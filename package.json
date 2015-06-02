@@ -1,0 +1,27 @@
+{
+  "name": "friends-circle",
+  "version": "0.0.1",
+  "description": "a service for friends",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qianjiahao/friends-circle.git"
+  },
+  "keywords": [
+    "angular.js"
+  ],
+  "author": "qianjiahao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qianjiahao/friends-circle/issues"
+  },
+  "homepage": "https://github.com/qianjiahao/friends-circle",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-ui-router": "^0.2.15",
+    "express": "^4.12.4"
+  }
+}
