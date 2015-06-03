@@ -14,6 +14,7 @@
 					}).on('mouseout', function () {
 						console.log('mouseout');
 					});
+					console.log(angular.element(this));
 				}	
 			};
 		})
@@ -29,6 +30,16 @@
 				restrict: 'E',
 				template: '<h1>Contact</h1>',
 				replace: true
+			}
+		})
+		.directive('test', function () {
+			return {
+				restrict: 'AE',
+				template: '<input type="text" ng-focus="isFocus">',
+				replace: true,
+				link: function (scope, element, attrs) {
+					console.log(element);;
+				}
 			}
 		})
 		
