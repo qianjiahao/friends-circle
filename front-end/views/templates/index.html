@@ -5,7 +5,10 @@
 		<p>
 			this is index page , you can get anything from here .
 		</p>
-		<test></test>
+		<select ng-model="current" ng-options="p.age as p.name for p in person" ng-change="show()">
+			<option value="">-- choose --</option>
+		</select>
+
 	</div>
 </div>
 
