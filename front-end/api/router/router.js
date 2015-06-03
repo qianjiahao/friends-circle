@@ -1,7 +1,7 @@
 (function () {
 
 	app
-		.config(function($stateProvider, $urlRouterProvider) {
+		.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 			$stateProvider
 				.state('index', {
 					url: '/index',
@@ -18,6 +18,6 @@
 
 			$urlRouterProvider.otherwise('/index');
 
-		})
+		}])
 
 })();

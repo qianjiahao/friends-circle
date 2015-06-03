@@ -5,7 +5,16 @@
 			return {
 				restrict: 'E',
 				template: '<h1>Index Page</h1>',
-				replace: true
+				replace: true,
+				link: function (scope, element, attrs) {
+					element.on('click', function () {
+						console.log('click');
+					}).on('mouseenter', function () {
+						console.log('mouseenter');
+					}).on('mouseout', function () {
+						console.log('mouseout');
+					});
+				}	
 			};
 		})
 		.directive('about', function () {
@@ -22,6 +31,7 @@
 				replace: true
 			}
 		})
+		
 		
 })();
 

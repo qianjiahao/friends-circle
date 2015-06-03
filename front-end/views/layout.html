@@ -3,11 +3,13 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>html5</title>
-	
+
 	<link rel="stylesheet" type="text/css" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../assert/styles/customer.css">
-	<script type="text/javascript" src="../assert/js/angular.min.js"></script>
-	<script type="text/javascript" src="../assert/js/angular-ui-router.min.js"></script>
+
+	<script type="text/javascript" src="../../bower_components/angular/angular.min.js"></script>
+	<script type="text/javascript" src="../../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="../../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="../api/app.js"></script>
 	<script type="text/javascript" src="../api/router/router.js"></script>
@@ -20,9 +22,8 @@
 	
 	<div ui-view></div>
 
+
 	<div ng-include="'templates/footer.html'"></div>
 	
 </body>
 </html>
-
-		
