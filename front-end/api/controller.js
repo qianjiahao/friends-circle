@@ -1,17 +1,8 @@
 (function() {
 
 	app
-		.controller('BodyCtrl', ['$scope', function($scope) {
-			
-			
+		.controller('FoldController', ['$scope', function ($scope){
+			$scope.isFolded = true;
 		}])
-		.controller('IndexCtrl', ['$scope', function ($scope) {
-
-			$scope.abc = 'Index';
-
-
-		}])
-
-
 
 })();

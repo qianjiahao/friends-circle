@@ -4,7 +4,7 @@
 		.directive('headertemplate', ['$templateCache', function ($templateCache) {
 			return {
 				restrict: 'E',
-				templateUrl: $templateCache.get('header.html')
+				templateUrl: '../views/templates/header.html'   // $templateCache.get('header.html')
 			}
 		}])
 		.directive('footertemplate',['$templateCache', function ($templateCache) {
@@ -13,29 +13,26 @@
 				templateUrl: $templateCache.get('footer.html')
 			}
 		}])
-		.directive('index', function () {
+		.directive('fold', function () {
 			return {
-				restrict: 'E',
-				template: '<h1>Index Page</h1>',
-				replace: true
-			};
-		})
-		.directive('about', function () {
-			return {
-				restrict: 'E',
-				template: '<h1>About Page</h1>',
-				replace: true
-			};
-		})
-		.directive('contact', function () {
-			return {
-				restrict: 'E',
-				template: '<h1>Contact</h1>',
-				replace: true
+				restrict: 'A',
+				link: function (scope, element, attrs) {
+					element.on('click', function() {
+						scope.isFolded = !scope.isFolded;			
+						element.slideUp();
+						scope.$apply();                      // refresh the view [Important]
+					})
+					function toggleFold(isFold) {
+					
+						isFold ? element.slideUp() : element.slideDown();
+					}
+					scope.$watch(attrs.fold, function (isFold) {
+						toggleFold(isFold);
+					});
+				}
 			}
 		})
-		
-		
+
 })();
 
 

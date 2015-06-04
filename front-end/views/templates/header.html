@@ -1,21 +1,24 @@
 <header>
-	<nav class="navbar navbar-default">
+	<nav class="navbar navbar-default" ng-controller="FoldController">
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="collapse">
+				<button type="button" class="navbar-toggle" ng-click="isFolded=!isFolded">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="#/index" class="navbar-brand">Index</a>
+
+				<a href="#/index" class="navbar-brand">Index {{isFolded}}</a>
 			</div>
-			<div class="navbar-collapse collapse" id="collapse">
+			<div class="navbar-collapse collapse" fold="isFolded">
 				<ul class="navbar-nav nav">
 					<li class="active"><a href="#/index">index</a></li>
 					<li><a href="#/about">about</a></li>
 					<li><a href="#/contact">contact</a></li>
+					<li><a href="#/chatroom">chatroom</a></li>
 				</ul>
 			</div>
+
 		</div>
 	</nav>	
 </header>

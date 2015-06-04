@@ -1,4 +1,30 @@
+body{
+
+}
+
 footer{
 	text-align: center;
 	font-size: 18px;
+}
+
+a:visited, a:active{
+	outline: none;
+}
+
+.theme-white {
+  background-color: #F9F9F5;
+  color: #2C3E50;
+}
+
+.chatroom-wrapper{
+	max-width: 90%;
+
+}
+
+.chatroom-main{
+
+}
+
+.chatroom-side{
+
 }

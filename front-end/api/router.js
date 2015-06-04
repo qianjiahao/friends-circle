@@ -14,7 +14,11 @@
 				.state('contact', {
 					url: '/contact',
 					templateUrl: '../views/templates/contact.html'
-				});
+				})
+				.state('chatroom', {
+					url: '/chatroom',
+					templateUrl: '../views/templates/contact.html'
+				})
 
 			$urlRouterProvider.otherwise('/index');
 
