@@ -4,7 +4,8 @@
 		.directive('headertemplate', ['$templateCache', function ($templateCache) {
 			return {
 				restrict: 'E',
-				templateUrl: '../views/templates/header.html'   // $templateCache.get('header.html')
+				templateUrl: '../views/templates/header.html'    
+				// templateUrl: $templateCache.get('header.html')
 			}
 		}])
 		.directive('footertemplate',['$templateCache', function ($templateCache) {
@@ -17,17 +18,25 @@
 			return {
 				restrict: 'A',
 				link: function (scope, element, attrs) {
-					element.on('click', function() {
-						scope.isFolded = !scope.isFolded;			
-						element.slideUp();
-						scope.$apply();                      // refresh the view [Important]
-					})
+					element.find('li').on('click', function() {
+
+						if(!scope.isFolded) {
+							scope.isFolded = true;
+							element.slideUp();
+							scope.$apply();                      // refresh the view [Important]
+						}
+						element.find('li').removeClass('active');
+						angular.element(this).addClass('active');
+
+					});
 					function toggleFold(isFold) {
 					
 						isFold ? element.slideUp() : element.slideDown();
 					}
 					scope.$watch(attrs.fold, function (isFold) {
+						
 						toggleFold(isFold);
+
 					});
 				}
 			}

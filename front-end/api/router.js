@@ -17,7 +17,7 @@
 				})
 				.state('chatroom', {
 					url: '/chatroom',
-					templateUrl: '../views/templates/contact.html'
+					templateUrl: '../views/templates/chatroom.html'
 				})
 
 			$urlRouterProvider.otherwise('/index');
