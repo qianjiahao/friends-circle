@@ -12,18 +12,18 @@
 	<script type="text/javascript" src="../../bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 
 	<script type="text/javascript" src="../api/app.js"></script>
-	<script type="text/javascript" src="../api/router/router.js"></script>
-	<script type="text/javascript" src="../api/controller/controller.js"></script>
-	<script type="text/javascript" src="../api/directive/directive.js"></script>
+	<script type="text/javascript" src="../api/router.js"></script>
+	<script type="text/javascript" src="../api/controller.js"></script>
+	<script type="text/javascript" src="../api/directive.js"></script>
+	<script type="text/javascript" src="../api/service.js"></script>
 </head>
-<body>
+<body ng-controller="BodyCtrl">
 	
-	<div ng-include="'templates/header.html'"></div>
-	
+	<headertemplate></headertemplate>
+
 	<div ui-view></div>
-
-
-	<div ng-include="'templates/footer.html'"></div>
+	
+	<footertemplate></footertemplate>
 	
 </body>
 </html>
