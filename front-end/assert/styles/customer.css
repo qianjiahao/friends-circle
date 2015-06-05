@@ -23,7 +23,73 @@ a:visited, a:active{
   background-color: #F9F9F5;
   color: #2C3E50;
 }
+.jumbotron{
+	overflow: hidden;
+	zoom: 1;
+}
 
+.left{
+	width: 50%;
+	float: left;
+}
+.login-area{
+	width: 50%;
+	float: right;
+	border-radius: 15px;
+}
+
+.login-list{
+	list-style-type: none;
+	background-color: #F9F9F5;
+	padding: 10px;
+
+}
+.login-list li{
+	width: 100%;
+	padding: 3px 9px;
+	margin:10px 0;
+	overflow: hidden;
+}
+.input-normal{
+	border-bottom: 1px solid #ddd;	
+}
+.input-error{
+	border-bottom: 1px solid red;
+}
+
+.icon{
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.login-group{
+	float: left;
+}
+
+.login-group input{
+	padding: 5px;
+	outline: none;
+	border: none;
+	background-color: #F9F9F5;
+	cursor: pointer;
+}
+
+.icon-group{
+	float: right;
+	margin-top: 6px;
+}
+
+.button-group{
+	text-align: center;
+}
+.signin-area{
+	width: 100%;
+	height: 140px;
+	clear: both;
+	border-top: 1px solid #e56;
+	border-bottom: 1px solid #e56;
+	display: none;
+}
 .chatroom-wrapper{
 	width: 100%;
 	overflow: hidden;
@@ -77,29 +143,44 @@ a:visited, a:active{
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	box-sizing:border-box;
-	border: 1px solid #e7e7e7;
+	border: 1px solid #EEEEE0;
 	background-color: #fff;
 	font-size: 18px;
 }
 .input-area{
-	padding: 9px 9px;
+	padding: 7px 9px;
 	height: 100%;
 	border:none;
 	outline: none;
 	width: 60%;
+	float: left;
+	cursor: pointer;
 }
+
 .button{
 	height: 100%;
-	width: 90px;
+	width: auto;
 	text-align: center;
 	display: inline-block;
-	
-	padding: 7px;
-	margin-left: 30px;
+	outline: none;
+	cursor: pointer;
 }
+
+.button-input{
+	padding: 7px 20%;
+}
+.button-normal{
+	padding: 7px;
+}
+.button-chat{
+	padding: 8px;
+	width: 19%;
+	display: inline-block;
+	border: none;
+}
+
 .lightsalmon{
 	color:lightsalmon;
-	border: 2px solid lightsalmon;
 }
 
 .lightsalmon:hover{
@@ -111,19 +192,37 @@ a:visited, a:active{
 }
 .lightseagreen{
 	color:lightseagreen;
-	border: 2px solid lightseagreen;
-	
 }
 .lightseagreen:hover{
 	color: #fff;
 	background-color: lightseagreen;
 	text-decoration: none;
 	-webkit-transition: color .2s linear;
-	-webkit-transition: background-color .2s linear;
-	
+	-webkit-transition: background-color .2s linear;	
 }
 
+.orangered{
+	color:orangered;
+}
+.orangered:hover{
+	color: #fff;
+	background-color: orangered;
+	text-decoration: none;
+	-webkit-transition: color .2s linear;
+	-webkit-transition: background-color .2s linear;	
+}
 
+.lightcoral{
+	color:lightcoral;
+}
+
+.lightcoral:hover{
+	color: #fff;
+	background-color: lightcoral;
+	text-decoration: none;
+	-webkit-transition: color .2s linear;
+	-webkit-transition: background-color .2s linear;	
+}
 /**
  * class
  */
