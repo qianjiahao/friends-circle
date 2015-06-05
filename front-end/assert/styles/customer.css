@@ -32,6 +32,10 @@ a:visited, a:active{
 	width: 50%;
 	float: left;
 }
+
+/**
+ *  login style 
+ */
 .login-area{
 	width: 50%;
 	float: right;
@@ -82,14 +86,31 @@ a:visited, a:active{
 .button-group{
 	text-align: center;
 }
+.button-input{
+	padding: 7px 20%;
+	background-color: #F9F9F5;
+	border: none;
+}
+/**
+ * login style
+ */
+
+	/* ------------------------------------------------------------------------------------  */
+
 .signin-area{
 	width: 100%;
 	height: 140px;
 	clear: both;
 	border-top: 1px solid #e56;
 	border-bottom: 1px solid #e56;
-	display: none;
+	/*display: none;*/
 }
+
+	/* ------------------------------------------------------------------------------------  */
+
+/**
+ * chatroom style
+ */
 .chatroom-wrapper{
 	width: 100%;
 	overflow: hidden;
@@ -156,7 +177,21 @@ a:visited, a:active{
 	float: left;
 	cursor: pointer;
 }
+.button-chat{
+	padding: 8px;
+	width: 19%;
+	display: inline-block;
+	border: none;
+}
+/**
+ * chatroom style
+ */
 
+	/* ------------------------------------------------------------------------------------  */
+
+/**
+ * button style [common]
+ */
 .button{
 	height: 100%;
 	width: auto;
@@ -166,23 +201,13 @@ a:visited, a:active{
 	cursor: pointer;
 }
 
-.button-input{
-	padding: 7px 20%;
-}
 .button-normal{
 	padding: 7px;
-}
-.button-chat{
-	padding: 8px;
-	width: 19%;
-	display: inline-block;
-	border: none;
 }
 
 .lightsalmon{
 	color:lightsalmon;
 }
-
 .lightsalmon:hover{
 	color:#fff;
 	background-color: lightsalmon;
@@ -215,7 +240,6 @@ a:visited, a:active{
 .lightcoral{
 	color:lightcoral;
 }
-
 .lightcoral:hover{
 	color: #fff;
 	background-color: lightcoral;
@@ -223,6 +247,12 @@ a:visited, a:active{
 	-webkit-transition: color .2s linear;
 	-webkit-transition: background-color .2s linear;	
 }
+/**
+ * button style [common]
+ */
+
+	/* ------------------------------------------------------------------------------------  */
+
 /**
  * class
  */

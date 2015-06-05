@@ -1,5 +1,5 @@
 <div class="container">
-	<div class="jumbotron">
+	<div class="jumbotron" ng-controller="ButtonController">
 		<div class="left">
 			
 			<h1>index</h1>
@@ -7,42 +7,41 @@
 				this is index page , you can get anything from here .
 			</p>
 		</div>
-		<div class="login-area">
-			<form>
+		<div class="login-area" ng-controller="LoginController">
+			<form name="loginForm">
 				<ul class="login-list">
 					<li class="input-normal">
 						<span class="login-group">
 							<span class="glyphicon glyphicon-user icon" aira-hidden="true"></span>
-							<input type="email" placeholder="Email" name="email">
-							<span>email is n</span>
+							<input type="email" placeholder="Email" name="email" ng-minlength="1" ng-model="loginEmail" required="">
+							<span>email is error</span>
 						</span>
 						<span class="icon-group">
-							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true"></span>
-							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true"></span>
+							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="loginForm.email.$valid"></span>
+							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.email.$dirty && (loginForm.email.$error.required || loginForm.email.$error.email)"></span>
 							<span class="glyphicon glyphicon-info-sign icon" aira-hidden="true"></span>	
 						</span>
-						
 					</li>
 					<li class="input-normal">
 						<div class="login-group">
 							<span class="glyphicon glyphicon-lock" aira-hidden="true"></span>
-							<input type="password" placeholder="Password">
+							<input type="password" placeholder="Password" name="password" ng-minlength="6" ng-maxlength="20" ng-model="loginPassword" required="">
 						</div>
 						<div class="icon-group">
-							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true"></span>
-							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true"></span>
+							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="loginForm.password.$valid"></span>
+							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.password.$dirty && (loginForm.password.$error.required || loginForm.password.$error.password || loginForm.password.$error.maxlength || loginForm.password.$error.minlength)"></span>
 							<span class="glyphicon glyphicon-info-sign icon" aira-hidden="true"></span>	
 						</div>
 					</li>
 					<li class="button-group">
-						<a href="" class="button lightseagreen button-input">Login</a>
-						<a href="" class="button lightcoral button-input">Signin</a>	
+						<input type="submit" class="button lightseagreen button-input"  value="login" ng-disabled="loginForm.$invalid">
+						<input type="button" class="button lightcoral button-input" ng-click="toggleSignin()" value="signin">	
 					</li>
 				</ul>
 			</form>
 		</div>
-		<div class="signin-area">
-			
+		<div class="signin-area" ng-show="isSignin" ng-controller="SigninController">
+				
 		</div>
 	</div>
 </div>
