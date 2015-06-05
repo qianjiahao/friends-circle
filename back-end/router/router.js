@@ -21,6 +21,13 @@ module.exports = function (app) {
 	});
 
 	app.post('/register', function (req, res) {
-
+		var user = {
+			username: req.body.username,
+			password: req.body.password,
+			confiration: req.body.confiration,
+			email: req.body.email,
+			message: req.body.message
+		}
+		res.send(user);
 	})
 }

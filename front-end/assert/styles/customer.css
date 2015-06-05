@@ -94,7 +94,7 @@ input:-webkit-autofill {
 	text-align: center;
 }
 .button-input{
-	padding: 7px 20%;
+	padding: 5px 20%;
 	background-color: #F9F9F5;
 	border: none;
 }
@@ -106,12 +106,52 @@ input:-webkit-autofill {
 
 .signin-area{
 	width: 100%;
-	height: 140px;
+	/*height: 140px;*/
 	clear: both;
 	border-top: 1px solid #e56;
 	border-bottom: 1px solid #e56;
+	overflow: hidden;
 }
 
+.signin-list{
+	list-style-type: none;
+	background-color: #F9F9F5;
+	padding: 10px;
+	border-right: 1px solid #ddd;
+
+}
+.signin-list li{
+	width: 100%;
+	padding: 3px 9px;
+	margin:10px 0;
+	overflow: hidden;
+
+}
+.signin-left{
+	margin-top: 10px;
+	width: 50%;
+	float: left;
+	
+}
+.signin-right{
+	margin-top: 10px;
+	width: 50%;
+	float: right;
+}
+
+.signin-group{
+	float: left;
+	width: 90%;
+}
+
+.signin-group input, .signin-group input:focus{
+	padding: 5px;
+	outline: none;
+	border: none;
+	background-color: #F9F9F5;
+	cursor: pointer;
+	width: 60%;
+}
 	/* ------------------------------------------------------------------------------------  */
 
 /**
@@ -186,7 +226,6 @@ input:-webkit-autofill {
 .button-chat{
 	padding: 8px;
 	width: 19%;
-	display: inline-block;
 	border: none;
 }
 /**
@@ -200,7 +239,6 @@ input:-webkit-autofill {
  */
 .button{
 	height: 100%;
-	width: auto;
 	text-align: center;
 	display: inline-block;
 	outline: none;

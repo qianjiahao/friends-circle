@@ -4,8 +4,8 @@
 		.directive('headertemplate', ['$templateCache', function ($templateCache) {
 			return {
 				restrict: 'E',
-				templateUrl: '../views/templates/header.html'    
-				// templateUrl: $templateCache.get('header.html')
+				// templateUrl: '../views/templates/header.html'    
+				templateUrl: $templateCache.get('header.html')
 			}
 		}])
 		.directive('footertemplate',['$templateCache', function ($templateCache) {
@@ -14,7 +14,7 @@
 				templateUrl: $templateCache.get('footer.html')
 			}
 		}])
-		.directive('fold', function () {
+		.directive('fold', ['$location','$rootScope',function ($location, $rootScope) {
 			return {
 				restrict: 'A',
 				link: function (scope, element, attrs) {
@@ -24,10 +24,10 @@
 							scope.isFolded = true;
 							element.slideUp();
 							scope.$apply();                      // refresh the view [Important]
+						// $rootScope.currentPath = $location.path();
 						}
 						element.find('li').removeClass('active');
 						angular.element(this).addClass('active');
-
 					});
 					function toggleFold(isFold) {
 					
@@ -40,7 +40,9 @@
 					});
 				}
 			}
-		})
+		}])
+
+
 
 })();
 
