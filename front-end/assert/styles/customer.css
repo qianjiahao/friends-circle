@@ -10,6 +10,11 @@ a:visited, a:active{
 	outline: none;
 }
 
+input:-webkit-autofill {
+	-webkit-box-shadow: 0 0 0px 1000px #F9F9F5 inset;
+}
+
+
 /**
  * tag 
  */
@@ -58,7 +63,7 @@ a:visited, a:active{
 	border-bottom: 1px solid #ddd;	
 }
 .input-error{
-	border-bottom: 1px solid red;
+	border-bottom: 1px solid orangered;
 }
 
 .icon{
@@ -68,14 +73,16 @@ a:visited, a:active{
 
 .login-group{
 	float: left;
+	width: 80%;
 }
 
-.login-group input{
+.login-group input, .login-group input:focus{
 	padding: 5px;
 	outline: none;
 	border: none;
 	background-color: #F9F9F5;
 	cursor: pointer;
+	width: 60%;
 }
 
 .icon-group{
@@ -103,7 +110,6 @@ a:visited, a:active{
 	clear: both;
 	border-top: 1px solid #e56;
 	border-bottom: 1px solid #e56;
-	/*display: none;*/
 }
 
 	/* ------------------------------------------------------------------------------------  */
