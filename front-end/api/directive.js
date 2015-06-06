@@ -4,7 +4,6 @@
 		.directive('headertemplate', ['$templateCache', function ($templateCache) {
 			return {
 				restrict: 'E',
-				// templateUrl: '../views/templates/header.html'    
 				templateUrl: $templateCache.get('header.html')
 			}
 		}])

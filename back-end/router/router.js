@@ -14,7 +14,7 @@ module.exports = function (app) {
 		next();
 	});
 
-	app.post('/login', function (req, res) {
+	app.post('/login', function (req, res, next) {
 		var temp = {
 			email: req.body.email,
 			encryptedPassword: req.body.password
@@ -51,7 +51,7 @@ module.exports = function (app) {
 		});
 	});
 
-	app.post('/register', function (req, res, next) {
+	app.post('/signin', function (req, res, next) {
 		var temp = {
 			username: req.body.username,
 			encryptedPassword: req.body.password,

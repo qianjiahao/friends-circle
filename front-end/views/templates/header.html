@@ -15,8 +15,11 @@
 					<li class="active"><a href="#/index">index</a></li>
 					<li><a href="#/about">about</a></li>
 					<li><a href="#/contact">contact</a></li>
-					<li><a href="#/chatroom">chatroom</a></li>
+					<li ng-if="isAuth"><a href="#/chatroom">chatroom</a></li>
 				</ul>
+				<div class="navbar-right" ng-controller="LogoutController">
+					<button class="btn btn-sm btn-danger navbar-btn" ng-click="logout()" ng-show="isAuth">logout</button>
+				</div>
 			</div>
 
 		</div>

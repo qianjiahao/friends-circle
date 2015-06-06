@@ -4,7 +4,7 @@
 		.controller('FoldController', ['$scope', function ($scope){
 			$scope.isFolded = true;
 		}])
-		.controller('LoginController', ['$scope','$http','$rootScope','$location','$cookies', function ($scope, $http, $rootScope, $location, $cookies){
+		.controller('LoginController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 
 			$scope.toggleSignin = function () {
 				$rootScope.isSignin = !$rootScope.isSignin;
@@ -12,25 +12,22 @@
 
 			$scope.login = function (email, password) {
 
-				$http.post("http://localhost:3000/login",{
-					email: email,
-					password: password
-				}).success(function (data, status) {
- 					
+				AuthFactory.login({
+					email: email, password: password
+				},function(data,status) {
 					var expires = new Date();
- 				    expires.setDate(expires.getDate() + 15);
+					    expires.setDate(expires.getDate() + 15);
 					$cookies.putObject('User', data.data, {
 						'expires': expires
 					});
-
-					$location.path('/chatroom')
-					console.log($cookies.getObject('User'));
-				}).error(function (data, status) {
-					console.log(data,status);
+					$rootScope.isAuth = $cookies.get('User') ? true : false;
+					$location.path('/chatroom');
+				},function(error,status) {
+					console.log(error,status);
 				});
 			}
 		}])
-		.controller('SigninController', ['$scope','$http','$rootScope','$location','$cookies', function ($scope, $http, $rootScope, $location, $cookies){
+		.controller('SigninController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 					
 			$rootScope.isSignin = true;
 
@@ -40,37 +37,40 @@
 
 			$scope.signin = function (username, password, confiration, email, message) {
 
-				if(password !== confiration) {
-					$location.path('/index');
-				}else{
-					$http.post("http://localhost:3000/register", {
-						username: username,
-						password: password,
-						email: email,
-						message: message
-					}).success(function (data,status) {
-
-						var expires = new Date();
-	 				    expires.setDate(expires.getDate() + 15);
-						$cookies.putObject('User', data.data, {
-							'expires': expires
-						});
-
-						$location.path('/chatroom');
-
-					}).error(function (data,status) {
-						console.log(data,status);
-					})
-				}
+				AuthFactory.signin({
+					username: username,
+					password: password,
+					email: email,
+					message: message
+				},function (data, status) {
+					var expires = new Date();
+ 				    expires.setDate(expires.getDate() + 15);
+					$cookies.putObject('User', data.data, {
+						'expires': expires
+					});
+					$rootScope.isAuth = $cookies.get('User') ? true : false;
+					$location.path('/chatroom');
+				},function (error, status) {
+					console.log(data,status);
+				});
 			}
 
+		}])
+		.controller('LogoutController', ['$scope','$rootScope','$cookies', function ($scope, $rootScope, $cookies){
+			
+			$scope.logout = function () {
+				$cookies.remove('User');
+				$rootScope.isAuth = $cookies.get('User') ? true : false;
+			}
 		}])
 		.controller('UserInfoController',['$scope','$cookies',function ($scope, $cookies) {
 
 			var user =  $cookies.getObject('User');
-			console.log(user);
-			$scope.username = user.username || 'Nobody';
-			$scope.message = user.message || 'Nothing';
+			if(user) {
+				$scope.username = user.username;
+				$scope.message = user.message;
+				console.log(user);
+			}
 		}])
 
 })();
