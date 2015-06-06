@@ -1,3 +1,8 @@
+var User = require('../model/user.js');
+var bcrypt = require('bcrypt');
+var flash = require('../util/flash.js');
+
+
 module.exports = function (app) {
 
 	app.all('*', function (req, res, next) {
@@ -10,24 +15,75 @@ module.exports = function (app) {
 	});
 
 	app.post('/login', function (req, res) {
-		console.log(req.body.email,req.body.password);
-		
-		var obj = {
+		var temp = {
 			email: req.body.email,
-			password: req.body.password
+			encryptedPassword: req.body.password
 		}
 
-		res.send(obj);
+		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
+
+			if(err) return next(err);
+
+			User.findOne({
+				email: temp.email
+			}, function (err, user) {
+				if(err) return next(err);
+
+				if(!user) {
+					res.send(flash('error','user not exist',null));
+				}
+				bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
+					if(err) return next(err);
+
+					if(!valid) {
+						res.send(flash('error','password not match',temp));
+						return ;
+					}
+					if(valid) {
+						res.send(flash('success','login success',{
+							username: user.username,
+							email: user.email,
+							message: user.message
+						}));
+					}
+				});
+			});
+		});
 	});
 
-	app.post('/register', function (req, res) {
-		var user = {
+	app.post('/register', function (req, res, next) {
+		var temp = {
 			username: req.body.username,
-			password: req.body.password,
-			confiration: req.body.confiration,
+			encryptedPassword: req.body.password,
 			email: req.body.email,
 			message: req.body.message
 		}
-		res.send(user);
-	})
+
+		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
+			if(err) return next(err);
+
+			User.findOne({
+				email: temp.email
+			}, function (err, user) {
+				if(err) return next(err);
+				if(user) {
+					res.send(flash('error','user already exist',temp));
+					return ;
+				}
+				temp.encryptedPassword = encryptedPassword;
+				var user = new User(temp);
+
+				User.create(user,function (err, user) {
+					if(err) return next(err);
+
+					console.log(user);
+					res.send(flash('success','register success',{
+						username: user.username,
+						email: user.email,
+						message: user.message
+					}));
+				});
+			});
+		});
+	});
 }

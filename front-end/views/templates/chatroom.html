@@ -20,17 +20,13 @@
 			</div>	
 		</div>
 		<div class="side">
-			<div class="panel">
+			<div class="panel" ng-controller="UserInfoController">
 				<div class="header">
 					用户信息
 				</div>
 				<div class="content">
-					<span class="user-name">
-						qianjiahao
-					</span>
-					<p class="user-message">
-						我就是我，就是天上不一样的烟火~~~~~~						
-					</p>
+					<span class="user-name" ng-model="username" ng-bind="username"></span>
+					<p class="user-message" ng-model="message" ng-bind="message"></p>
 				</div>
 			</div>
 		</div>
