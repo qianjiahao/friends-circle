@@ -3,9 +3,9 @@
 	app
 		.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
 			$stateProvider
-				.state('index', {
-					url: '/index',
-					templateUrl: '../views/templates/index.html'
+				.state('auth', {
+					url: '/auth',
+					templateUrl: '../views/templates/auth.html'
 				})
 				.state('about', {
 					url: '/about',
@@ -20,7 +20,7 @@
 					templateUrl: '../views/templates/chatroom.html'
 				})
 
-			$urlRouterProvider.otherwise('/index');
+			$urlRouterProvider.otherwise('/auth');
 
 		}])
 

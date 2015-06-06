@@ -2,22 +2,22 @@
 	<nav class="navbar navbar-default" ng-controller="FoldController">
 		<div class="container">
 			<div class="navbar-header">
-				<button type="button" class="navbar-toggle" ng-click="isFolded=!isFolded">
+				<button type="button" class="navbar-toggle" ng-model="toggleButton" ng-click="toggleFold(isFolded)">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
 
-				<a href="#/index" class="navbar-brand">Index</a>
+				<a href="" class="navbar-brand">firends-circle</a>
 			</div>
-			<div class="navbar-collapse collapse" fold="isFolded">
+			<div class="navbar-collapse" ng-if="isFolded">
 				<ul class="navbar-nav nav">
-					<li class="active"><a href="#/index">index</a></li>
-					<li><a href="#/about">about</a></li>
-					<li><a href="#/contact">contact</a></li>
-					<li ng-if="isAuth"><a href="#/chatroom">chatroom</a></li>
+					<li ng-class="{ active: isActive('/auth') }" ng-click="toggleFold(isFolded)" ng-if="!isAuth"><a href="#/auth">auth</a></li>
+					<li ng-class="{ active: isActive('/about') }" ng-click="toggleFold(isFolded)"><a href="#/about">about</a></li>
+					<li ng-class="{ active: isActive('/contact') }" ng-click="toggleFold(isFolded)"><a href="#/contact">contact</a></li>
+					<li ng-class="{ active: isActive('/chatroom') }" ng-if="isAuth" ng-click="toggleFold(isFolded)"><a href="#/chatroom">chatroom</a></li>
 				</ul>
-				<div class="navbar-right" ng-controller="LogoutController">
+				<div class="navbar-right" ng-controller="LogoutController" ng-click="toggleFold(isFolded)">
 					<button class="btn btn-sm btn-danger navbar-btn" ng-click="logout()" ng-show="isAuth">logout</button>
 				</div>
 			</div>

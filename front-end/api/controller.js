@@ -1,8 +1,26 @@
 (function() {
 
 	app
-		.controller('FoldController', ['$scope', function ($scope){
-			$scope.isFolded = true;
+		.controller('FoldController', ['$scope','$rootScope', '$location','$window', function ($scope, $rootScope, $location, $window){
+			var toggleButton = function() {
+				$rootScope.isFolded = $window.document.documentElement.offsetWidth <= 768 ? false : true;
+			}
+
+			toggleButton();
+
+			$window.onresize = function () {
+				toggleButton();
+				$rootScope.$apply();
+			}
+			
+		    $scope.toggleFold = function (isFolded) {
+		    	$rootScope.isFolded = !isFolded;
+		    }
+
+			$scope.isActive = function (viewLocation) {
+			     var active = (viewLocation === $location.path());
+			     return active;
+			};
 		}])
 		.controller('LoginController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 
