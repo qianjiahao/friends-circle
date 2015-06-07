@@ -1,26 +1,58 @@
 (function() {
 
 	app
-		.controller('FoldController', ['$scope','$rootScope', '$location','$window', function ($scope, $rootScope, $location, $window){
-			var toggleButton = function() {
-				$rootScope.isFolded = $window.document.documentElement.offsetWidth <= 768 ? false : true;
+		.controller('NavbarController', ['$scope','$rootScope', '$location','$window', function ($scope, $rootScope, $location, $window){
+
+			/*
+				[isNeedFoldCurrent] : save the current the boolean if window need fold or not , 
+				[isNeedFoldCache] : save the last value of boolean , if value change and then apply the viewmodel ,
+				[minWindowSize] : the boundary value of the navbar hide or show .
+			 */
+			var isNeedFoldCurrent, isNeedFoldCache, minWindowSize = 768;
+
+
+			$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent =  $window.document.documentElement.offsetWidth <= minWindowSize ? true : false;
+
+			/*
+				{toggleNavbar} toggle the navbar if the [windowSizeCurrent] less than 768 .
+			 */
+			$scope.toggleNavbar = function () {
+				if(isNeedFoldCurrent) {
+					$scope.isFolded = !$scope.isFolded;
+				}else{
+					$scope.isFolded = false;
+				}
 			}
 
-			toggleButton();
+			/*
+				when window was resized , check the cache and choose apply or not .
+			 */
+			$window.onresize = function() {
+				isNeedFoldCurrent = $window.document.documentElement.offsetWidth <= 768 ? true : false
+				if(isNeedFoldCache !== isNeedFoldCurrent) {
+					$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent;
+					$scope.$apply();
+				}
 
-			$window.onresize = function () {
-				toggleButton();
-				$rootScope.$apply();
 			}
-			
-		    $scope.toggleFold = function (isFolded) {
-		    	$rootScope.isFolded = !isFolded;
-		    }
 
+			/*
+				check the item which is active , add the active class .
+			 */
 			$scope.isActive = function (viewLocation) {
 			     var active = (viewLocation === $location.path());
 			     return active;
 			};
+
+			$scope.brand = 'friends';
+
+			$scope.toggleBrand = function() {
+				if($scope.brand == 'friends') {
+					$scope.brand = 'circle';
+				}else{
+					$scope.brand = 'friends'
+				}
+			}
 		}])
 		.controller('LoginController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 
@@ -79,6 +111,7 @@
 			$scope.logout = function () {
 				$cookies.remove('User');
 				$rootScope.isAuth = $cookies.get('User') ? true : false;
+
 			}
 		}])
 		.controller('UserInfoController',['$scope','$cookies',function ($scope, $cookies) {

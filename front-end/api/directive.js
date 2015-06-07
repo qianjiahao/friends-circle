@@ -13,10 +13,6 @@
 				templateUrl: $templateCache.get('footer.html')
 			}
 		}])
-
-
-
-
 })();
 
 
