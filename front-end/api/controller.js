@@ -1,7 +1,7 @@
 (function() {
 
 	app
-		.controller('NavbarController', ['$scope','$rootScope', '$location','$window', function ($scope, $rootScope, $location, $window){
+		.controller('NavbarController', ['$scope','$rootScope', '$location','$window', '$cookies', function ($scope, $rootScope, $location, $window, $cookies){
 
 			/*
 				[isNeedFoldCurrent] : save the current the boolean if window need fold or not , 
@@ -44,15 +44,8 @@
 			     return active;
 			};
 
-			$scope.brand = 'friends';
+			$rootScope.isAuth = $cookies.get('User') ? true : false;
 
-			$scope.toggleBrand = function() {
-				if($scope.brand == 'friends') {
-					$scope.brand = 'circle';
-				}else{
-					$scope.brand = 'friends'
-				}
-			}
 		}])
 		.controller('LoginController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 
@@ -65,17 +58,18 @@
 				AuthFactory.login({
 					email: email, password: password
 				},function(data,status) {
-					var expires = new Date();
-					    expires.setDate(expires.getDate() + 15);
-					$cookies.putObject('User', data.data, {
-						'expires': expires
-					});
+					// var expires = new Date();
+					    // expires.setDate(expires.getDate() + 15);
+					$cookies.putObject('User', data.data);
 					$rootScope.isAuth = $cookies.get('User') ? true : false;
+					console.log('cookies : ',$cookies.get('User'));
 					$location.path('/chatroom');
 				},function(error,status) {
 					console.log(error,status);
 				});
 			}
+
+			$rootScope.isAuth = $cookies.get('User') ? true : false;
 		}])
 		.controller('SigninController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
 					
@@ -93,25 +87,27 @@
 					email: email,
 					message: message
 				},function (data, status) {
-					var expires = new Date();
- 				    expires.setDate(expires.getDate() + 15);
-					$cookies.putObject('User', data.data, {
-						'expires': expires
-					});
+					// var expires = new Date();
+ 				    // expires.setDate(expires.getDate() + 15);
+					$cookies.putObject('User', data.data);
 					$rootScope.isAuth = $cookies.get('User') ? true : false;
+					console.log('cookies : ',$cookies.get('User'));
 					$location.path('/chatroom');
 				},function (error, status) {
 					console.log(data,status);
 				});
 			}
 
+			$rootScope.isAuth = $cookies.get('User') ? true : false;
+
 		}])
-		.controller('LogoutController', ['$scope','$rootScope','$cookies', function ($scope, $rootScope, $cookies){
+		.controller('LogoutController', ['$scope','$rootScope','$cookies', '$location', function ($scope, $rootScope, $cookies, $location){
 			
 			$scope.logout = function () {
 				$cookies.remove('User');
 				$rootScope.isAuth = $cookies.get('User') ? true : false;
-
+				console.log('cookies : ',$cookies.get('User'));
+				$location.path('/auth');
 			}
 		}])
 		.controller('UserInfoController',['$scope','$cookies',function ($scope, $cookies) {
@@ -120,7 +116,6 @@
 			if(user) {
 				$scope.username = user.username;
 				$scope.message = user.message;
-				console.log(user);
 			}
 		}])
 
