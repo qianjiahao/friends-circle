@@ -127,7 +127,7 @@
 					socket.emit('send message',{
 						username: AuthFactory.getAuth('User').username,
 						message: $scope.content,
-						date: moment().format('MM-DD HH:mm')
+						date: moment().format('HH:mm:ss')
 					});
 					$scope.content = '';
 				}
