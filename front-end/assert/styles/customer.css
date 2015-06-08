@@ -35,7 +35,9 @@ input:-webkit-autofill {
 	overflow: hidden;
 	zoom: 1;
 }
-
+.navbar{
+	border-radius: 0;
+}
 .left{
 	width: 50%;
 	float: left;
@@ -111,9 +113,13 @@ input:-webkit-autofill {
 
 	/* ------------------------------------------------------------------------------------  */
 
+/*
+	sigin style
+ */
+
+
 .signin-area{
 	width: 100%;
-	/*height: 140px;*/
 	clear: both;
 	border-top: 1px solid #e56;
 	border-bottom: 1px solid #e56;
@@ -159,8 +165,40 @@ input:-webkit-autofill {
 	cursor: pointer;
 	width: 50%;
 }
+/*
+	signin style
+ */
+
 	/* ------------------------------------------------------------------------------------  */
 
+/*
+	search style
+ */
+
+.search-friend-title{
+	text-align: center;
+	font-size: 40px;
+}
+.search-friend-bar{
+	width: 100%;
+	margin:10px;
+	overflow: hidden;
+}
+.search-friend-input{
+	outline: none;
+	width: 100%;
+	padding: 7px 15px;
+	font-size: 20px;
+	float: left;
+}
+.search-result{
+	text-align: center;
+}
+
+/*
+	search style
+ */
+	/* ------------------------------------------------------------------------------------  */
 /**
  * chatroom style
  */
@@ -223,42 +261,6 @@ input:-webkit-autofill {
 	text-align: left;
 }
 
-/*.other-username{
-	float: left;
-}
-.self-username{
-	float: right;
-	padding-left: 20px;
-}
-.self{
-	text-align: right;
-}
-.other{
-	text-align: left;
-}
-.chat-username{
-	font-weight: 600;
-	font-size: 16px;
-	display: block;
-	clear: both;
-}
-.chat-date{
-	display: block;
-	font-size: 14px;
-	padding-top: 2px;
-	margin:0 10px;
-	text-indent: 20px;
-
-}
-.chat-message{
-	width: 90%;
-	font-size: 14px;
-	word-wrap:break-word;
-	text-indent: 40px;
-
-}*/
-
-
 .side{
 	width: 25%;
 	float: right;
@@ -283,7 +285,7 @@ input:-webkit-autofill {
 	display: block;
 }
 
-.user-message{
+.user-signature{
 	font-style: italic;
 }
 

@@ -7,9 +7,9 @@
 					url: '/auth',
 					templateUrl: '../views/templates/auth.html'
 				})
-				.state('about', {
-					url: '/about',
-					templateUrl: '../views/templates/about.html'
+				.state('search', {
+					url: '/search',
+					templateUrl: '../views/templates/search.html'
 				})
 				.state('contact', {
 					url: '/contact',

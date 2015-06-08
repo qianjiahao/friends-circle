@@ -74,7 +74,8 @@
 					email: email, password: password
 				},function(data,status) {
 					AuthFactory.setAuth('User',data.data);
- 					$rootScope.isAuth = AuthFactory.getAuth('User');
+ 					$rootScope.isAuth = AuthFactory.checkAuth('User');
+ 					$rootScope.username = AuthFactory.getAuth('User');
  					$location.path('/chatroom')
 				},function(error,status) {
 					console.log(error,status);
@@ -104,16 +105,17 @@
 			/*
 				{signin} sign in the system .
 			 */
-			$scope.signin = function (username, password, confiration, email, message) {
+			$scope.signin = function (username, password, confiration, email, signature) {
 
 				AuthFactory.signin({
 					username: username,
 					password: password,
 					email: email,
-					message: message
+					signature: signature
 				},function (data, status) {
 					AuthFactory.setAuth('User',data.data);
-					$rootScope.isAuth = AuthFactory.getAuth('User');
+					$rootScope.isAuth = AuthFactory.checkAuth('User');
+					$rootScope.username = AuthFactory.getAuth('User');
 					$location.path('/chatroom');
 				},function (error, status) {
 					console.log(data,status);
@@ -129,20 +131,23 @@
 			$scope.logout = function () {
 				AuthFactory.removeAuth('User');
 				$rootScope.isAuth = AuthFactory.checkAuth('User');
+				$rootScope.username = null;
 			}
 		}])
-		.controller('UserInfoController',['$scope', 'AuthFactory',function ($scope, AuthFactory) {
+		.controller('UserInfoController',['$scope', '$rootScope', 'AuthFactory',function ($scope, $rootScope, AuthFactory) {
 			
 			/*
-				[username] , [message] show username and user message .
+				[username] , [signature] show username and user signature .
 			 */
 			var user = AuthFactory.getAuth('User');
 			if(user) {
-				$scope.username = user.username;
-				$scope.message = user.message;
+				$rootScope.username = user.username;
+				$scope.signature = user.signature;
 			}
+
+
 		}])
-		.controller('ChatController', ['$scope', 'socket', 'AuthFactory', function ($scope, socket, AuthFactory) {
+		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
 			if(AuthFactory.checkAuth('User')) {
 
 				/*
@@ -181,9 +186,34 @@
 					}
 				});
 
-				
+				$scope.isCreate = false;
+
+				$scope.createRoom = function(){
+
+					$http.post('http://localhost:3000/createRoom',{
+
+					})
+				}
 			}
 
+		}])
+		.controller('SearchFriendController', ['$scope', '$http', function ($scope, $http) {
+			$scope.searchFriendContent = '';
+
+			$scope.search = function() {
+				var content = $scope.searchFriendContent;
+				$http.post('http://localhost:3000/search',{
+					content:content
+				}).success(function(data) {
+					$scope.searchResult = data.data;
+					console.log(data);
+				}).error(function(error) {
+					console.log(error);
+				})
+
+				$scope.searchFriendContent = '';
+			}
+			
 		}])
 
 })();

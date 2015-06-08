@@ -1,5 +1,5 @@
 <header>
-	<nav class="navbar navbar-default" ng-controller="NavbarController">
+	<nav class="navbar navbar-inverse" ng-controller="NavbarController">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" ng-click="isFolded=!isFolded">
@@ -13,12 +13,20 @@
 			<div class="navbar-collapse" ng-if="!isFolded" ng-click="toggleNavbar()">
 				<ul class="navbar-nav nav">
 					<li ng-class="{ active: isActive('/auth') }" ng-if="!isAuth"><a href="#/auth" >auth</a></li>
-					<li ng-class="{ active: isActive('/about') }" ><a href="#/about">about</a></li>
-					<li ng-class="{ active: isActive('/contact') }" ><a href="#/contact">contact</a></li>
+					<li ng-class="{ active: isActive('/search') }" ng-if="isAuth"><a href="#/search">search</a></li>
+					<li ng-class="{ active: isActive('/contact') }" ng-if="isAuth"><a href="#/contact">contact</a></li>
 					<li ng-class="{ active: isActive('/chatroom') }" ng-if="isAuth" ><a href="#/chatroom">chatroom</a></li>
 				</ul>
+				
 				<div class="navbar-right" ng-controller="LogoutController" >
 					<button class="btn btn-sm btn-danger navbar-btn" ng-click="logout()" ng-show="isAuth">logout</button>
+				</div>
+				<div class="navbar-right" ng-controller="UserInfoController">
+
+					<ul class="navbar-nav nav">
+						<li><a href=""><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>10</a></li>
+						<li><a href="">{{username}}</a></li>
+					</ul>
 				</div>
 			</div>
 		</div>

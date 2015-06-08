@@ -43,7 +43,7 @@ module.exports = function (app) {
 						res.send(flash('success','login success',{
 							username: user.username,
 							email: user.email,
-							message: user.message
+							signature: user.signature
 						}));
 					}
 				});
@@ -56,7 +56,7 @@ module.exports = function (app) {
 			username: req.body.username,
 			encryptedPassword: req.body.password,
 			email: req.body.email,
-			message: req.body.message
+			signature: req.body.signature
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -80,10 +80,29 @@ module.exports = function (app) {
 					res.send(flash('success','register success',{
 						username: user.username,
 						email: user.email,
-						message: user.message
+						signature: user.signature
 					}));
 				});
 			});
 		});
 	});
+
+	app.post('/search', function (req, res, next) {
+		var content = req.body.content;
+		var pattern = new RegExp('^.*' + content + '.*$')
+		User.find({ '$or' :[{ 'username' : pattern },{ 'email' : content }]}, function (err, users) {
+			if(err) return next(err);
+
+			// console.log(data);
+			res.send(flash('success','search success',users));
+		})
+
+	})
+
+
+
+
+
+
+
 }

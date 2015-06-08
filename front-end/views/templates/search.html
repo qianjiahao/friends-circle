@@ -1,0 +1,26 @@
+<div class="container" ng-controller="SearchFriendController">
+	<div class="jumbotron">
+		<div class="search-friend-title">
+			<span>Search Your Friend</span>
+		</div>
+		<div class="search-friend-bar">
+			<form>
+				
+				<input type="text" class="search-friend-input" ng-model="searchFriendContent" placeholder="Email or Nickname">
+				
+				<input type="submit" ng-disabled="!searchFriendContent" ng-click="search(searchFriendContent)" style="display: none;">
+			</form>
+		</div>
+	</div>
+	<table class="table table-hover table-bordered" ng-if="searchResult">
+		<tr class="search-result">
+			<td>#</td>
+			<td>nickname</td>
+			<td>signature</td>
+			<td>operation</td>
+		</tr>
+		<tr ng-repeat="sr in searchResult track by $index" class="search-result">
+			<td ng-bind="$index+1"></td><td ng-bind="sr.username"></td><td ng-bind="sr.signature"></td><td><button class="btn btn-sm btn-primary">apply for</button></td>
+		</tr>
+	</table>
+</div>

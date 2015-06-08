@@ -46,20 +46,25 @@
 				</div>
 				<div class="content">
 					<span class="user-name" ng-model="username" ng-bind="username"></span>
-					<p class="user-message" ng-model="message" ng-bind="message"></p>
+					<p class="user-signature" ng-model="signature" ng-bind="signature"></p>
 				</div>
 			</div>
 			<div class="panel" ng-controller="ChatController">
 				<div class="header">
 					{{room}}
+					<span>
+						<a href="" ng-click="isCreate=!isCreate">create</a>
+					</span>
 				</div>
 				<div class="content">
+					<div ng-show="isCreate" name="createRoomForm">
+						<input type="text" autocomplete="off" ng-model="createRoomContent">
+						<a href="" class="button button-input" ng-show="createRoomContent">create room</a>
+					</div>
 					<div>
 						<input type="text" autocomplete="off">
-						<a href="" class="button">create room</a>
+						<a href="">search</a>
 					</div>
-					<input type="text" autocomplete="off">
-					<a href="">search</a>
 				</div>
 			</div>
 		</div>
