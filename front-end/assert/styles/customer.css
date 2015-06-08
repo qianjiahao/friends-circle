@@ -172,10 +172,11 @@ input:-webkit-autofill {
 .chatroom-main{
 	width: 70%;
 	float: left;
+
 }
 
 .chat{
-	height: 400px;
+	height: 300px;
 	overflow: scroll;
 }
 .content{
@@ -186,6 +187,42 @@ input:-webkit-autofill {
 	border: 1px solid #e7e7e7;
 	background-color: #fff;
 }
+.chat-content{
+	clear: both;
+	width: 100%;
+	margin-bottom: 5px;
+	overflow: hidden;
+
+}
+
+.other{
+	float: left;
+}
+.self{
+	float: right;
+	text-align: right;
+
+}
+.chat-username{
+	font-weight: 600;
+	font-size: 16px;
+	display: inline-block;
+}
+.chat-date{
+	display: inline-block;
+	font-size: 14px;
+	padding-top: 2px;
+	margin:0 10px;
+
+}
+.chat-message{
+	width: 80%;
+	float: left;
+	font-size: 14px;
+	word-wrap:break-word;
+}
+
+
 .side{
 	width: 25%;
 	float: right;

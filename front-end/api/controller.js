@@ -122,6 +122,7 @@
 			if(AuthFactory.checkAuth('User')) {
 
 				$scope.message = [];
+				$scope.isSelf = false;
 
 				$scope.sendMessage = function(data) {
 					socket.emit('send message',{
@@ -133,6 +134,8 @@
 				}
 
 				socket.on('receive message', function (data) {
+					var isSelf = data.username === AuthFactory.getAuth('User').username ? true : false ;
+					data.isSelf = isSelf;
 					$scope.message.push(data);
 					console.log(data);
 				});
