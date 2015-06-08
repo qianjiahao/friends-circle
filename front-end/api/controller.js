@@ -1,7 +1,10 @@
 (function() {
 
 	app
-		.controller('NavbarController', ['$scope','$rootScope', '$location','$window', '$cookies', function ($scope, $rootScope, $location, $window, $cookies){
+		.controller('NavbarController', ['$scope','$rootScope', '$location','$window','AuthFactory', function ($scope, $rootScope, $location, $window, AuthFactory){
+
+			$rootScope.isAuth = AuthFactory.checkAuth('User');
+
 
 			/*
 				[isNeedFoldCurrent] : save the current the boolean if window need fold or not , 
@@ -44,10 +47,11 @@
 			     return active;
 			};
 
-			$rootScope.isAuth = $cookies.get('User') ? true : false;
 
 		}])
-		.controller('LoginController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
+		.controller('LoginController', ['$scope','$rootScope', '$location', 'AuthFactory', function ($scope, $rootScope, $location, AuthFactory){
+			AuthFactory.checkAuth('User');
+			AuthFactory.checkNotAuth('User');
 
 			$scope.toggleSignin = function () {
 				$rootScope.isSignin = !$rootScope.isSignin;
@@ -59,20 +63,21 @@
 					email: email, password: password
 				},function(data,status) {
 					// var expires = new Date();
-					    // expires.setDate(expires.getDate() + 15);
-					$cookies.putObject('User', data.data);
-					$rootScope.isAuth = $cookies.get('User') ? true : false;
-					console.log('cookies : ',$cookies.get('User'));
-					$location.path('/chatroom');
+				    // expires.setDate(expires.getDate() + 15);
+					
+					AuthFactory.setAuth('User',data.data);
+ 					$rootScope.isAuth = AuthFactory.getAuth('User');
+ 					$location.path('/chatroom')
 				},function(error,status) {
 					console.log(error,status);
 				});
 			}
 
-			$rootScope.isAuth = $cookies.get('User') ? true : false;
 		}])
-		.controller('SigninController', ['$scope','$rootScope','$location','$cookies','AuthFactory', function ($scope, $rootScope, $location, $cookies, AuthFactory){
-					
+		.controller('SigninController', ['$scope', '$rootScope', '$location', 'AuthFactory', function ($scope, $rootScope, $location, AuthFactory){
+			
+			AuthFactory.checkAuth('User');
+
 			$rootScope.isSignin = true;
 
 			$scope.$watchGroup(['signinPassword','signinConfiration'], function (newVal) {
@@ -89,53 +94,51 @@
 				},function (data, status) {
 					// var expires = new Date();
  				    // expires.setDate(expires.getDate() + 15);
-					$cookies.putObject('User', data.data);
-					$rootScope.isAuth = $cookies.get('User') ? true : false;
-					console.log('cookies : ',$cookies.get('User'));
+					
+					AuthFactory.setAuth('User',data.data);
+					$rootScope.isAuth = AuthFactory.getAuth('User');
 					$location.path('/chatroom');
 				},function (error, status) {
 					console.log(data,status);
 				});
 			}
 
-			$rootScope.isAuth = $cookies.get('User') ? true : false;
-
 		}])
-		.controller('LogoutController', ['$scope','$rootScope','$cookies', '$location', function ($scope, $rootScope, $cookies, $location){
+		.controller('LogoutController', ['$scope','$rootScope','AuthFactory', function ($scope, $rootScope, AuthFactory){
 			
 			$scope.logout = function () {
-				$cookies.remove('User');
-				$rootScope.isAuth = $cookies.get('User') ? true : false;
-				console.log('cookies : ',$cookies.get('User'));
-				$location.path('/auth');
+				AuthFactory.removeAuth('User');
+				$rootScope.isAuth = AuthFactory.checkAuth('User');
 			}
 		}])
-		.controller('UserInfoController',['$scope','$cookies',function ($scope, $cookies) {
-
-			var user =  $cookies.getObject('User');
+		.controller('UserInfoController',['$scope', 'AuthFactory',function ($scope, AuthFactory) {
+			var user = AuthFactory.getAuth('User');
 			if(user) {
 				$scope.username = user.username;
 				$scope.message = user.message;
 			}
 		}])
-		.controller('ChatController', ['$scope', '$cookies', 'socket', function ($scope, $cookies, socket) {
+		.controller('ChatController', ['$scope', 'socket', 'AuthFactory', function ($scope, socket, AuthFactory) {
+			if(AuthFactory.checkAuth('User')) {
 
-			$scope.message = [];
+				$scope.message = [];
 
-			$scope.sendMessage = function(data) {
-				socket.emit('send message',{
-					username: $cookies.getObject('User').username,
-					message: $scope.content,
-					date: moment().format('MM-DD HH:mm')
+				$scope.sendMessage = function(data) {
+					socket.emit('send message',{
+						username: AuthFactory.getAuth('User').username,
+						message: $scope.content,
+						date: moment().format('MM-DD HH:mm')
+					});
+					$scope.content = '';
+				}
+
+				socket.on('receive message', function (data) {
+					$scope.message.push(data);
+					console.log(data);
 				});
-				$scope.content = '';
 			}
-
-			socket.on('receive message', function (data) {
-				$scope.message.push(data);
-				console.log(data);
-			});
 
 		}])
 
 })();
+
