@@ -234,6 +234,7 @@ input:-webkit-autofill {
 	padding: 8px;
 	width: 19%;
 	border: none;
+	background-color: #fff;
 }
 /**
  * chatroom style

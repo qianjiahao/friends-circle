@@ -121,18 +121,16 @@
 		.controller('ChatController', ['$scope', '$cookies', 'socket', function ($scope, $cookies, socket) {
 
 			$scope.message = [];
-
+			
 			$scope.sendMessage = function(message) {
-				console.log('send' + message);
-				socket.emit('send message', message);
+				socket.emit('send message',$cookies.getObject('User').username, message);
+				$scope.content = '';
 			}
 
-			socket.on('receive message',function (message) {
-				console.log('User nickname : ' +  $cookies.getObject('User').username +  'send message ' + message);
+			socket.on('receive message', function (nickname, message) {
 				$scope.message.push({
-					nickname: $cookies.getObject('User').username, message: message
+					nickname: nickname, message: message
 				});
-				$scope.$apply();
 			});
 
 		}])

@@ -20,9 +20,9 @@ http.listen(port,function(){
 io.on('connection',function (socket) {
 	console.log('Welcome on : ', socket.id);
 
-	socket.on('send message',function (message) {
-		console.log('User ' + socket.id +  'send message ' + message);
-		io.emit('receive message', message);
+	socket.on('send message',function (nickname, message) {
+		console.log('User ' + socket.id  + ', nickname : ' + nickname + ', send message :' + message);
+		io.emit('receive message',nickname, message);
 	});
 
 	socket.on('disconnect',function() {
