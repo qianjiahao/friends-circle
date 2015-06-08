@@ -6,10 +6,19 @@
 
 #Usage
 
+clone & enter
+
     git clone git@github.com:qianjiahao/friends-circle.git
     cd friends-circle
+start node server
+
     cd back-end && node application.js
+start front end server
+
     cd .. && http-server .
+open brwser
+
+    http://localhost:8080/front-end/views/layout.html
 
 #Description
   
