@@ -1,17 +1,33 @@
 <div class="container">
 	
-	<h1>chatroom</h1>
 	<div class="chatroom-wrapper">
 		<div class="chatroom-main" ng-controller="ChatController">
 			<form name="chatroom">
 				<div class="header">
-					Room Number : xx xxx 
+					Room : {{room}}
 				</div>
 				<div class="content chat">
-					<div class="chat-content" ng-repeat="m in message">
-						<span class="chat-username" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.username}}</span>
-						<span class="chat-date" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.date}}</span>
+					<!-- <div class="chat-content" ng-repeat="m in message">
+						<span class="chat-username" ng-class="{true : 'self-username',false : 'other-username'}[m.isSelf]">{{m.username}}<br/></span>
+						<span class="chat-date" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.date}}<br/></span>
 						<div class="chat-message" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.message}}</div>
+					</div> -->
+					<div class="chat-content" ng-model="message" ng-repeat="m in message">
+						<div class="chat-username" ng-class="{true : 'self',false : 'other'}[m.isSelf]">
+							<span>
+								{{m.username}}
+							</span>
+						</div>
+						<div class="chat-date" ng-class="{true : 'self',false : 'other'}[m.isSelf]">
+							<span >
+								{{m.date}}
+							</span>
+						</div>
+						<div class="chat-message">
+							<p>
+								{{m.message}}
+							</p>
+						</div>
 					</div>
 				</div>
 				<div class="operator">
@@ -31,6 +47,19 @@
 				<div class="content">
 					<span class="user-name" ng-model="username" ng-bind="username"></span>
 					<p class="user-message" ng-model="message" ng-bind="message"></p>
+				</div>
+			</div>
+			<div class="panel" ng-controller="ChatController">
+				<div class="header">
+					{{room}}
+				</div>
+				<div class="content">
+					<div>
+						<input type="text" autocomplete="off">
+						<a href="" class="button">create room</a>
+					</div>
+					<input type="text" autocomplete="off">
+					<a href="">search</a>
 				</div>
 			</div>
 		</div>

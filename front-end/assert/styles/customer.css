@@ -176,7 +176,7 @@ input:-webkit-autofill {
 }
 
 .chat{
-	height: 300px;
+	height: 400px;
 	overflow: scroll;
 }
 .content{
@@ -194,33 +194,69 @@ input:-webkit-autofill {
 	overflow: hidden;
 
 }
+.chat-content{
+	overflow: hidden;
+	width: 100%;
+}
+.chat-username{
+	font-weight: 500;
+	font-size: 18px;
+}
+.chat-date{
 
-.other{
-	float: left;
+}
+.chat-message{
+	width: 90%;
+	margin: 0 auto;
+	word-wrap:break-word;
+	background-color: rgba(97,178,167,0.15);
+	border-radius: 3px;
+	padding: 5px;
+}
+.chat-message p{
+	margin: 0;
 }
 .self{
-	float: right;
-	text-align: right;
+	text-align: right;	
+}
+.other{
+	text-align: left;
+}
 
+/*.other-username{
+	float: left;
+}
+.self-username{
+	float: right;
+	padding-left: 20px;
+}
+.self{
+	text-align: right;
+}
+.other{
+	text-align: left;
 }
 .chat-username{
 	font-weight: 600;
 	font-size: 16px;
-	display: inline-block;
+	display: block;
+	clear: both;
 }
 .chat-date{
-	display: inline-block;
+	display: block;
 	font-size: 14px;
 	padding-top: 2px;
 	margin:0 10px;
+	text-indent: 20px;
 
 }
 .chat-message{
-	width: 80%;
-	float: left;
+	width: 90%;
 	font-size: 14px;
 	word-wrap:break-word;
-}
+	text-indent: 40px;
+
+}*/
 
 
 .side{
