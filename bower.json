@@ -11,7 +11,7 @@
     "angular-bootstrap": "~0.13.0",
     "angular-ui-router": "~0.2.15",
     "angular-cookies": "~1.4.0",
-    "socket.io": "~1.3.5",
-    "angular-socket-io": "~0.7.0"
+    "angular-socket-io": "~0.7.0",
+    "moment": "~2.10.3"
   }
 }

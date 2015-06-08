@@ -176,6 +176,7 @@ input:-webkit-autofill {
 
 .chat{
 	height: 400px;
+	overflow: scroll;
 }
 .content{
 	-moz-box-sizing:border-box;

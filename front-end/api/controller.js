@@ -121,16 +121,19 @@
 		.controller('ChatController', ['$scope', '$cookies', 'socket', function ($scope, $cookies, socket) {
 
 			$scope.message = [];
-			
-			$scope.sendMessage = function(message) {
-				socket.emit('send message',$cookies.getObject('User').username, message);
+
+			$scope.sendMessage = function(data) {
+				socket.emit('send message',{
+					username: $cookies.getObject('User').username,
+					message: $scope.content,
+					date: moment().format('MM-DD HH:mm')
+				});
 				$scope.content = '';
 			}
 
-			socket.on('receive message', function (nickname, message) {
-				$scope.message.push({
-					nickname: nickname, message: message
-				});
+			socket.on('receive message', function (data) {
+				$scope.message.push(data);
+				console.log(data);
 			});
 
 		}])

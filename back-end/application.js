@@ -20,10 +20,16 @@ http.listen(port,function(){
 io.on('connection',function (socket) {
 	console.log('Welcome on : ', socket.id);
 
-	socket.on('send message',function (nickname, message) {
-		console.log('User ' + socket.id  + ', nickname : ' + nickname + ', send message :' + message);
-		io.emit('receive message',nickname, message);
+	var room = [];
+
+	socket.on('send message',function (data) {
+		console.log('User ' + socket.id  + ', nickname : ' + data.username + ', send message :' + data.message + ', date : ' + data.date);
+		io.emit('receive message',data);
 	});
+
+
+
+
 
 	socket.on('disconnect',function() {
 		console.log('Goodbye : ', socket.id);
