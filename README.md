@@ -1,5 +1,5 @@
 # friends-circle
 
-##bug aggregation
+##key point aggregation
 
-1.[ng-if & ng-click] ng-if may cause ng-click doesn't work , change ng-if to ng-show will fix it.
+1.[ng-if] ng-if will create a new scope , if your use the same variable to toggle something , it will doesn't work , one of way is use $parent.xxx to keep the same scope , i use anthor way to fix it .

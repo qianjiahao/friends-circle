@@ -2,22 +2,22 @@
 	
 	<h1>chatroom</h1>
 	<div class="chatroom-wrapper">
-		<div class="chatroom-main">
-			<div>
+		<div class="chatroom-main" ng-controller="ChatController">
+			<form name="chatroom">
 				<div class="header">
 					Room Number : xx xxx 
 				</div>
 				<div class="content chat">
-					内容区域
+					{{message}}
 				</div>
 				<div class="operator">
-					<input type="text" class="input-area" placeholder="input something ... ">
+					<input type="text" class="input-area" placeholder="input something ... " ng-bind="content" ng-model="content" name="content">
 					<div class="chatroom-group">
-						<a href="" class="button lightseagreen button-chat" id="submit">submit</a>
+						<a href="" class="button lightseagreen button-chat" ng-click="sendMessage(content)" ng-disabled="chatroom.content.$valid">submit</a>
 						<a href="" class="button button-chat orangered">reset</a>
 					</div>
 				</div>
-			</div>	
+			</form>	
 		</div>
 		<div class="side">
 			<div class="panel" ng-controller="UserInfoController">

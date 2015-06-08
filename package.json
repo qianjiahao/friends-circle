@@ -20,8 +20,6 @@
   },
   "homepage": "https://github.com/qianjiahao/friends-circle",
   "dependencies": {
-    "angular": "^1.4.0",
-    "angular-ui-router": "^0.2.15",
     "bcrypt": "^0.8.3",
     "express": "^4.12.4",
     "gulp": "^3.9.0",

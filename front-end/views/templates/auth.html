@@ -84,7 +84,7 @@
 					<ul class="signin-list">
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.email.$dirty && signinForm.email.$invalid]">
 							<span class="signin-group">
-								<span class="glyphicon glyphicon-user icon" aira-hidden="true"></span>
+								<span class="glyphicon glyphicon-envelope icon" aira-hidden="true"></span>
 								<input type="email" placeholder="Email" name="email" ng-model="signinEmail" required="" autocomplete="off">
 								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.required">email required</span>
 								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.email">email type error</span>
@@ -96,7 +96,7 @@
 						</li>
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.message.$dirty && signinForm.message.$invalid]">
 							<span class="signin-group">
-								<span class="glyphicon glyphicon-user icon" aira-hidden="true"></span>
+								<span class="glyphicon glyphicon-book icon" aira-hidden="true"></span>
 								<input type="text" placeholder="Message" ng-maxlength="40" name="message" ng-model="signinMessage" required="" autocomplete="off">
 								
 								<span class="error-message" ng-show="signinForm.message.$dirty && signinForm.username.$error.maxlength">message too length</span>
@@ -107,7 +107,7 @@
 							</span>
 						</li>
 						<li class="button-group">
-							<input type="submit" class="button lightseagreen button-input"  value="signin" ng-disabled="loginForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)">
+							<input type="submit" class="button lightseagreen button-input"  value="signin" ng-disabled="signinForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)">
 							<input type="reset" class="button lightcoral button-input" value="reset">	
 						</li>
 					</ul>					

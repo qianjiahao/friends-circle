@@ -118,5 +118,23 @@
 				$scope.message = user.message;
 			}
 		}])
+		.controller('ChatController', ['$scope', '$cookies', 'socket', function ($scope, $cookies, socket) {
+
+			$scope.message = [];
+
+			$scope.sendMessage = function(message) {
+				console.log('send' + message);
+				socket.emit('send message', message);
+			}
+
+			socket.on('receive message',function (message) {
+				console.log('User nickname : ' +  $cookies.getObject('User').username +  'send message ' + message);
+				$scope.message.push({
+					nickname: $cookies.getObject('User').username, message: message
+				});
+				$scope.$apply();
+			});
+
+		}])
 
 })();
