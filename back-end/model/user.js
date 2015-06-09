@@ -6,6 +6,7 @@ var UesrSchema = new Schema({
 	encryptedPassword: String,
 	email: String,
 	signature: String,
+	hints: Number,
 	friends: Array
 });
 

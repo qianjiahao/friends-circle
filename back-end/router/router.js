@@ -56,7 +56,8 @@ module.exports = function (app) {
 			username: req.body.username,
 			encryptedPassword: req.body.password,
 			email: req.body.email,
-			signature: req.body.signature
+			signature: req.body.signature,
+			hints: 0
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -99,21 +100,39 @@ module.exports = function (app) {
 		});
 	});
 
-	app.post('/hint', function (req, res, next) {
+	app.post('/hints', function (req, res, next) {
 		var hint = new Hint({
 			targetId:req.body.targetId,
 			hintType: req.body.hintType,
 			hintContent: req.body.hintContent,
 			senderId: req.body.senderId
 		});
-		console.log(hint);
 		Hint.create(hint, function (err, hint) {
 			if(err) return next(err);
 
-			res.send(flash('success','create hint success',hint));
+			User.findOne({ '_id': req.body.targetId }, function (err, user) {
+				if(err) return next(err);
 
-		})
-	})
+				user.update({ '$inc': { hints : 1} }, function (err) {
+					if(err) return next(err);
+
+					res.send({
+						targetId:req.body.targetId
+					})
+				});
+			});
+		});
+	});
+
+	app.get('/hintsCount', function (req, res, next) {
+		User.findOne({ '_id' : req.query.id}, function (err, user) {
+			if(err) return next(err);
+
+			res.send({
+				count: user.hints
+			});
+		});
+	});
 
 
 

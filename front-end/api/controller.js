@@ -152,7 +152,7 @@
 				$rootScope.username = null;
 			}
 		}])
-		.controller('UserInfoController',['$scope', '$rootScope', 'AuthFactory','socket' ,function ($scope, $rootScope, AuthFactory, socket) {
+		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory','socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
 			
 			/*
 				[username] , [signature] show username and user signature .
@@ -165,18 +165,26 @@
 			/*
 				[isHint] flag there is hint or not .	
 			 */
-			$scope.isHint = false;
-			$scope.hintCount = 0;
+			// $scope.isHint = false;
+			// $scope.hintCount = 0;
 			/*
 				subscribe the hint by socket.io .
 			 */
-			socket.on('hint',function (id) {
+			socket.on('receive hint',function (id) {
 				if(AuthFactory.getAuth('User').id === id) {
-					$scope.isHint = true;
-					$scope.hintCount ++ ;
+					getHintCount();
 				}
-			})
+			});
 
+			function getHintCount(){
+				$http.get('http://localhost:3000/hintsCount?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+					$scope.hintCount = data.count;
+					$scope.isHint = $scope.hintCount ? true : false ;
+				}).error(function (error) {
+					console.log(error);
+				});
+			}
+			getHintCount();
 
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
@@ -208,13 +216,12 @@
 					{receive message} receive message from server .
 				 */
 				socket.on('receive message', function (data) {
-					var isSelf = data.username === AuthFactory.getAuth('User').username ? true : false ;
-					data.isSelf = isSelf;
-					$scope.message.push(data);
+					$scope.message.push({
+						data.isSelf:data.username === AuthFactory.getAuth('User').username ? true : false
+					});
 					var len = $scope.message.length;
 					if(len >= 100) {
 						$scope.message = $scope.message.slice(len/4);
-
 					}
 				});
 
@@ -265,14 +272,13 @@
 			
 			$scope.isApply = false;
 			$scope.applyFor = function(id,hintContent){
-				 $http.post('http://localhost:3000/hint', {
+				 $http.post('http://localhost:3000/hints', {
 				 	targetId: id,
 				 	hintType: 'apply for',
 				 	hintContent: hintContent,
 				 	senderId: AuthFactory.getAuth('User').id
 				 }).success(function (data) {
-				 	console.log(data.data)
-				 	socket.emit('hint',data.data.targetId);
+				 	socket.emit('send hint',data.targetId);
 				 }).error(function (error) {
 				 	console.log(error);
 				 });
@@ -280,9 +286,6 @@
 				 this.isApply = true;
 				 this.applyContent = '';
 			}
-
-			
 		}])
-		
 })();
 
