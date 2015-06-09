@@ -27,8 +27,8 @@ io.on('connection',function (socket) {
 		io.emit('receive message',data);
 	});
 
-	socket.on('send hint',function(id) {
-		io.emit('receive hint',id);
+	socket.on('send hint',function(data) {
+		io.emit('receive hint',data);
 	})
 
 

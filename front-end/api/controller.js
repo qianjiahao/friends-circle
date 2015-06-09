@@ -161,6 +161,8 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
+				getHintCount();
+
 			}
 			/*
 				[isHint] flag there is hint or not .	
@@ -170,21 +172,21 @@
 			/*
 				subscribe the hint by socket.io .
 			 */
-			socket.on('receive hint',function (id) {
-				if(AuthFactory.getAuth('User').id === id) {
+			socket.on('receive hint',function (data) {
+				if(AuthFactory.getAuth('User').id === data.targetId) {
 					getHintCount();
 				}
 			});
 
 			function getHintCount(){
 				$http.get('http://localhost:3000/hintsCount?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-					$scope.hintCount = data.count;
+					$scope.hintCount = data.hints.length;
 					$scope.isHint = $scope.hintCount ? true : false ;
 				}).error(function (error) {
 					console.log(error);
 				});
 			}
-			getHintCount();
+
 
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
@@ -216,9 +218,8 @@
 					{receive message} receive message from server .
 				 */
 				socket.on('receive message', function (data) {
-					$scope.message.push({
-						data.isSelf:data.username === AuthFactory.getAuth('User').username ? true : false
-					});
+					data.isSelf = data.username === AuthFactory.getAuth('User').username ? true : false ;
+					$scope.message.push(data);
 					var len = $scope.message.length;
 					if(len >= 100) {
 						$scope.message = $scope.message.slice(len/4);
@@ -278,7 +279,7 @@
 				 	hintContent: hintContent,
 				 	senderId: AuthFactory.getAuth('User').id
 				 }).success(function (data) {
-				 	socket.emit('send hint',data.targetId);
+				 	socket.emit('send hint',data);
 				 }).error(function (error) {
 				 	console.log(error);
 				 });

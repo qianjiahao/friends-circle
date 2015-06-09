@@ -57,7 +57,7 @@ module.exports = function (app) {
 			encryptedPassword: req.body.password,
 			email: req.body.email,
 			signature: req.body.signature,
-			hints: 0
+			hints: []
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -113,12 +113,14 @@ module.exports = function (app) {
 			User.findOne({ '_id': req.body.targetId }, function (err, user) {
 				if(err) return next(err);
 
-				user.update({ '$inc': { hints : 1} }, function (err) {
+				user.hints.push(hint._id);
+				user.save(function (err) {
 					if(err) return next(err);
 
 					res.send({
-						targetId:req.body.targetId
-					})
+						targetId: req.body.targetId,
+						hints: user.hints
+					});
 				});
 			});
 		});
@@ -129,7 +131,7 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			res.send({
-				count: user.hints
+				hints: user.hints
 			});
 		});
 	});
