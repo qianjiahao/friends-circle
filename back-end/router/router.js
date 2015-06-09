@@ -30,7 +30,7 @@ module.exports = function (app) {
 				if(err) return next(err);
 
 				if(!user) {
-					res.send(flash('error','user not exist',null));
+					res.send(flash('error','user not exist',temp));
 				}
 				bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
 					if(err) return next(err);
@@ -90,10 +90,11 @@ module.exports = function (app) {
 	app.post('/search', function (req, res, next) {
 		var content = req.body.content;
 		var pattern = new RegExp('^.*' + content + '.*$')
-		User.find({ '$or' :[{ 'username' : pattern },{ 'email' : content }]}, function (err, users) {
+		User.find({ '$or' :[{ 'username' : pattern },{ 'email' : content }]},{
+			'_id': 1, 'username': 1, 'signature': 1
+		}, function (err, users) {
 			if(err) return next(err);
 
-			// console.log(data);
 			res.send(flash('success','search success',users));
 		})
 

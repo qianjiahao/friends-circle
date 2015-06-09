@@ -33,7 +33,7 @@
 						</div>
 					</li>
 					<li class="button-group">
-						<input type="submit" class="button lightseagreen button-input"  value="login" ng-disabled="loginForm.$invalid" ng-click="login(loginEmail,loginPassword)">
+						<input type="submit" class="button lightseagreen button-input"  value="login" ng-disabled="loginForm.$invalid" ng-click="login()">
 						<input type="button" class="button lightcoral button-input" ng-click="toggleSignin()" value="signin">	
 					</li>
 				</ul>
@@ -97,8 +97,7 @@
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.message.$dirty && signinForm.message.$invalid]">
 							<span class="signin-group">
 								<span class="glyphicon glyphicon-book icon" aira-hidden="true"></span>
-								<input type="text" placeholder="Message" ng-maxlength="40" name="message" ng-model="signinMessage" required="" autocomplete="off">
-								
+								<input type="text" placeholder="Message" ng-maxlength="40" name="message" ng-model="signinSignature" required="" autocomplete="off">
 								<span class="error-message" ng-show="signinForm.message.$dirty && signinForm.username.$error.maxlength">message too length</span>
 							</span>
 							<span class="icon-group">

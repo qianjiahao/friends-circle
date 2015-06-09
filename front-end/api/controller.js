@@ -68,15 +68,23 @@
 			/*
 				{login} login the system .
 			 */
-			$scope.login = function (email, password) {
+			$scope.login = function () {
 
 				AuthFactory.login({
-					email: email, password: password
+					email: $scope.loginEmail, password: $scope.loginPassword
 				},function(data,status) {
-					AuthFactory.setAuth('User',data.data);
- 					$rootScope.isAuth = AuthFactory.checkAuth('User');
- 					$rootScope.username = AuthFactory.getAuth('User');
- 					$location.path('/chatroom')
+					if(data.status === 'error') {
+						$location.path('/auth');
+						$scope.loginEmail = data.data.email;
+						$scope.loginPassword = data.data.password;
+						console.log(data.message);
+					}else{
+						AuthFactory.setAuth('User',data.data);
+	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
+	 					$rootScope.username = AuthFactory.getAuth('User');
+	 					$location.path('/chatroom');
+	 					console.log(data.message)
+					}
 				},function(error,status) {
 					console.log(error,status);
 				});
@@ -105,18 +113,28 @@
 			/*
 				{signin} sign in the system .
 			 */
-			$scope.signin = function (username, password, confiration, email, signature) {
+			$scope.signin = function () {
 
 				AuthFactory.signin({
-					username: username,
-					password: password,
-					email: email,
-					signature: signature
+					username: $scope.signinUsername,
+					password: $scope.signinPassword,
+					email: $scope.signinEmail,
+					signature: $scope.signinSignature
 				},function (data, status) {
-					AuthFactory.setAuth('User',data.data);
-					$rootScope.isAuth = AuthFactory.checkAuth('User');
-					$rootScope.username = AuthFactory.getAuth('User');
-					$location.path('/chatroom');
+					if(data.status === 'error') {
+						$location.path('/auth');
+						$scope.signinUsername = data.data.username;
+						$scope.signinPassword = data.data.password;
+						$scope.signinEmail = data.data.email;
+						$scope.signinSignature = data.data.signature;
+						console.log(data.message);
+					}else{
+						AuthFactory.setAuth('User',data.data);
+						$rootScope.isAuth = AuthFactory.checkAuth('User');
+						$rootScope.username = AuthFactory.getAuth('User');
+						$location.path('/chatroom');
+						console.log(data.message);
+					}
 				},function (error, status) {
 					console.log(data,status);
 				});
@@ -199,19 +217,28 @@
 		}])
 		.controller('SearchFriendController', ['$scope', '$http', function ($scope, $http) {
 			$scope.searchFriendContent = '';
-
+			$scope.noSearchResult = false;
 			$scope.search = function() {
-				var content = $scope.searchFriendContent;
+				$scope.searchResult = null;
 				$http.post('http://localhost:3000/search',{
-					content:content
+					content:$scope.searchFriendContent
 				}).success(function(data) {
-					$scope.searchResult = data.data;
-					console.log(data);
+					if(data.data && data.data.length) {
+						$scope.searchResult = data.data;
+						$scope.noSearchResult = false;
+						console.log(data);
+					}else{
+						$scope.searchResult = null;
+						$scope.noSearchResult = true;
+					}
 				}).error(function(error) {
 					console.log(error);
 				})
-
 				$scope.searchFriendContent = '';
+			}
+
+			$scope.applyFor = function(){
+				
 			}
 			
 		}])

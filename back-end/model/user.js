@@ -5,7 +5,8 @@ var UesrSchema = new Schema({
 	username: String,
 	encryptedPassword: String,
 	email: String,
-	signature: String
+	signature: String,
+	friends: Array
 });
 
 var User = mongoose.model('User',UesrSchema);
