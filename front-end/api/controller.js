@@ -52,7 +52,7 @@
 
 
 		}])
-		.controller('LoginController', ['$scope','$rootScope', '$location', 'AuthFactory', function ($scope, $rootScope, $location, AuthFactory){
+		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', function ($scope, $rootScope, $location, $http, AuthFactory){
 			/*
 				check not authentication .
 			 */
@@ -81,7 +81,13 @@
 					}else{
 						AuthFactory.setAuth('User',data.data);
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
-	 					$rootScope.username = AuthFactory.getAuth('User');
+	 					$rootScope.username = AuthFactory.getAuth('User').username;
+	 					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+							$rootScope.hintsCount = data.count;
+							$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+						}).error(function (error) {
+							console.log(error);
+						});
 	 					$location.path('/chatroom');
 	 					console.log(data)
 					}
@@ -141,7 +147,7 @@
 			}
 
 		}])
-		.controller('LogoutController', ['$scope','$rootScope','AuthFactory', function ($scope, $rootScope, AuthFactory){
+		.controller('LogoutController', ['$scope','$rootScope','AuthFactory','socket', function ($scope, $rootScope, AuthFactory, socket){
 			
 			/*
 				{logout} logout the system .
@@ -150,6 +156,8 @@
 				AuthFactory.removeAuth('User');
 				$rootScope.isAuth = AuthFactory.checkAuth('User');
 				$rootScope.username = null;
+				$rootScope.hintsCount = 0;
+				$rootScope.isHint = false;
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory','socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
@@ -161,7 +169,7 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
-				getHintCount();
+				getHintsCount();
 
 			}
 			/*
@@ -174,14 +182,14 @@
 			 */
 			socket.on('receive hint',function (data) {
 				if(AuthFactory.getAuth('User').id === data.targetId) {
-					getHintCount();
+					getHintsCount();
 				}
 			});
 
-			function getHintCount(){
-				$http.get('http://localhost:3000/hintsCount?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-					$scope.hintCount = data.hints.length;
-					$scope.isHint = $scope.hintCount ? true : false ;
+			function getHintsCount(){
+				$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+					$rootScope.hintsCount = data.count;
+					$rootScope.isHint = $rootScope.hintsCount ? true : false ;
 				}).error(function (error) {
 					console.log(error);
 				});

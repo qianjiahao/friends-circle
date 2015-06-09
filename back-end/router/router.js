@@ -126,12 +126,12 @@ module.exports = function (app) {
 		});
 	});
 
-	app.get('/hintsCount', function (req, res, next) {
+	app.get('/hints/count', function (req, res, next) {
 		User.findOne({ '_id' : req.query.id}, function (err, user) {
 			if(err) return next(err);
 
 			res.send({
-				hints: user.hints
+				count: user.hints.length
 			});
 		});
 	});

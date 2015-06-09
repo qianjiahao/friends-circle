@@ -31,6 +31,7 @@ io.on('connection',function (socket) {
 		io.emit('receive hint',data);
 	})
 
+	io.emit('reload hint');
 
 
 	socket.on('disconnect',function() {
