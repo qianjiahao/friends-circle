@@ -1,4 +1,5 @@
 var User = require('../model/user.js');
+var Hint = require('../model/hint.js');
 var bcrypt = require('bcrypt');
 var flash = require('../util/flash.js');
 
@@ -39,13 +40,12 @@ module.exports = function (app) {
 						res.send(flash('error','password not match',temp));
 						return ;
 					}
-					if(valid) {
-						res.send(flash('success','login success',{
-							username: user.username,
-							email: user.email,
-							signature: user.signature
-						}));
-					}
+					res.send(flash('success','login success',{
+						username: user.username,
+						email: user.email,
+						signature: user.signature,
+						id: user._id
+					}));
 				});
 			});
 		});
@@ -76,11 +76,11 @@ module.exports = function (app) {
 				User.create(user,function (err, user) {
 					if(err) return next(err);
 
-					console.log(user);
 					res.send(flash('success','register success',{
 						username: user.username,
 						email: user.email,
-						signature: user.signature
+						signature: user.signature,
+						id: user._id
 					}));
 				});
 			});
@@ -96,9 +96,25 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			res.send(flash('success','search success',users));
-		})
+		});
+	});
 
+	app.post('/hint', function (req, res, next) {
+		var hint = new Hint({
+			targetId:req.body.targetId,
+			hintType: req.body.hintType,
+			hintContent: req.body.hintContent,
+			senderId: req.body.senderId
+		});
+		console.log(hint);
+		Hint.create(hint, function (err, hint) {
+			if(err) return next(err);
+
+			res.send(flash('success','create hint success',hint));
+
+		})
 	})
+
 
 
 

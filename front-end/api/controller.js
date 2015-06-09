@@ -83,7 +83,7 @@
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User');
 	 					$location.path('/chatroom');
-	 					console.log(data.message)
+	 					console.log(data)
 					}
 				},function(error,status) {
 					console.log(error,status);
@@ -133,7 +133,7 @@
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
 						$rootScope.username = AuthFactory.getAuth('User');
 						$location.path('/chatroom');
-						console.log(data.message);
+						console.log(data);
 					}
 				},function (error, status) {
 					console.log(data,status);
@@ -152,7 +152,7 @@
 				$rootScope.username = null;
 			}
 		}])
-		.controller('UserInfoController',['$scope', '$rootScope', 'AuthFactory',function ($scope, $rootScope, AuthFactory) {
+		.controller('UserInfoController',['$scope', '$rootScope', 'AuthFactory','socket' ,function ($scope, $rootScope, AuthFactory, socket) {
 			
 			/*
 				[username] , [signature] show username and user signature .
@@ -162,6 +162,20 @@
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
 			}
+			/*
+				[isHint] flag there is hint or not .	
+			 */
+			$scope.isHint = false;
+			$scope.hintCount = 0;
+			/*
+				subscribe the hint by socket.io .
+			 */
+			socket.on('hint',function (id) {
+				if(AuthFactory.getAuth('User').id === id) {
+					$scope.isHint = true;
+					$scope.hintCount ++ ;
+				}
+			})
 
 
 		}])
@@ -208,16 +222,25 @@
 
 				$scope.createRoom = function(){
 
-					$http.post('http://localhost:3000/createRoom',{
-
-					})
 				}
 			}
 
 		}])
-		.controller('SearchFriendController', ['$scope', '$http', function ($scope, $http) {
+		.controller('SearchFriendController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket) {
+			
+			/*
+				[searchFriendContent] search bar content .
+			 */
 			$scope.searchFriendContent = '';
+
+			/*
+				[noSearchResult] flag no search result .
+			 */
 			$scope.noSearchResult = false;
+
+			/*
+				{search} search friends by email or nickname .
+			 */
 			$scope.search = function() {
 				$scope.searchResult = null;
 				$http.post('http://localhost:3000/search',{
@@ -226,7 +249,6 @@
 					if(data.data && data.data.length) {
 						$scope.searchResult = data.data;
 						$scope.noSearchResult = false;
-						console.log(data);
 					}else{
 						$scope.searchResult = null;
 						$scope.noSearchResult = true;
@@ -237,8 +259,21 @@
 				$scope.searchFriendContent = '';
 			}
 
-			$scope.applyFor = function(){
-				
+			/*
+				{applyFor} apply for other people to be friend .
+			 */
+			$scope.applyFor = function(id){
+
+				 $http.post('http://localhost:3000/hint', {
+				 	targetId: id,
+				 	hintType: 'apply for',
+				 	hintContent: '',
+				 	senderId: AuthFactory.getAuth('User').id
+				 }).success(function (data) {
+				 	socket.emit('hint',data.data.targetId);
+				 }).error(function (error) {
+				 	console.log(error);
+				});
 			}
 			
 		}])

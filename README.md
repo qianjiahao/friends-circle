@@ -10,6 +10,10 @@ clone & enter
 
     git clone git@github.com:qianjiahao/friends-circle.git
     cd friends-circle
+
+install dependencies
+
+	bower install && npm install
     
 start node server
 
@@ -27,6 +31,8 @@ open brwser
   
     login & signin
     realtime chatroom
+    search friends
+    information hint : pub/sub
     to be continue ...
 
 if you like it , don't forget to star ~ thanks a lot .

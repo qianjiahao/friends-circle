@@ -50,7 +50,9 @@ input:-webkit-autofill {
 	border-bottom: 1px solid orangered;
 }
 
-
+.hint{
+	color:orangered;
+}
 /**
  *  login style 
  */

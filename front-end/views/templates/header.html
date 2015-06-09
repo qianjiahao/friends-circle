@@ -24,7 +24,7 @@
 				<div class="navbar-right" ng-controller="UserInfoController">
 
 					<ul class="navbar-nav nav">
-						<li><a href=""><span class="glyphicon glyphicon-flag" aria-hidden="true"></span>10</a></li>
+						<li><a href=""><span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[isHint]"><i ng-bind="hintCount" ng-show="hintCount!=0"></i></span></a></li>
 						<li><a href="">{{username}}</a></li>
 					</ul>
 				</div>
