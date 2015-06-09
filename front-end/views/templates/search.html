@@ -17,13 +17,16 @@
 			<td>#</td>
 			<td>nickname</td>
 			<td>signature</td>
+			<td>apply content</td>
 			<td>operation</td>
 		</tr>
 		<tr ng-repeat="sr in searchResult track by $index" class="search-result">
 			<td ng-bind="$index+1"></td>
 			<td ng-bind="sr.username"></td>
 			<td ng-bind="sr.signature"></td>
-			<td><button class="btn btn-sm btn-primary" ng-click="applyFor(sr._id)">apply for</button></td>
+			<td><input type="text" ng-model="applyContent" class="apply-content" placeholder="fill your apply content"></td>
+			<td><a class="btn btn-sm btn-primary" ng-click="applyFor(sr._id,applyContent)" ng-disabled="isApply">apply for</a></td>
+
 		</tr>
 	</table>
 	<div ng-if="noSearchResult" style="text-align: center;">

@@ -262,21 +262,27 @@
 			/*
 				{applyFor} apply for other people to be friend .
 			 */
-			$scope.applyFor = function(id){
-
+			
+			$scope.isApply = false;
+			$scope.applyFor = function(id,hintContent){
 				 $http.post('http://localhost:3000/hint', {
 				 	targetId: id,
 				 	hintType: 'apply for',
-				 	hintContent: '',
+				 	hintContent: hintContent,
 				 	senderId: AuthFactory.getAuth('User').id
 				 }).success(function (data) {
+				 	console.log(data.data)
 				 	socket.emit('hint',data.data.targetId);
 				 }).error(function (error) {
 				 	console.log(error);
-				});
+				 });
+
+				 this.isApply = true;
+				 this.applyContent = '';
 			}
+
 			
 		}])
-
+		
 })();
 
