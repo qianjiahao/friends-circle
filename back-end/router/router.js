@@ -110,32 +110,6 @@ module.exports = function (app) {
 			date: moment().format('MMMM Do YYYY, h:mm:ss a'),
 			mark: false
 		});
-		// Hint.create(hint)
-		// 	.exec(function (err, hint) {
-		// 		if(err) return next(err);
-
-		// 		User.findOne()
-		// 			.where('_id')
-		// 			.equals(req.body.targetId)
-		// 			.exec(function (err, user) {
-		// 				if(err) return next(err);
-
-		// 				user.hints.push(hint._id);
-		// 				user.save()
-		// 					.exec(function (err) {
-		// 						if(err) return next(err);
-
-		// 						res.send({
-		// 							targetId: req.body.targetId,
-		// 							hints: user.hints
-		// 						});
-		// 					})
-		// 			})
-		// 	})
-
-
-
-
 		Hint.create(hint, function (err, hint) {
 			if(err) return next(err);
 
@@ -153,6 +127,10 @@ module.exports = function (app) {
 				});
 			});
 		});
+
+
+
+
 	});
 
 	app.get('/hints/all', function (req, res, next) {
@@ -170,7 +148,7 @@ module.exports = function (app) {
 		})
 	});
 
-	app.get('/hints/unmark', function (req, res, next) {
+	app.get('/hints/unmarked', function (req, res, next) {
 		User.findOne()
 			.where('_id')
 			.equals(req.query.id)
@@ -182,6 +160,18 @@ module.exports = function (app) {
 					hints: user.hints
 				})
 		})
+	});
+
+	app.post('/hint/unmarked', function (req, res, next) {
+		Hint.findOne({'_id': req.body._id }, function (err, hint) {
+			if(err) return next(err);
+
+			hint.update({ 'mark': true }, function (err, hint) {
+				console.log(hint);
+			})
+			
+		})
+
 	});
 
 

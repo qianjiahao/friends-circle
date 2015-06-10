@@ -84,11 +84,7 @@
 						AuthFactory.setAuth('User',data.data);
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User').username;
-	 					$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-							$rootScope.hints = data.hints;
-						}).error(function (error) {
-							console.log(error);
-						});
+						$rootScope.hintChanged = !$rootScope.hintChanged;
 	 					$location.path('/chatroom');
 	 					console.log(data)
 					}
@@ -170,30 +166,32 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
-				$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-						$rootScope.hints = data.hints;
-					}).error(function (error) {
-						console.log(error);
-					});
 			}
 			/*
 				[isHint] flag there is hint or not .	
 			 */
+
+			 $rootScope.hintChanged = false;
 
 			/*
 				subscribe the hint by socket.io .
 			 */
 			socket.on('receive hint',function (data) {
 				if(AuthFactory.getAuth('User').id === data.targetId) {
-					$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-						$rootScope.hints = data.hints;
-						// console.log(data)
-					}).error(function (error) {
-						console.log(error);
-					});
+					$rootScope.hintChanged = !$rootScope.hintChanged;
 				}
 			});
 
+			$scope.$watch('hintChanged', function(newValue) {
+			
+				$http.get('http://localhost:3000/hints/unmarked?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+						$rootScope.hints = data.hints;
+					}).error(function (error) {
+						console.log(error);
+					});
+
+					console.log('hint  changed');
+			});
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
 			if(AuthFactory.checkAuth('User')) {
@@ -285,7 +283,6 @@
 				 	hintContent: hintContent,
 				 	senderId: AuthFactory.getAuth('User').id,
 				 	senderEmail: AuthFactory.getAuth('User').email,
-				 	date: new Date()
 				 }).success(function (data) {
 				 	socket.emit('send hint',data);
 				 }).error(function (error) {
@@ -296,7 +293,7 @@
 				 this.applyContent = '';
 			}
 		}])
-		.controller('HintController', ['$scope', '$http', 'AuthFactory',function ($scope, $http, AuthFactory){
+		.controller('HintController', ['$scope', '$http', '$location', 'AuthFactory',function ($scope, $http, $location, AuthFactory){
 			
 			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
 				.success(function (data) {
@@ -304,7 +301,25 @@
 					console.log(data)
 				}).error(function (error) {
 					console.log(error)
+				});
+
+			$scope.marked = false;
+			$scope.mark = function(id) {
+				$http.post('http://localhost:3000/hint/unmarked',{
+					_id: id 
+				}).success(function (data) {
+					console.log(data);
+					$location.path('/hint');
+				}).error(function (error) {
+					console.log(error);
 				})
+				this.marked = true;
+				console.log(this.marked);
+			}
+
+
+
+
 
 		}])
 })();

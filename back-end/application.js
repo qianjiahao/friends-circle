@@ -31,7 +31,6 @@ io.on('connection',function (socket) {
 		io.emit('receive hint',data);
 	})
 
-	console.log(socket);
 	socket.on('disconnect',function() {
 		console.log('Goodbye : ', socket.id);
 	});

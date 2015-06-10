@@ -12,9 +12,11 @@
 			<td>{{hl.hintContent}}</td>
 			<td>{{hl.date}}</td>
 			<td>
-				<a href="" ng-disabled="hl.mark" ng-class="{ true: 'unmarked-hint',false: 'marked-hint' }[!hl.mark]">
+				<a href="" ng-show="!marked && !hl.mark" ng-class="{ true: 'marked-hint',false: 'unmarked-hint' }[marked || hl.mark]" ng-click="mark(hl._id)">
 					<span class="glyphicon glyphicon-bookmark" aira-hidden="true"></span>
 				</a>
+				<a href="" ng-show="marked || hl.mark" ng-class="{ true: 'marked-hint',false: 'unmarked-hint' }[marked || hl.mark]">
+				<span class="glyphicon glyphicon-bookmark" aira-hidden="true"></span></a>
 			</td>
 			<td>
 				<a href="" class="btn btn-sm btn-success">accept</a>

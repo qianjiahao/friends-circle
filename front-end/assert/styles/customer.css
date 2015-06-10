@@ -201,7 +201,15 @@ input:-webkit-autofill {
 	color: orangered;
 	font-size: 20px;
 }
+.unmarked-hint:hover,.unmarked-hint:active,.marked-hint:hover,.marked-hint:active{
+	color: inherit;
+}
+
 .marked-hint{
+	color: #666;
+	font-size: 20px;
+}
+.marked-hint:visited{
 	color: #666;
 }
 
