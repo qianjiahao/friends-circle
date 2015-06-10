@@ -182,15 +182,17 @@
 				}
 			});
 
+				
 			$scope.$watch('hintChanged', function(newValue) {
-			
-				$http.get('http://localhost:3000/hints/unmarked?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-						$rootScope.hints = data.hints;
-					}).error(function (error) {
-						console.log(error);
-					});
+				if(AuthFactory.checkAuth('User')) {
 
-					console.log('hint  changed');
+					$http.get('http://localhost:3000/hints/unmarked?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+							$rootScope.hints = data.hints;
+							console.log('current hints :' + data.hints);
+						}).error(function (error) {
+							console.log(error);
+						});
+				}
 			});
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
@@ -293,7 +295,7 @@
 				 this.applyContent = '';
 			}
 		}])
-		.controller('HintController', ['$scope', '$http', '$location', 'AuthFactory',function ($scope, $http, $location, AuthFactory){
+		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory','socket',function ($scope, $http, $location, $rootScope, AuthFactory, socket){
 			
 			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
 				.success(function (data) {
@@ -303,8 +305,10 @@
 					console.log(error)
 				});
 
+
 			$scope.marked = false;
 			$scope.mark = function(id) {
+
 				$http.post('http://localhost:3000/hint/unmarked',{
 					_id: id 
 				}).success(function (data) {
@@ -314,9 +318,26 @@
 					console.log(error);
 				})
 				this.marked = true;
-				console.log(this.marked);
+
+
 			}
 
+
+			$scope.accepted = false;
+			$scope.accept = function(id) {
+
+				$http.post('http://localhost:3000/hint/unaccepted',{
+					_id: id
+				}).success(function (data) {
+					console.log(data);
+				}).error(function (error) {
+					console.log(error);
+				})
+
+
+				this.accepted = true;
+
+			}
 
 
 

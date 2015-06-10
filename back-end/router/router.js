@@ -167,13 +167,36 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			hint.update({ 'mark': true }, function (err, hint) {
+				if(err) return next(err);
 				console.log(hint);
-			})
-			
-		})
+			});
+
+			User.findOne({ '_id': hint.targetId }, function (err, user) {
+				if(err) return next(err);
+
+				var result = [];
+				user.hints.map(function (ele) {
+					if(ele != req.body._id) {
+						result.push(ele);
+					}
+				});
+
+				user.hints = result;
+				console.log(result);
+				user.save(function (err) {
+					if(err) return next(err);
+				});
+			});
+		});
 
 	});
 
+	app.post('/hint/unaccepted', function (req, res, next) {
+		Hint.findOne({ '_id': req.body._id }, function (err, hint) {
+			if(err) return next(err);
+
+		})
+	})
 
 
 
