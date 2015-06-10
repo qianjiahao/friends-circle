@@ -50,6 +50,8 @@
 			     return active;
 			};
 
+			// HintFactory.getCount();
+
 
 		}])
 		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', function ($scope, $rootScope, $location, $http, AuthFactory){
@@ -137,7 +139,9 @@
 					}else{
 						AuthFactory.setAuth('User',data.data);
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
-						$rootScope.username = AuthFactory.getAuth('User');
+						$rootScope.username = AuthFactory.getAuth('User').username;
+						$rootScope.hintsCount = 0;
+						$rootScope.isHint = false;
 						$location.path('/chatroom');
 						console.log(data);
 					}
@@ -160,7 +164,7 @@
 				$rootScope.isHint = false;
 			}
 		}])
-		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory','socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
+		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory', 'socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
 			
 			/*
 				[username] , [signature] show username and user signature .
@@ -169,32 +173,30 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
-				getHintsCount();
-
+				$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+						$rootScope.hintsCount = data.count;
+						$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+					}).error(function (error) {
+						console.log(error);
+					});
 			}
 			/*
 				[isHint] flag there is hint or not .	
 			 */
-			// $scope.isHint = false;
-			// $scope.hintCount = 0;
+
 			/*
 				subscribe the hint by socket.io .
 			 */
 			socket.on('receive hint',function (data) {
 				if(AuthFactory.getAuth('User').id === data.targetId) {
-					getHintsCount();
+					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+						$rootScope.hintsCount = data.count;
+						$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+					}).error(function (error) {
+						console.log(error);
+					});
 				}
 			});
-
-			function getHintsCount(){
-				$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-					$rootScope.hintsCount = data.count;
-					$rootScope.isHint = $rootScope.hintsCount ? true : false ;
-				}).error(function (error) {
-					console.log(error);
-				});
-			}
-
 
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {

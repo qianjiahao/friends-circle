@@ -54,6 +54,10 @@ input:-webkit-autofill {
 	color:orangered;
 }
 
+.main{
+	min-height: 300px;
+}
+
 
 
 

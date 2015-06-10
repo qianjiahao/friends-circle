@@ -7,11 +7,6 @@
 					Room : {{room}}
 				</div>
 				<div class="content chat">
-					<!-- <div class="chat-content" ng-repeat="m in message">
-						<span class="chat-username" ng-class="{true : 'self-username',false : 'other-username'}[m.isSelf]">{{m.username}}<br/></span>
-						<span class="chat-date" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.date}}<br/></span>
-						<div class="chat-message" ng-class="{true : 'self',false : 'other'}[m.isSelf]">{{m.message}}</div>
-					</div> -->
 					<div class="chat-content" ng-model="message" ng-repeat="m in message">
 						<div class="chat-username" ng-class="{true : 'self',false : 'other'}[m.isSelf]">
 							<span>

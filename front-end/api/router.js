@@ -19,6 +19,10 @@
 					url: '/chatroom',
 					templateUrl: '../views/templates/chatroom.html'
 				})
+				.state('hint', {
+					url: '/hint',
+					templateUrl: '../views/templates/hint.html'
+				})
 
 			$urlRouterProvider.otherwise('/auth');
 
