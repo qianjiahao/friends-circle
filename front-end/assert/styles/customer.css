@@ -5,17 +5,23 @@ footer{
 	text-align: center;
 	font-size: 18px;
 }
-
+a{
+	text-decoration: none;
+}
 a:visited, a:active{
 	outline: none;
 }
 
+ul{
+	list-style-type: none;
+}
 input{
 	box-shadow:none;
 }
 input:-webkit-autofill {
 	-webkit-box-shadow: 0 0 0px 1000px #F9F9F5 inset;
 }
+
 
 
 /**
@@ -182,6 +188,31 @@ input:-webkit-autofill {
 
 	/* ------------------------------------------------------------------------------------  */
 
+/*
+	hint style
+ */
+
+.hint-list{
+	text-align: center;
+	vertical-align: center;
+}
+
+.unmarked-hint{
+	color: orangered;
+	font-size: 20px;
+}
+.marked-hint{
+	color: #666;
+}
+
+
+
+
+/*
+	hint style
+ */
+
+	/* ------------------------------------------------------------------------------------  */
 /*
 	search style
  */

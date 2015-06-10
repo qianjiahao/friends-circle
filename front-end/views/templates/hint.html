@@ -1,5 +1,25 @@
-<div class="container">
+<div class="container" ng-controller="HintController">
 	
 	<h2>hint</h2>
 
+	<table class="table hint-list table-bordered table-hover">
+		<tr >
+			<td>nickname</td><td>reason</td><td>content</td><td>date</td><td>mark</td><td>operation</td>
+		</tr>
+		<tr ng-repeat="hl in hintsList">
+			<td>{{hl.senderEmail}}</td>
+			<td>{{hl.hintType}}</td>
+			<td>{{hl.hintContent}}</td>
+			<td>{{hl.date}}</td>
+			<td>
+				<a href="" ng-disabled="hl.mark" ng-class="{ true: 'unmarked-hint',false: 'marked-hint' }[!hl.mark]">
+					<span class="glyphicon glyphicon-bookmark" aira-hidden="true"></span>
+				</a>
+			</td>
+			<td>
+				<a href="" class="btn btn-sm btn-success">accept</a>
+			</td>
+		</tr>
+	</table>
+	
 </div>

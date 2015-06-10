@@ -2,7 +2,7 @@ var User = require('../model/user.js');
 var Hint = require('../model/hint.js');
 var bcrypt = require('bcrypt');
 var flash = require('../util/flash.js');
-
+var moment = require('moment');
 
 module.exports = function (app) {
 
@@ -105,8 +105,37 @@ module.exports = function (app) {
 			targetId:req.body.targetId,
 			hintType: req.body.hintType,
 			hintContent: req.body.hintContent,
-			senderId: req.body.senderId
+			senderId: req.body.senderId,
+			senderEmail: req.body.senderEmail,
+			date: moment().format('MMMM Do YYYY, h:mm:ss a'),
+			mark: false
 		});
+		// Hint.create(hint)
+		// 	.exec(function (err, hint) {
+		// 		if(err) return next(err);
+
+		// 		User.findOne()
+		// 			.where('_id')
+		// 			.equals(req.body.targetId)
+		// 			.exec(function (err, user) {
+		// 				if(err) return next(err);
+
+		// 				user.hints.push(hint._id);
+		// 				user.save()
+		// 					.exec(function (err) {
+		// 						if(err) return next(err);
+
+		// 						res.send({
+		// 							targetId: req.body.targetId,
+		// 							hints: user.hints
+		// 						});
+		// 					})
+		// 			})
+		// 	})
+
+
+
+
 		Hint.create(hint, function (err, hint) {
 			if(err) return next(err);
 
@@ -126,15 +155,35 @@ module.exports = function (app) {
 		});
 	});
 
-	app.get('/hints/count', function (req, res, next) {
-		User.findOne({ '_id' : req.query.id}, function (err, user) {
-			if(err) return next(err);
+	app.get('/hints/all', function (req, res, next) {
+		Hint.find()
+			.where('targetId')
+			.equals(req.query.targetId)
+			.sort('-date')
+			.exec(function (err, hints) {
 
-			res.send({
-				count: user.hints.length
-			});
-		});
+				if(err) return next(err);
+
+				res.send({
+					hints: hints
+				});
+		})
 	});
+
+	app.get('/hints/unmark', function (req, res, next) {
+		User.findOne()
+			.where('_id')
+			.equals(req.query.id)
+			.exec(function (err, user) {
+
+				if(err) return next(err);
+
+				res.send({
+					hints: user.hints
+				})
+		})
+	});
+
 
 
 

@@ -8,6 +8,8 @@
 			 */
 			$rootScope.isAuth = AuthFactory.checkAuth('User');
 
+			$rootScope.hints = [];
+
 
 			/*
 				[isNeedFoldCurrent] : save the current the boolean if window need fold or not , 
@@ -50,8 +52,6 @@
 			     return active;
 			};
 
-			// HintFactory.getCount();
-
 
 		}])
 		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', function ($scope, $rootScope, $location, $http, AuthFactory){
@@ -84,9 +84,8 @@
 						AuthFactory.setAuth('User',data.data);
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User').username;
-	 					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-							$rootScope.hintsCount = data.count;
-							$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+	 					$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+							$rootScope.hints = data.hints;
 						}).error(function (error) {
 							console.log(error);
 						});
@@ -140,8 +139,7 @@
 						AuthFactory.setAuth('User',data.data);
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
 						$rootScope.username = AuthFactory.getAuth('User').username;
-						$rootScope.hintsCount = 0;
-						$rootScope.isHint = false;
+						$rootScope.hints = [];
 						$location.path('/chatroom');
 						console.log(data);
 					}
@@ -160,8 +158,7 @@
 				AuthFactory.removeAuth('User');
 				$rootScope.isAuth = AuthFactory.checkAuth('User');
 				$rootScope.username = null;
-				$rootScope.hintsCount = 0;
-				$rootScope.isHint = false;
+				$rootScope.hints = [];
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory', 'socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
@@ -173,9 +170,8 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
-				$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-						$rootScope.hintsCount = data.count;
-						$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+				$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+						$rootScope.hints = data.hints;
 					}).error(function (error) {
 						console.log(error);
 					});
@@ -189,9 +185,9 @@
 			 */
 			socket.on('receive hint',function (data) {
 				if(AuthFactory.getAuth('User').id === data.targetId) {
-					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-						$rootScope.hintsCount = data.count;
-						$rootScope.isHint = $rootScope.hintsCount ? true : false ;
+					$http.get('http://localhost:3000/hints/unmark?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+						$rootScope.hints = data.hints;
+						// console.log(data)
 					}).error(function (error) {
 						console.log(error);
 					});
@@ -287,7 +283,9 @@
 				 	targetId: id,
 				 	hintType: 'apply for',
 				 	hintContent: hintContent,
-				 	senderId: AuthFactory.getAuth('User').id
+				 	senderId: AuthFactory.getAuth('User').id,
+				 	senderEmail: AuthFactory.getAuth('User').email,
+				 	date: new Date()
 				 }).success(function (data) {
 				 	socket.emit('send hint',data);
 				 }).error(function (error) {
@@ -297,6 +295,17 @@
 				 this.isApply = true;
 				 this.applyContent = '';
 			}
+		}])
+		.controller('HintController', ['$scope', '$http', 'AuthFactory',function ($scope, $http, AuthFactory){
+			
+			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
+				.success(function (data) {
+					$scope.hintsList = data.hints;
+					console.log(data)
+				}).error(function (error) {
+					console.log(error)
+				})
+
 		}])
 })();
 

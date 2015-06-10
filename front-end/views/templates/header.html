@@ -24,7 +24,12 @@
 				<div class="navbar-right" ng-controller="UserInfoController">
 
 					<ul class="navbar-nav nav">
-						<li><a href="#/hint"><span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[isHint]"><i ng-bind="hintsCount" ng-show="hintsCount!=0"></i></span></a></li>
+						<li>
+							<a href="#/hint" ng-if="isAuth">
+								<span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[hints.length!=0]"><i ng-bind="hints.length" ng-show="hints.length!=0"></i></span>
+							</a>
+							<a href="" ng-if="!isAuth"><span class="glyphicon glyphicon-flag" aria-hidden="true" ></span></a>
+						</li>
 						<li><a href="">{{username}}</a></li>
 					</ul>
 				</div>
