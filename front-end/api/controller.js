@@ -286,7 +286,7 @@
 				 	hintType: 'apply for',
 				 	hintContent: hintContent,
 				 	senderId: AuthFactory.getAuth('User').id,
-				 	senderEmail: AuthFactory.getAuth('User').email,
+				 	senderName: AuthFactory.getAuth('User').username,
 				 }).success(function (data) {
 				 	socket.emit('send hint',data);
 				 }).error(function (error) {

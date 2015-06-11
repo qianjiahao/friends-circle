@@ -6,7 +6,7 @@ var HintSchema = new Schema({
 	hintType: String,
 	hintContent: String,
 	senderId: String,
-	senderEmail: String,
+	senderName: String,
 	date: String,
 	mark: Boolean,
 	accept:Boolean

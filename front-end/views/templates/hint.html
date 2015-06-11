@@ -7,9 +7,9 @@
 			<td>nickname</td><td>reason</td><td>content</td><td>date</td><td>mark</td><td>operation</td>
 		</tr>
 		<tr ng-repeat="hl in hintsList">
-			<td>{{hl.senderEmail}}</td>
+			<td>{{hl.senderName}}</td>
 			<td>{{hl.hintType}}</td>
-			<td>{{hl.hintContent}}</td>
+			<td style="width:200px;word-break: break-word;">{{hl.hintContent}}</td>
 			<td>{{hl.date}}</td>
 			<td>
 				<a href="" ng-show="!isMarked && !hl.mark" ng-class="{ true: 'marked-hint',false: 'unmarked-hint' }[isMarked || hl.mark]" ng-click="mark(hl._id)">

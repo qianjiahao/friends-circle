@@ -106,7 +106,7 @@ module.exports = function (app) {
 			hintType: req.body.hintType,
 			hintContent: req.body.hintContent,
 			senderId: req.body.senderId,
-			senderEmail: req.body.senderEmail,
+			senderName: req.body.senderName,
 			date: moment().format('MMMM Do YYYY, h:mm:ss a'),
 			mark: false,
 			accept: false
