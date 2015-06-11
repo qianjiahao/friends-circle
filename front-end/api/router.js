@@ -11,9 +11,9 @@
 					url: '/search',
 					templateUrl: '../views/templates/search.html'
 				})
-				.state('contact', {
-					url: '/contact',
-					templateUrl: '../views/templates/contact.html'
+				.state('circle', {
+					url: '/circle',
+					templateUrl: '../views/templates/circle.html'
 				})
 				.state('chatroom', {
 					url: '/chatroom',

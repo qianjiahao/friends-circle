@@ -57,7 +57,7 @@ module.exports = function (app) {
 			encryptedPassword: req.body.password,
 			email: req.body.email,
 			signature: req.body.signature,
-			hints: []
+			hints: 0
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -117,21 +117,16 @@ module.exports = function (app) {
 			User.findOne({ '_id': req.body.targetId }, function (err, user) {
 				if(err) return next(err);
 
-				user.hints.push(hint._id);
-				user.save(function (err) {
-					if(err) return next(err);
-
+				user.update({ '$inc' : { 'hints': 1 } }, function (err, user) {
+					if(err) return(err);
+					
+					console.log(user);	
 					res.send({
-						targetId: req.body.targetId,
-						hints: user.hints
+						targetId: req.body.targetId
 					});
 				});
 			});
 		});
-
-
-
-
 	});
 
 	app.get('/hints/all', function (req, res, next) {
@@ -162,31 +157,13 @@ module.exports = function (app) {
 				console.log('total : ' + total);
 				res.send({
 					total: total
-				})
-			})
-
+				});
+			});
 	});
 
-	app.post('/hint', function (req, res, next) {
-		User.findOne({ '_id': req.body.targetId }, function (err, user) {
-			if(err) return next(err);
-
-			var result = [];
-			user.hints.map(function (ele) {
-				if(ele != req.body._id) {
-					result.push(ele);
-				}
-			});
-			user.hints = result;
-			user.save(function (err) {
-				if(err) return next(err);
-
-				console.log('save done');
-			});
-		});
-	});
-
-
+	/*
+		change the variable : mark to the true value , mark the hint .
+	 */
 	app.post('/hint/unmarked', function (req, res, next) {
 		Hint.findOne({'_id': req.body._id }, function (err, hint) {
 			if(err) return next(err);
@@ -194,11 +171,20 @@ module.exports = function (app) {
 			hint.update({ 'mark': true }, function (err, hint) {
 				if(err) return next(err);
 				console.log(hint);
+
+				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
+					if(err) return next(err);
+
+					console.log('mark : ',user);
+
+				});
 			});
 		});
-
 	});
 
+	/*
+		change the variable : accept , mark to true value , accept and mark the hint .
+	 */
 	app.post('/hint/unaccepted', function (req, res, next) {
 		Hint.findOne({ '_id': req.body._id }, function (err, hint) {
 			if(err) return next(err);
@@ -206,24 +192,31 @@ module.exports = function (app) {
 			hint.update({ 'accept': true , 'mark': true }, function (err) {
 				if(err) return next(err);
 
-				console.log('result :' + hint);
-				res.send({
-					hint: hint
-				})
+				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
+					if(err) return next(err);
+
+					res.send({
+						hint: hint
+					});
+					console.log('accept : ',user);
+				});
 			});
 		});
 	});
 
-	app.post('/friend/add', function (req, res, next) {
+	/*
+		add someone into friends list .
+	 */
+	app.post('/friend/accept', function (req, res, next) {
 		User.findOne({ '_id': req.body.targetId }, function (err, user) {
 			if(err) return next(err);
 
-			user.friends.push(req.body.selfId);
-			user.save(function (err) {
+			user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
 				if(err) return next(err);
 
-				console.log('add friend done ');
+				console.log(user);
 			})
+
 		})
 	})
 

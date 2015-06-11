@@ -310,31 +310,43 @@
 
 			$scope.isMarked = false;
 			$scope.mark = function(id) {
+				
+				var self = this;
+
 				$http.post('http://localhost:3000/hint/unmarked',{
-					_id: id 
+					targetId: AuthFactory.getAuth('User').id,
+					_id: id
 				}).success(function (data) {
+					
 					
 				}).error(function (error) {
 					console.log(error);
-				})
-
-				this.isMarked = true;
-				modifyHintIntoDB(id);
+				});
+				self.isMarked = true;
 				modifyHintInfoPage();
-
 			}
 
-			function modifyHintIntoDB(id){
 
-				$http.post('http://localhost:3000/hint',{
+			$scope.isAccepted = false;
+			$scope.accept = function(id) {
+
+				var self = this;
+
+				$http.post('http://localhost:3000/hint/unaccepted',{
 					targetId: AuthFactory.getAuth('User').id,
-					_id: id 
+					_id: id
 				}).success(function (data) {
-
+					if(!data.hint.mark) {
+						self.isMarked = true;
+						modifyHintInfoPage();
+					}
+					addFriend(data.hint.targetId,data.hint.senderId);
+					self.isAccepted = true;
 				}).error(function (error) {
 					console.log(error);
-				})
+				});
 			}
+			
 			function modifyHintInfoPage(){
 				if($rootScope.totalHints) {
 					$rootScope.totalHints -= 1;
@@ -342,32 +354,12 @@
 				console.log('result :' + $rootScope.totalHints);
 			}
 
-			function addFriend(targetId,selfId) {
-				$http.post('http://localhost:3000/friend/add',{
+			function addFriend(targetId,senderId) {
+				$http.post('http://localhost:3000/friend/accept',{
 					targetId: targetId,
-					selfId: selfId
+					senderId: senderId
 				}).success(function (data) {
 					console.log(data);
-				}).error(function (error) {
-					console.log(error);
-				});
-			}
-
-			$scope.isAccepted = false;
-			$scope.accept = function(id) {
-
-				var self = this;
-				$http.post('http://localhost:3000/hint/unaccepted',{
-					_id: id
-				}).success(function (data) {
-					if(!data.hint.mark) {
-						console.log('mark : ',data.hint.mark);
-						self.isMarked = true;
-						modifyHintInfoPage();
-					}
-					self.isAccepted = true;
-					modifyHintIntoDB(id);
-					addFriend(data.hint.targetId,data.hint.senderId);
 				}).error(function (error) {
 					console.log(error);
 				});
