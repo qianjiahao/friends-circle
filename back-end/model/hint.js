@@ -8,7 +8,8 @@ var HintSchema = new Schema({
 	senderId: String,
 	senderEmail: String,
 	date: String,
-	mark: Boolean
+	mark: Boolean,
+	accept:Boolean
 });
 
 var Hint = mongoose.model('Hint',HintSchema);

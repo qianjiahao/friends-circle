@@ -8,7 +8,7 @@
 			 */
 			$rootScope.isAuth = AuthFactory.checkAuth('User');
 
-			$rootScope.hints = [];
+			$rootScope.totalHints = 0;
 
 
 			/*
@@ -135,7 +135,7 @@
 						AuthFactory.setAuth('User',data.data);
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
 						$rootScope.username = AuthFactory.getAuth('User').username;
-						$rootScope.hints = [];
+						$rootScope.totalHints = 0;
 						$location.path('/chatroom');
 						console.log(data);
 					}
@@ -154,7 +154,7 @@
 				AuthFactory.removeAuth('User');
 				$rootScope.isAuth = AuthFactory.checkAuth('User');
 				$rootScope.username = null;
-				$rootScope.hints = [];
+				$rootScope.totalHints = 0;
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory', 'socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
@@ -166,6 +166,8 @@
 			if(user) {
 				$rootScope.username = user.username;
 				$scope.signature = user.signature;
+				$rootScope.hintChanged = !$rootScope.hintChanged;
+
 			}
 			/*
 				[isHint] flag there is hint or not .	
@@ -187,8 +189,8 @@
 				if(AuthFactory.checkAuth('User')) {
 
 					$http.get('http://localhost:3000/hints/unmarked?id=' + AuthFactory.getAuth('User').id).success(function (data) {
-							$rootScope.hints = data.hints;
-							console.log('current hints :' + data.hints);
+							$rootScope.totalHints = data.total;
+							console.log('total hints :' + data.total);
 						}).error(function (error) {
 							console.log(error);
 						});
@@ -295,7 +297,7 @@
 				 this.applyContent = '';
 			}
 		}])
-		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory','socket',function ($scope, $http, $location, $rootScope, AuthFactory, socket){
+		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', function ($scope, $http, $location, $rootScope, AuthFactory){
 			
 			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
 				.success(function (data) {
@@ -306,42 +308,61 @@
 				});
 
 
-			$scope.marked = false;
+			$scope.isMarked = false;
 			$scope.mark = function(id) {
-
 				$http.post('http://localhost:3000/hint/unmarked',{
 					_id: id 
 				}).success(function (data) {
-					console.log(data);
-					$location.path('/hint');
+					
 				}).error(function (error) {
 					console.log(error);
 				})
-				this.marked = true;
 
+				this.isMarked = true;
+				modifyHintIntoDB(id);
+				modifyHintInfoPage();
 
 			}
 
+			function modifyHintIntoDB(id){
 
-			$scope.accepted = false;
+				$http.post('http://localhost:3000/hint',{
+					targetId: AuthFactory.getAuth('User').id,
+					_id: id 
+				}).success(function (data) {
+
+				}).error(function (error) {
+					console.log(error);
+				})
+			}
+			function modifyHintInfoPage(){
+				if($rootScope.totalHints) {
+					$rootScope.totalHints -= 1;
+				}
+				console.log('result :' + $rootScope.totalHints);
+			}
+
+
+			$scope.isAccepted = false;
 			$scope.accept = function(id) {
 
+				var self = this;
 				$http.post('http://localhost:3000/hint/unaccepted',{
 					_id: id
 				}).success(function (data) {
-					console.log(data);
+					if(!data.hint.mark) {
+						console.log('mark : ',data.hint.mark);
+						self.isMarked = true;
+						modifyHintInfoPage();
+					}
+					self.isAccepted = true;
+
+					modifyHintIntoDB(id);
 				}).error(function (error) {
 					console.log(error);
-				})
-
-
-				this.accepted = true;
-
+				});
+				
 			}
-
-
-
-
 		}])
 })();
 

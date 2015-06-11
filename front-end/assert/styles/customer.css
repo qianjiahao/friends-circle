@@ -201,9 +201,6 @@ input:-webkit-autofill {
 	color: orangered;
 	font-size: 20px;
 }
-.unmarked-hint:hover,.unmarked-hint:active,.marked-hint:hover,.marked-hint:active{
-	color: inherit;
-}
 
 .marked-hint{
 	color: #666;
@@ -213,6 +210,9 @@ input:-webkit-autofill {
 	color: #666;
 }
 
+.unmarked-hint:hover,.unmarked-hint:active,.marked-hint:hover,.marked-hint:active{
+	color: inherit;
+}
 
 
 

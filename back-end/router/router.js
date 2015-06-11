@@ -108,7 +108,8 @@ module.exports = function (app) {
 			senderId: req.body.senderId,
 			senderEmail: req.body.senderEmail,
 			date: moment().format('MMMM Do YYYY, h:mm:ss a'),
-			mark: false
+			mark: false,
+			accept: false
 		});
 		Hint.create(hint, function (err, hint) {
 			if(err) return next(err);
@@ -137,6 +138,7 @@ module.exports = function (app) {
 		Hint.find()
 			.where('targetId')
 			.equals(req.query.targetId)
+			.sort('mark')
 			.sort('-date')
 			.exec(function (err, hints) {
 
@@ -149,18 +151,41 @@ module.exports = function (app) {
 	});
 
 	app.get('/hints/unmarked', function (req, res, next) {
-		User.findOne()
-			.where('_id')
+		Hint.count()
+			.where('targetId')
 			.equals(req.query.id)
-			.exec(function (err, user) {
-
+			.where('mark')
+			.equals(false)
+			.exec(function (err, total) {
 				if(err) return next(err);
 
+				console.log('total : ' + total);
 				res.send({
-					hints: user.hints
+					total: total
 				})
-		})
+			})
+
 	});
+
+	app.post('/hint', function (req, res, next) {
+		User.findOne({ '_id': req.body.targetId }, function (err, user) {
+			if(err) return next(err);
+
+			var result = [];
+			user.hints.map(function (ele) {
+				if(ele != req.body._id) {
+					result.push(ele);
+				}
+			});
+			user.hints = result;
+			user.save(function (err) {
+				if(err) return next(err);
+
+				console.log('save done');
+			});
+		});
+	});
+
 
 	app.post('/hint/unmarked', function (req, res, next) {
 		Hint.findOne({'_id': req.body._id }, function (err, hint) {
@@ -170,23 +195,6 @@ module.exports = function (app) {
 				if(err) return next(err);
 				console.log(hint);
 			});
-
-			User.findOne({ '_id': hint.targetId }, function (err, user) {
-				if(err) return next(err);
-
-				var result = [];
-				user.hints.map(function (ele) {
-					if(ele != req.body._id) {
-						result.push(ele);
-					}
-				});
-
-				user.hints = result;
-				console.log(result);
-				user.save(function (err) {
-					if(err) return next(err);
-				});
-			});
 		});
 
 	});
@@ -195,8 +203,17 @@ module.exports = function (app) {
 		Hint.findOne({ '_id': req.body._id }, function (err, hint) {
 			if(err) return next(err);
 
-		})
-	})
+			hint.update({ 'accept': true , 'mark': true }, function (err) {
+				if(err) return next(err);
+
+				console.log('result :' + hint);
+				res.send({
+					hint: hint
+				})
+			});
+
+		});
+	});
 
 
 
