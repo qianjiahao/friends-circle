@@ -342,6 +342,16 @@
 				console.log('result :' + $rootScope.totalHints);
 			}
 
+			function addFriend(targetId,selfId) {
+				$http.post('http://localhost:3000/friend/add',{
+					targetId: targetId,
+					selfId: selfId
+				}).success(function (data) {
+					console.log(data);
+				}).error(function (error) {
+					console.log(error);
+				});
+			}
 
 			$scope.isAccepted = false;
 			$scope.accept = function(id) {
@@ -356,12 +366,11 @@
 						modifyHintInfoPage();
 					}
 					self.isAccepted = true;
-
 					modifyHintIntoDB(id);
+					addFriend(data.hint.targetId,data.hint.senderId);
 				}).error(function (error) {
 					console.log(error);
 				});
-				
 			}
 		}])
 })();

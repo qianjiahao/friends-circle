@@ -211,11 +211,21 @@ module.exports = function (app) {
 					hint: hint
 				})
 			});
-
 		});
 	});
 
+	app.post('/friend/add', function (req, res, next) {
+		User.findOne({ '_id': req.body.targetId }, function (err, user) {
+			if(err) return next(err);
 
+			user.friends.push(req.body.selfId);
+			user.save(function (err) {
+				if(err) return next(err);
+
+				console.log('add friend done ');
+			})
+		})
+	})
 
 
 
