@@ -103,7 +103,7 @@ module.exports = function (app) {
 	/*
 		create a hint and post it to target people .
 	 */
-	app.post('/hints', function (req, res, next) {
+	app.post('/hint', function (req, res, next) {
 		var hint = new Hint({
 			targetId:req.body.targetId,
 			hintType: req.body.hintType,
@@ -111,8 +111,8 @@ module.exports = function (app) {
 			senderId: req.body.senderId,
 			senderName: req.body.senderName,
 			date: moment().format('MMMM Do YYYY, h:mm:ss a'),
-			mark: false,
-			accept: false
+			mark: req.body.mark,
+			accept: req.body.accept
 		});
 		Hint.create(hint, function (err, hint) {
 			if(err) return next(err);
@@ -174,7 +174,7 @@ module.exports = function (app) {
 		change the variable : mark to the true value , mark the hint .
 	 */
 	app.post('/hint/mark', function (req, res, next) {
-		Hint.findOne({'_id': req.body._id }, function (err, hint) {
+		Hint.findOne({'_id': req.body.id }, function (err, hint) {
 			if(err) return next(err);
 
 			hint.update({ 'mark': true }, function (err, hint) {
@@ -195,7 +195,7 @@ module.exports = function (app) {
 		change the variable : accept , mark to true value , accept and mark the hint .
 	 */
 	app.post('/hint/accept', function (req, res, next) {
-		Hint.findOne({ '_id': req.body._id }, function (err, hint) {
+		Hint.findOne({ '_id': req.body.id }, function (err, hint) {
 			if(err) return next(err);
 
 			hint.update({ 'accept': true , 'mark': true }, function (err) {
@@ -217,16 +217,26 @@ module.exports = function (app) {
 		add someone into friends list .
 	 */
 	app.post('/friend/accept', function (req, res, next) {
+		User.findOne({ '_id': req.body.senderId }, function (err, user) {
+			if(err) return next(err);
+
+			user.update({ '$push': { 'friends': req.body.targetId } }, function (err, user) {
+				if(err) return next(err);
+			});
+		});
+
 		User.findOne({ '_id': req.body.targetId }, function (err, user) {
 			if(err) return next(err);
 
 			user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
 				if(err) return next(err);
-
-				console.log(user);
+		
 			});
 
 		});
+
+		res.send({})
+
 	});
 
 	app.get('/friends/all', function (req, res, next) {
@@ -244,7 +254,19 @@ module.exports = function (app) {
 
 	});
 
+	app.get('/user', function (req, res, next) {
+		User.findOne({ '_id': req.query.id }, function (err, user) {
+			if(err) return next(err);
 
+			res.send({
+				username: user.username,
+				email: user.email,
+				signature: user.signature,
+				id: user._id,
+				friends: user.friends
+			});
+		});
+	});
 
 
 

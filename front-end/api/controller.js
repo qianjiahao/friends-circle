@@ -190,6 +190,15 @@
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
 			if(AuthFactory.checkAuth('User')) {
 
+				$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
+					.success(function (data) {
+						console.log(data);
+						AuthFactory.setAuth('User', data);
+					}).error(function (error) {
+						console.log(error);
+					})
+
+				console.log(AuthFactory.getAuth('User'))
 				/*
 					[message] contain chatroom message .	
 				 */
@@ -206,6 +215,7 @@
 				$scope.sendMessage = function(data) {
 					socket.emit('send message',{
 						username: AuthFactory.getAuth('User').username,
+						id: AuthFactory.getAuth('User').id,
 						message: $scope.content,
 						date: moment().format('HH:mm:ss')
 					});
@@ -216,13 +226,35 @@
 					{receive message} receive message from server .
 				 */
 				socket.on('receive message', function (data) {
-					data.isSelf = data.username === AuthFactory.getAuth('User').username ? true : false ;
-					$scope.message.push(data);
-					var len = $scope.message.length;
-					if(len >= 100) {
-						$scope.message = $scope.message.slice(len/4);
+					if(checkSelf(data)) {
+						console.log('self')
+						data.isSelf = checkSelf(data);
+						$scope.message.push(data);
+					}else if(checkFriends(data)) {
+						console.log('friends')
+						$scope.message.push(data);						
+					}else{
+						console.log('stranger');
 					}
+
+
 				});
+				function checkSelf(data) {
+					return data.id == AuthFactory.getAuth('User').id ? true : false;
+				}
+				function checkFriends(data) {
+					var friends = AuthFactory.getAuth('User').friends;
+					console.log(friends);
+					if(friends && friends.length) {
+
+						console.log(friends.indexOf(data.id));
+						if(friends.indexOf(data.id) >= 0) {
+							return true;
+						}else{
+							return false;
+						}
+					}
+				}
 			}
 		}])
 		.controller('SearchFriendController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket) {
@@ -267,15 +299,17 @@
 			 */
 			
 			$scope.isApply = false;
-			$scope.applyFor = function(id,hintContent){
-				if(id !== AuthFactory.getAuth('User').id) {
+			$scope.applyFor = function(targetId,hintContent){
+				if(targetId !== AuthFactory.getAuth('User').id) {
 
-					$http.post('http://localhost:3000/hints', {
-						targetId: id,
-						hintType: 'apply for',
+					$http.post('http://localhost:3000/hint', {
+						targetId: targetId,
+						hintType: 'friend request',
 						hintContent: hintContent,
 						senderId: AuthFactory.getAuth('User').id,
 						senderName: AuthFactory.getAuth('User').username,
+						mark: false,
+						accept: false
 					}).success(function (data) {
 						socket.emit('send hint',data);
 					}).error(function (error) {
@@ -287,12 +321,11 @@
 				}
 			}
 		}])
-		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', function ($scope, $http, $location, $rootScope, AuthFactory){
+		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', 'socket', function ($scope, $http, $location, $rootScope, AuthFactory, socket){
 			
 			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
 				.success(function (data) {
 					$scope.hintsList = data.hints;
-					console.log(data)
 				}).error(function (error) {
 					console.log(error)
 				});
@@ -305,15 +338,14 @@
 
 				$http.post('http://localhost:3000/hint/mark',{
 					targetId: AuthFactory.getAuth('User').id,
-					_id: id
+					id: id
 				}).success(function (data) {
-					
 					
 				}).error(function (error) {
 					console.log(error);
 				});
 				self.isMarked = true;
-				modifyHintInfoPage();
+				modifyHint();
 			}
 
 
@@ -324,11 +356,11 @@
 
 				$http.post('http://localhost:3000/hint/accept',{
 					targetId: AuthFactory.getAuth('User').id,
-					_id: id
+					id: id
 				}).success(function (data) {
 					if(!data.hint.mark) {
 						self.isMarked = true;
-						modifyHintInfoPage();
+						modifyHint();
 					}
 					addFriend(data.hint.targetId,data.hint.senderId);
 					self.isAccepted = true;
@@ -337,22 +369,46 @@
 				});
 			}
 			
-			function modifyHintInfoPage(){
+			function modifyHint(){
 				if($rootScope.totalHints) {
 					$rootScope.totalHints -= 1;
 				}
-				console.log('result :' + $rootScope.totalHints);
 			}
 
 			function addFriend(targetId,senderId) {
+
 				$http.post('http://localhost:3000/friend/accept',{
 					targetId: targetId,
 					senderId: senderId
-				}).success(function (data) {
-					console.log(data);
+				}).success(function (date) {
+
+					$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
+						.success(function (data) {
+							console.log(data);
+							AuthFactory.setAuth('User', data);
+						}).error(function (error) {
+							console.log(error);
+						})
 				}).error(function (error) {
 					console.log(error);
-				});
+				})
+				returnMessage(senderId,'i accept your request , we are friend now .');
+			}
+
+			function returnMessage(targetId,hintContent) {
+				$http.post('http://localhost:3000/hint',{
+					targetId: targetId,
+					hintType: 'accept request',
+					hintContent: hintContent,
+					senderId: AuthFactory.getAuth('User').id,
+					senderName: AuthFactory.getAuth('User').username,
+					mark: false,
+					accept: true
+				}).success(function (data) {
+					socket.emit('send hint',data);
+				}).error(function (error) {
+					console.log(error);
+				})
 			}
 		}])
 		.controller('GenerateRoomController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
