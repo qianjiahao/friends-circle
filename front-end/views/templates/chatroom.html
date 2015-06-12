@@ -1,7 +1,7 @@
 <div class="container">
 	
-	<div class="chatroom-wrapper">
-		<div class="chatroom-main" ng-controller="ChatController">
+	<div class="chatroom-wrapper" ng-controller="ChatController">
+		<div class="chatroom-main">
 			<form name="chatroom">
 				<div class="header">
 					Room : {{room}}
@@ -37,7 +37,7 @@
 		<div class="side">
 			<div class="panel" ng-controller="UserInfoController">
 				<div class="header">
-					用户信息
+					<span>用户信息</span>
 				</div>
 				<div class="content">
 					<span class="user-name" ng-model="username" ng-bind="username"></span>
@@ -46,10 +46,7 @@
 			</div>
 			<div class="panel" ng-controller="ChatController">
 				<div class="header">
-					{{room}}
-					<span>
-						<a href="" ng-click="isCreate=!isCreate">create</a>
-					</span>
+					<span>房间信息</span>
 				</div>
 				<div class="content">
 					<div ng-show="isCreate" name="createRoomForm">

@@ -188,7 +188,7 @@
 			$scope.$watch('hintChanged', function(newValue) {
 				if(AuthFactory.checkAuth('User')) {
 
-					$http.get('http://localhost:3000/hints/unmarked?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
 							$rootScope.totalHints = data.total;
 							console.log('total hints :' + data.total);
 						}).error(function (error) {
@@ -233,14 +233,7 @@
 						$scope.message = $scope.message.slice(len/4);
 					}
 				});
-
-				$scope.isCreate = false;
-
-				$scope.createRoom = function(){
-
-				}
 			}
-
 		}])
 		.controller('SearchFriendController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket) {
 			
@@ -254,11 +247,14 @@
 			 */
 			$scope.noSearchResult = false;
 
+
+			$scope.selfId = AuthFactory.getAuth('User').id;
 			/*
 				{search} search friends by email or nickname .
 			 */
 			$scope.search = function() {
 				$scope.searchResult = null;
+
 				$http.post('http://localhost:3000/search',{
 					content:$scope.searchFriendContent
 				}).success(function(data) {
@@ -273,6 +269,7 @@
 					console.log(error);
 				})
 				$scope.searchFriendContent = '';
+
 			}
 
 			/*
@@ -281,20 +278,23 @@
 			
 			$scope.isApply = false;
 			$scope.applyFor = function(id,hintContent){
-				 $http.post('http://localhost:3000/hints', {
-				 	targetId: id,
-				 	hintType: 'apply for',
-				 	hintContent: hintContent,
-				 	senderId: AuthFactory.getAuth('User').id,
-				 	senderName: AuthFactory.getAuth('User').username,
-				 }).success(function (data) {
-				 	socket.emit('send hint',data);
-				 }).error(function (error) {
-				 	console.log(error);
-				 });
+				if(id !== AuthFactory.getAuth('User').id) {
 
-				 this.isApply = true;
-				 this.applyContent = '';
+					$http.post('http://localhost:3000/hints', {
+						targetId: id,
+						hintType: 'apply for',
+						hintContent: hintContent,
+						senderId: AuthFactory.getAuth('User').id,
+						senderName: AuthFactory.getAuth('User').username,
+					}).success(function (data) {
+						socket.emit('send hint',data);
+					}).error(function (error) {
+						console.log(error);
+					});
+
+					this.isApply = true;
+					this.applyContent = '';
+				}
 			}
 		}])
 		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', function ($scope, $http, $location, $rootScope, AuthFactory){
@@ -313,7 +313,7 @@
 				
 				var self = this;
 
-				$http.post('http://localhost:3000/hint/unmarked',{
+				$http.post('http://localhost:3000/hint/mark',{
 					targetId: AuthFactory.getAuth('User').id,
 					_id: id
 				}).success(function (data) {
@@ -332,7 +332,7 @@
 
 				var self = this;
 
-				$http.post('http://localhost:3000/hint/unaccepted',{
+				$http.post('http://localhost:3000/hint/accept',{
 					targetId: AuthFactory.getAuth('User').id,
 					_id: id
 				}).success(function (data) {

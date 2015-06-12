@@ -21,7 +21,7 @@
 				},
 				checkNotAuth: function (target) {
 					if($cookies.getObject(target)) {
-						$location.path('/chatroom');
+						$location.path('/circle');
 					}
 				},
 				setAuth: function(target, data) {

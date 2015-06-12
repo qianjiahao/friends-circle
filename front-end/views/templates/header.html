@@ -8,13 +8,14 @@
 					<span class="icon-bar"></span>
 				</button>
 
-				<a href="" class="navbar-brand">friends-circle</a>
+				<a href="" class="navbar-brand header-title"><span class="header-title-first">F</span>riends <span class="header-title-first">C</span>ircle</a>
 			</div>
 			<div class="navbar-collapse" ng-if="!isFolded" ng-click="toggleNavbar()">
-				<ul class="navbar-nav nav">
+				<ul class="navbar-nav nav header-link">
 					<li ng-class="{ active: isActive('/auth') }" ng-if="!isAuth"><a href="#/auth" >auth</a></li>
 					<li ng-class="{ active: isActive('/search') }" ng-if="isAuth"><a href="#/search">search</a></li>
 					<li ng-class="{ active: isActive('/circle') }" ng-if="isAuth"><a href="#/circle">circle</a></li>
+					<li ng-class="{ active: isActive('/generate_room') }" ng-if="isAuth"><a href="#/generate_room">generate_room</a></li>
 					<li ng-class="{ active: isActive('/chatroom') }" ng-if="isAuth" ><a href="#/chatroom">chatroom</a></li>
 				</ul>
 				
@@ -23,7 +24,7 @@
 				</div>
 				<div class="navbar-right" ng-controller="UserInfoController">
 
-					<ul class="navbar-nav nav">
+					<ul class="navbar-nav nav header-link">
 						<li>
 							<a href="#/hint" ng-if="isAuth">
 								<span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[totalHints>0]"><i ng-bind="totalHints" ng-show="totalHints>0"></i></span>

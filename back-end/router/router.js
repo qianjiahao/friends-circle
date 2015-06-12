@@ -100,6 +100,9 @@ module.exports = function (app) {
 		});
 	});
 
+	/*
+		create a hint and post it to target people .
+	 */
 	app.post('/hints', function (req, res, next) {
 		var hint = new Hint({
 			targetId:req.body.targetId,
@@ -129,6 +132,9 @@ module.exports = function (app) {
 		});
 	});
 
+	/*
+		get all hints .
+	 */
 	app.get('/hints/all', function (req, res, next) {
 		Hint.find()
 			.where('targetId')
@@ -145,7 +151,10 @@ module.exports = function (app) {
 		})
 	});
 
-	app.get('/hints/unmarked', function (req, res, next) {
+	/*
+		get total count of unmarked hint .
+	 */
+	app.get('/hints/count', function (req, res, next) {
 		Hint.count()
 			.where('targetId')
 			.equals(req.query.id)
@@ -164,7 +173,7 @@ module.exports = function (app) {
 	/*
 		change the variable : mark to the true value , mark the hint .
 	 */
-	app.post('/hint/unmarked', function (req, res, next) {
+	app.post('/hint/mark', function (req, res, next) {
 		Hint.findOne({'_id': req.body._id }, function (err, hint) {
 			if(err) return next(err);
 
@@ -185,7 +194,7 @@ module.exports = function (app) {
 	/*
 		change the variable : accept , mark to true value , accept and mark the hint .
 	 */
-	app.post('/hint/unaccepted', function (req, res, next) {
+	app.post('/hint/accept', function (req, res, next) {
 		Hint.findOne({ '_id': req.body._id }, function (err, hint) {
 			if(err) return next(err);
 
