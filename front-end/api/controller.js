@@ -411,6 +411,15 @@
 				})
 			}
 		}])
+		.controller('CircleController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
+			$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
+				.success(function (data) {
+					$scope.friends = data;
+				}).error(function (error) {
+					console.log(error);
+				});
+			
+		}])
 		.controller('GenerateRoomController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
 			
 			$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
