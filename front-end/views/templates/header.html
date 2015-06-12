@@ -12,11 +12,11 @@
 			</div>
 			<div class="navbar-collapse" ng-if="!isFolded" ng-click="toggleNavbar()">
 				<ul class="navbar-nav nav header-link">
-					<li ng-class="{ active: isActive('/auth') }" ng-if="!isAuth"><a href="#/auth" >auth</a></li>
-					<li ng-class="{ active: isActive('/search') }" ng-if="isAuth"><a href="#/search">search</a></li>
-					<li ng-class="{ active: isActive('/circle') }" ng-if="isAuth"><a href="#/circle">circle</a></li>
-					<li ng-class="{ active: isActive('/generate_room') }" ng-if="isAuth"><a href="#/generate_room">generate_room</a></li>
-					<li ng-class="{ active: isActive('/chatroom') }" ng-if="isAuth" ><a href="#/chatroom">chatroom</a></li>
+					<li ui-sref-active="active" ng-if="!isAuth"><a ui-sref="auth" >auth</a></li>
+					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="search">search</a></li>
+					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="circle">circle</a></li>
+					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="generate_room">generate_room</a></li>
+					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="chatroom">chatroom</a></li>
 				</ul>
 				
 				<div class="navbar-right" ng-controller="LogoutController" >

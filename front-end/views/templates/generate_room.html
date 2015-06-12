@@ -1,13 +1,18 @@
 <div class="container">
 	<h2>GenerateRoom</h2>
-	<div>
+	<div ng-controller="GenerateRoomController">
 		<div class="generate-room-left">
 			<div class="panel">
+
 				<div class="header">
 					friends list
 				</div>
 				<div class="content">
-					qwe
+					<table class="table">
+						<tr ng-repeat="f in friends">
+							<td>{{f.username}}</td><td>{{f.email}}</td><td><span class="glyphicon glyphicon-unchecked" aira-hidden="true"></span><span class="glyphicon glyphicon-check" aira-hidden="true"></span></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>

@@ -8,8 +8,6 @@
 			mySocket = socketFactory({
 				ioSocket: socket
 			});
-
-			console.log(mySocket);
 			return mySocket;
 		}])
 

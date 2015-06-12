@@ -224,11 +224,25 @@ module.exports = function (app) {
 				if(err) return next(err);
 
 				console.log(user);
-			})
+			});
 
-		})
-	})
+		});
+	});
 
+	app.get('/friends/all', function (req, res, next) {
+
+		User.findOne({ '_id': req.query.id }, function (err, user) {
+			if(err) next(err);
+
+			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1 }, function (err, users) {
+				if(err) return next(err);
+
+				console.log(users);
+				res.send(users);
+			});
+		});
+
+	});
 
 
 

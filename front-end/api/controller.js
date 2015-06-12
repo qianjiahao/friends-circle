@@ -43,16 +43,6 @@
 				}
 
 			}
-
-			/*
-				[isActive] check the item which is active , add the active class .
-			 */
-			$scope.isActive = function (viewLocation) {
-			     var active = (viewLocation === $location.path());
-			     return active;
-			};
-
-
 		}])
 		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', function ($scope, $rootScope, $location, $http, AuthFactory){
 			/*
@@ -364,6 +354,16 @@
 					console.log(error);
 				});
 			}
+		}])
+		.controller('GenerateRoomController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
+			
+			$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
+				.success(function (data) {
+					$scope.friends = data;
+				}).error(function (error) {
+					console.log(error);
+				});
+
 		}])
 })();
 
