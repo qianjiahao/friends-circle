@@ -110,7 +110,7 @@ input:-webkit-autofill {
  *  authentication style 
  */
 .auth-list{
-	list-style-type: none;
+	/*list-style-type: none;*/
 	background-color: #F9F9F5;
 	padding: 10px;
 
