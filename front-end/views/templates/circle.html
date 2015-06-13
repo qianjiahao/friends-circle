@@ -1,7 +1,6 @@
 <div class="container">
 	<h2>Circle</h2>
 	<div ng-controller="CircleController">
-		
 		<div class="circle-left">
 			<div class="panel">
 				<div class="header">
@@ -12,21 +11,19 @@
 					<textarea class="circle-write-area" ng-model="writeContent" placeholder="what's happened today ?"></textarea>
 				</div>
 			</div>
-			<div class="panel" ng-repeat="nl in newsList">
+			<div class="panel" ng-repeat="nl in newsList | orderBy :'date' :true">
 				<div class="content">
 					
 					<h3>{{nl.publishId}}</h3>
-					<p>
-						{{nl.publishContent}}
-					</p>
-					<i>{{nl.date}}</i>
+					<p>{{nl.publishContent}}</p>
+					<i>{{nl.date | date : 'yyyy-MM-dd hh:mm:ss'}}</i>
 				</div>
 			</div>	
 		</div>
 		<div class="circle-right">
 			<div class="panel">
 				<div class="header">
-					friends list
+					<span>friends list</span>		
 				</div>
 				<div class="content">
 					<table class="table">
@@ -36,12 +33,14 @@
 						</tr>
 						<tr ng-repeat="f in friends">
 
-							<td><span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span></td><td>{{f.username}}</td>
+							<td>
+								<span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span>
+							</td>
+							<td>{{f.username}}</td>
 						</tr>
 					</table>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>

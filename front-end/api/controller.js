@@ -437,10 +437,17 @@
 			function updateNews(){
 				$http.get('http://localhost:3000/news/all?id=' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
+
+						// $scope.newsList = convertIdToUsername(AuthFactory.getAuth('User').friends,data);
 						$scope.newsList = data;
 					}).error(function (error) {
 						console.log(error);
 					});
+			}
+			function convertIdToUsername(friends,newsData){
+
+				
+
 			}
 			socket.on('update news',function (id) {
 				if(AuthFactory.checkAuth('User')) {
@@ -456,8 +463,7 @@
 			$scope.publish = function(){
 				$http.post('http://localhost:3000/news/create',{
 					publishId: AuthFactory.getAuth('User').id,
-					publishContent: $scope.writeContent,
-					date: moment().format('YYYY-MM-DD HH:mm:ss')
+					publishContent: $scope.writeContent
 				}).success(function (data) {
 
 					socket.emit('update news',AuthFactory.getAuth('User').id);

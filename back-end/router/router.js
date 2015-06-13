@@ -252,7 +252,7 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			if(user.friends.indexOf(req.body.senderId) < 0) {
-				
+
 				user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
 					if(err) return next(err);
 			
@@ -296,7 +296,7 @@ module.exports = function (app) {
 		News.create({
 			publishId: req.body.publishId,
 			publishContent: req.body.publishContent,
-			date: req.body.date
+			date: new Date()
 		}, function (err, news) {
 			if(err) return next(err);
 
@@ -310,7 +310,7 @@ module.exports = function (app) {
 
 			var array = user.friends;
 			array.push(req.query.id);
-			News.find({ 'publishId': { '$in':array } }, function (err, news) {
+			News.find({ 'publishId': { '$in':array } }, { 'date':1, 'publishId':1, 'publishContent':1 }, function (err, news) {
 				if(err) return next(err);
 
 
