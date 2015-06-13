@@ -17,6 +17,7 @@ ul{
 }
 input{
 	box-shadow:none;
+	outline: none;
 }
 input:-webkit-autofill {
 	-webkit-box-shadow: 0 0 0px 1000px #F9F9F5 inset;
@@ -37,16 +38,8 @@ input:-webkit-autofill {
   background-color: #F9F9F5;
   color: #2C3E50;
 }
-.jumbotron{
-	overflow: hidden;
-	zoom: 1;
-}
 .navbar{
 	border-radius: 0;
-}
-.left{
-	width: 50%;
-	float: left;
 }
 
 .input-normal{
@@ -56,6 +49,10 @@ input:-webkit-autofill {
 	border-bottom: 1px solid orangered;
 }
 
+.jumbotron{
+	overflow: hidden;
+	zoom: 1;
+}
 .hint{
 	color:orangered;
 }
@@ -66,7 +63,7 @@ input:-webkit-autofill {
 
 .header-title{
 	font-size: 20px;
-	font-weight: 600;
+	font-weight: 400;
 	letter-spacing:1px;
 }
 
@@ -79,7 +76,8 @@ input:-webkit-autofill {
 }
 
 .panel{
-	margin-bottom: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
 	border: 0 ;
 	border-radius: 3px;
 }
@@ -98,123 +96,54 @@ input:-webkit-autofill {
 	border: 1px solid #e7e7e7;
 	background-color: #fff;
 }
-/**
- *  login style 
- */
-.login-area{
-	width: 50%;
-	float: right;
-	border-radius: 15px;
-}
 
-.login-list{
+.text-center{
+	text-align: center;
+}
+.text-right{
+	text-align: right;	
+}
+.text-left{
+	text-align: left;
+}
+/**
+ *  authentication style 
+ */
+.auth-list{
 	list-style-type: none;
 	background-color: #F9F9F5;
 	padding: 10px;
 
+
 }
-.login-list li{
+.auth-list li{
 	width: 100%;
 	padding: 3px 9px;
 	margin:10px 0;
 	overflow: hidden;
 }
-
-
-.icon{
-	font-size: 16px;
-	line-height: 20px;
-}
-
-.login-group{
-	float: left;
-	width: 80%;
-}
-
-.login-group input, .login-group input:focus{
+.auth-list input, .auth-list input:focus{
 	padding: 5px;
 	outline: none;
 	border: none;
 	background-color: #F9F9F5;
 	cursor: pointer;
 	width: 60%;
-
 }
 
-.icon-group{
-	float: right;
-	margin-top: 6px;
-}
-
-.button-group{
-	text-align: center;
-}
-.button-input{
-	padding: 5px 20%;
-	background-color: #F9F9F5;
+.auth-a{
 	border: none;
+	background-color: #eee;
 }
+.auth-a:visited, .auth-a:active{
+	background-color: #eee;
+	color: inherit;
+}
+
 /**
- * login style
+ * authentication style
  */
 
-	/* ------------------------------------------------------------------------------------  */
-
-/*
-	sigin style
- */
-
-
-.signin-area{
-	width: 100%;
-	clear: both;
-	border-top: 1px solid #e56;
-	border-bottom: 1px solid #e56;
-	overflow: hidden;
-}
-
-.signin-list{
-	list-style-type: none;
-	background-color: #F9F9F5;
-	padding: 10px;
-	border-right: 1px solid #ddd;
-
-}
-.signin-list li{
-	width: 100%;
-	padding: 3px 9px;
-	margin:10px 0;
-	overflow: hidden;
-
-}
-.signin-left{
-	margin-top: 10px;
-	width: 50%;
-	float: left;
-	
-}
-.signin-right{
-	margin-top: 10px;
-	width: 50%;
-	float: right;
-}
-
-.signin-group{
-	float: left;
-	width: 80%;
-}
-
-.signin-group input, .signin-group input:focus{
-	padding: 5px;
-	outline: none;
-	border: none;
-	background-color: #F9F9F5;
-	cursor: pointer;
-	width: 50%;
-}
-/*
-	signin style
- */
 
 	/* ------------------------------------------------------------------------------------  */
 
@@ -245,8 +174,6 @@ input:-webkit-autofill {
 	color: inherit;
 }
 
-
-
 /*
 	hint style
  */
@@ -256,25 +183,25 @@ input:-webkit-autofill {
 	search style
  */
 
-.search-friend-title{
-	text-align: center;
-	font-size: 40px;
-}
 .search-friend-bar{
-	width: 100%;
 	margin:10px;
 	overflow: hidden;
-}
-.search-friend-input{
-	outline: none;
+	background-color: #fff;
 	width: 100%;
 	padding: 7px 15px;
 	font-size: 20px;
-	float: left;
 }
-.search-result{
-	text-align: center;
+.search-friend-input{
+	outline: none;
+	border: none;
+	width: 100%;
 }
+.search-friend-submit{
+	border: none;
+	background-color: #fff;
+	width: 100%;
+}
+
 .apply-content{
 	width: 100%;
 	height: auto;
@@ -292,15 +219,6 @@ input:-webkit-autofill {
 	circle style
  */
 
-.circle-left{
-	width: 60%;
-	float: left;
-}
-
-.circle-right{
-	width: 35%;
-	float: right;
-}
 
 .online{
 	color: seagreen;
@@ -314,7 +232,6 @@ input:-webkit-autofill {
 	outline: none;
 	border: none;
 	overflow: scroll;
-
 }
 .circle-wirte-submit{
 	float: right;
@@ -324,43 +241,12 @@ input:-webkit-autofill {
 /*
 	circle style
  */
+
 	/* ------------------------------------------------------------------------------------  */
 /*
-	generate-room style
+   chatroom style
  */
 
-.generate-room-left{
-	float: left;
-	width: 45%;
-}
-.generate-room-right{
-	float: right;
-	width: 45%;
-}
-
-
-
-
-
-
-
-/*
-	generate-room style
- */
-	/* ------------------------------------------------------------------------------------  */
-/**
- * chatroom style
- */
-.chatroom-wrapper{
-	width: 100%;
-	overflow: hidden;
-}
-
-.chatroom-main{
-	width: 70%;
-	float: left;
-
-}
 
 .chat{
 	height: 400px;
@@ -396,54 +282,36 @@ input:-webkit-autofill {
 .chat-message p{
 	margin: 0;
 }
-.self{
-	text-align: right;	
+.chat-operate-area{
+	overflow: hidden;
 }
-.other{
-	text-align: left;
-}
-
-.side{
-	width: 25%;
-	float: right;
-}
-
-
-
-.user-name{
-	font-size: 30px;
-	margin-top: 10px;
-	margin-bottom: 20px;
-	display: block;
-}
-
-.user-signature{
-	font-style: italic;
-}
-
-.operator{
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	box-sizing:border-box;
-	border: 1px solid #EEEEE0;
-	background-color: #fff;
-	font-size: 18px;
-}
-.input-area{
-	padding: 7px 9px;
-	height: 100%;
-	border:none;
-	outline: none;
-	width: 60%;
+.chat-input-area{
+	width: 90%;
 	float: left;
-	cursor: pointer;
+	
 }
-.button-chat{
-	padding: 8px;
-	width: 19%;
+.chat-input{
+	width: 100%;
+	height: auto;
 	border: none;
-	background-color: #fff;
+	outline: none;
 }
+.chat-submit-area{
+	width: 10%;
+	float: right;
+	padding: 10px;
+	text-align: center;
+	border-radius: 5px;
+	background-color: #eee;
+	color: #555;
+	z-index: 10;
+	font-size: 20px;
+}
+.chat-submit-area:hover{
+	background-color: #eee;
+	color: lightseagreen;
+}
+
 /**
  * chatroom style
  */

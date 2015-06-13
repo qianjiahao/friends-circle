@@ -220,14 +220,16 @@
 				/*
 					{sendMessage} send message to server by socket.io .
 				 */
-				$scope.sendMessage = function(data) {
-					socket.emit('send message',{
-						username: AuthFactory.getAuth('User').username,
-						id: AuthFactory.getAuth('User').id,
-						message: $scope.content,
-						date: moment().format('HH:mm:ss')
-					});
-					$scope.content = '';
+				$scope.sendMessage = function(content) {
+					if(content) {
+						socket.emit('send message',{
+							username: AuthFactory.getAuth('User').username,
+							id: AuthFactory.getAuth('User').id,
+							message: content,
+							date: moment().format('HH:mm:ss')
+						});
+						$scope.content = '';
+					}
 				}
 
 				/*

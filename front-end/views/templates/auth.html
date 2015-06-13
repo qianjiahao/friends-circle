@@ -1,113 +1,122 @@
 <div class="container">
 	<div class="jumbotron">
-		<div class="left">
+		<div class="col-md-6">
 			
 			<h1>Authentication</h1>
 			<p>
 				Please authenticate first .
 			</p>
 		</div>
-		<div class="login-area" ng-controller="LoginController">
+		<div class="col-md-6" ng-controller="LoginController">
 			<form name="loginForm">
-				<ul class="login-list">
+				<ul class="auth-list">
 					<li ng-class="{ true : 'input-error' , false : 'input-normal'}[loginForm.email.$dirty && loginForm.email.$invalid]">
-						<span class="login-group">
+						<span>
 							<span class="glyphicon glyphicon-envelope icon" aira-hidden="true"></span>
 							<input type="email" placeholder="Email" name="email" ng-model="loginEmail" required="" autocomplete="off">
-							<span class="error-message" ng-show="loginForm.email.$dirty && loginForm.email.$error.required">email required</span>
-							<span class="error-message" ng-show="loginForm.email.$dirty && loginForm.email.$error.email">email type error</span>
+							<span class="error-message" ng-show="loginForm.email.$dirty && loginForm.email.$error.required">required</span>
+							<span class="error-message" ng-show="loginForm.email.$dirty && loginForm.email.$error.email">error</span>
 						</span>
-						<span class="icon-group">
+						<span style="float: right">
 							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="loginForm.email.$valid"></span>
 							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.email.$dirty && (loginForm.email.$error.required || loginForm.email.$error.email)"></span>
 						</span>
 					</li>
 					<li ng-class="{ true : 'input-error' , false : 'input-normal'}[loginForm.password.$dirty && loginForm.password.$invalid]">
-						<div class="login-group">
+						<span>
 							<span class="glyphicon glyphicon-lock" aira-hidden="true"></span>
 							<input type="password" placeholder="Password" name="password" ng-minlength="6" ng-maxlength="20" ng-model="loginPassword" required="">
-						</div>
-						<div class="icon-group">
+						</span>
+						<span style="float: right">
 							<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="loginForm.password.$valid"></span>
 							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.password.$dirty && (loginForm.password.$error.required || loginForm.password.$error.password || loginForm.password.$error.maxlength || loginForm.password.$error.minlength)"></span>
-						</div>
+						</span>
 					</li>
-					<li class="button-group">
-						<input type="submit" class="button lightseagreen button-input"  value="login" ng-disabled="loginForm.$invalid" ng-click="login()">
-						<input type="button" class="button lightcoral button-input" ng-click="toggleSignin()" value="signin">	
+					<li>
+						<div class="rows">
+							<span class="col-sm-6">
+								<a href="" class="btn btn-block lightseagreen auth-a" ng-disabled="loginForm.$invalid" ng-click="login()">login</a>
+							</span>
+							<span class="col-sm-6">
+								<a href="" class="btn btn-block lightcoral auth-a" ng-click="toggleSignin()">signin</a>
+							</span>
+						</div>
 					</li>
 				</ul>
 			</form>
 		</div>
 		<div class="signin-area" ng-if="isSignin" ng-controller="SigninController">
 			<form name="signinForm">
-				<div class="signin-left">
-					<ul class="signin-list">
+				<div class="col-md-6">
+					<ul class="auth-list">
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.username.$dirty && signinForm.username.$invalid]">
-							<span class="signin-group">
+							<span>
 								<span class="glyphicon glyphicon-user icon" aira-hidden="true"></span>
 								<input type="text" placeholder="Username" ng-minlength="6" ng-maxlength="20" name="username" ng-model="signinUsername" required="" autocomplete="off">
-								<span class="error-message" ng-show="signinForm.username.$dirty && signinForm.username.$error.required">username required</span>
-								<span class="error-message" ng-show="signinForm.username.$dirty && ( signinForm.username.$error.minlength || signinForm.username.$error.maxlength)">username length error</span>
+								<span class="error-message" ng-show="signinForm.username.$dirty && signinForm.username.$error.required">required</span>
+								<span class="error-message" ng-show="signinForm.username.$dirty && ( signinForm.username.$error.minlength || signinForm.username.$error.maxlength)">error</span>
 							</span>
-							<span class="icon-group">
+							<span style="float: right">
 								<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="signinForm.username.$valid"></span>
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.username.$dirty && (signinForm.username.$error.required || signinForm.username.$error.minlength || signinForm.username.$error.maxlength)"></span>
 							</span>
 						</li>
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.password.$dirty && signinForm.password.$invalid]">
-							<span class="signin-group">
+							<span>
 								<span class="glyphicon glyphicon-lock icon" aira-hidden="true"></span>
 								<input type="password" placeholder="Password" ng-minlength="6" ng-maxlength="20" name="password" ng-model="signinPassword" required="">
-								<span class="error-message" ng-show="signinForm.password.$dirty && (signinForm.password.$error.minlength || signinForm.password.$error.maxlength)">password length error</span>
+								<span class="error-message" ng-show="signinForm.password.$dirty && (signinForm.password.$error.minlength || signinForm.password.$error.maxlength)">error</span>
 								
 							</span>
-							<span class="icon-group">
+							<span style="float: right">
 								<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="signinForm.password.$valid && signinForm.password != signinForm.confiration"></span>
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.password.$dirty && ( signinForm.password.$error.minlength || signinForm.password.$error.maxlength )"></span>
 							</span>
 						</li>
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.confiration.$dirty && (signinForm.confiration.$invalid || !isMatch )]">
-							<span class="signin-group">
+							<span>
 								<span class="glyphicon glyphicon-lock icon" aira-hidden="true"></span>
 								<input type="password" placeholder="Confiration" ng-minlength="6" ng-maxlength="20" name="confiration" ng-model="signinConfiration" required="">
-								<span class="error-message" ng-show="signinForm.confiration.$dirty && !isMatch">password not match</span>
+								<span class="error-message" ng-show="signinForm.confiration.$dirty && !isMatch">not match</span>
 							</span>
-							<span class="icon-group">
+							<span style="float: right">
 								<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="signinForm.confiration.$dirty && isMatch"></span>
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.confiration.$dirty && !isMatch"></span>
 							</span>
 						</li>
 					</ul>
 				</div>
-				<div class="signin-right">
-					<ul class="signin-list">
+				<div class="col-md-6">
+					<ul class="auth-list">
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.email.$dirty && signinForm.email.$invalid]">
-							<span class="signin-group">
+							<span>
 								<span class="glyphicon glyphicon-envelope icon" aira-hidden="true"></span>
 								<input type="email" placeholder="Email" name="email" ng-model="signinEmail" required="" autocomplete="off">
-								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.required">email required</span>
-								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.email">email type error</span>
+								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.required">required</span>
+								<span class="error-message" ng-show="signinForm.email.$dirty && signinForm.email.$error.email">error</span>
 							</span>
-							<span class="icon-group">
+							<span style="float: right">
 								<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="signinForm.email.$valid"></span>
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.email.$dirty && signinForm.email.$error.email"></span>
 							</span>
 						</li>
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.message.$dirty && signinForm.message.$invalid]">
-							<span class="signin-group">
+							<span>
 								<span class="glyphicon glyphicon-book icon" aira-hidden="true"></span>
 								<input type="text" placeholder="Message" ng-maxlength="40" name="message" ng-model="signinSignature" required="" autocomplete="off">
-								<span class="error-message" ng-show="signinForm.message.$dirty && signinForm.username.$error.maxlength">message too length</span>
+								<span class="error-message" ng-show="signinForm.message.$dirty && signinForm.username.$error.maxlength">too length</span>
 							</span>
-							<span class="icon-group">
+							<span style="float: right">
 								<span class="glyphicon glyphicon-ok-sign icon" aira-hidden="true" ng-show="!signinForm.message.$error.maxlength"></span>
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.username.$dirty && signinForm.username.$error.maxlength"></span>
 							</span>
 						</li>
-						<li class="button-group">
-							<input type="submit" class="button lightseagreen button-input"  value="signin" ng-disabled="signinForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)">
-							<input type="reset" class="button lightcoral button-input" value="reset">	
+						<li>
+							<div class="rows">
+								<span class="col-sm-12">
+									<a href="" class="btn btn-block lightseagreen auth-a" ng-disabled="signinForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)">signin</a>
+								</span>
+							</div>
 						</li>
 					</ul>					
 				</div>

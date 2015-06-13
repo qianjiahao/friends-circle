@@ -1,47 +1,49 @@
 <div class="container">
-	
-	<div class="chatroom-wrapper" ng-controller="ChatController">
-		<div class="chatroom-main">
-			<form name="chatroom">
-				<div class="header">
-					Room : {{room}}
-				</div>
-				<div class="content chat">
-					<div class="chat-content" ng-model="message" ng-repeat="m in message">
-						<div class="chat-username" ng-class="{true : 'self',false : 'other'}[m.isSelf]">
-							<span>
-								{{m.username}}
-							</span>
-						</div>
-						<div class="chat-date" ng-class="{true : 'self',false : 'other'}[m.isSelf]">
-							<span >
-								{{m.date}}
-							</span>
-						</div>
-						<div class="chat-message">
-							<p>
-								{{m.message}}
-							</p>
+	<div class="rows" ng-controller="ChatController">
+		<div class="col-md-9">
+			<div class="panel">
+				<form name="chatroom">
+					<div class="header">
+						Room : {{room}}
+					</div>
+					<div class="content chat">
+						<div class="chat-content" ng-model="message" ng-repeat="m in message">
+							<div class="chat-username" ng-class="{true : 'text-right',false : 'text-left'}[m.isSelf]">
+								<span>
+									{{m.username}}
+								</span>
+							</div>
+							<div class="chat-date" ng-class="{true : 'text-right',false : 'text-left'}[m.isSelf]">
+								<span >
+									{{m.date}}
+								</span>
+							</div>
+							<div class="chat-message">
+								<p>
+									{{m.message}}
+								</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="operator">
-					<input type="text" class="input-area" placeholder="input something ... " ng-bind="content" ng-model="content" name="content" autocomplete="off" required>
-					<div class="chatroom-group">
-						<button type="submit" class="button lightseagreen button-chat" ng-click="sendMessage(content)" ng-disabled="chatroom.content.$error.required">submit</button>
-						<button type="reset" class="button button-chat orangered">reset</button>
+					<div class="chat-operate-area content">
+						<div class="chat-input-area">
+							<textarea class="chat-input" placeholder="input something ... " rows="2" ng-bind="content" ng-model="content" name="content" autocomplete="off" required></textarea>
+						</div>
+						<a href="" ng-click="sendMessage(content)">
+							<span class="glyphicon glyphicon-send chat-submit-area" aira-hidden="true"></span>
+						</a>
 					</div>
-				</div>
-			</form>	
+ 				</form>	
+			</div>
 		</div>
-		<div class="side">
+		<div class="col-md-3">
 			<div class="panel" ng-controller="UserInfoController">
 				<div class="header">
 					<span>用户信息</span>
 				</div>
 				<div class="content">
-					<span class="user-name" ng-model="username" ng-bind="username"></span>
-					<p class="user-signature" ng-model="signature" ng-bind="signature"></p>
+					<h2>{{username}}</h2>
+					<i>{{signature}}</i>
 				</div>
 			</div>
 			<div class="panel" ng-controller="ChatController">
