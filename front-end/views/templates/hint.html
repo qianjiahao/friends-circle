@@ -20,7 +20,7 @@
 				</a>
 			</td>
 			<td>
-				<a href="" class="btn btn-sm btn-success" ng-disabled="isAccepted || hl.accept" ng-click="accept(hl._id)">accept</a>
+				<a href="" class="btn btn-sm btn-success" ng-disabled="isAccepted || hl.accept || friends.indexOf(hl.senderId) >=0 " ng-click="accept(hl._id)">accept</a>
 			</td>
 		</tr>
 	</table>

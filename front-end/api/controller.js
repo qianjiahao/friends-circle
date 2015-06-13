@@ -307,7 +307,9 @@
 			 */
 			
 			$scope.isApply = false;
+			$scope.friends = AuthFactory.getAuth('User').friends;
 			$scope.applyFor = function(targetId,hintContent){
+				var self = this;
 				if(targetId !== AuthFactory.getAuth('User').id) {
 
 					$http.post('http://localhost:3000/hint', {
@@ -319,13 +321,15 @@
 						mark: false,
 						accept: false
 					}).success(function (data) {
+						
 						socket.emit('send hint',data);
+						self.isApply = true;
+						self.applyContent = '';
+						
 					}).error(function (error) {
 						console.log(error);
 					});
 
-					this.isApply = true;
-					this.applyContent = '';
 				}
 			}
 		}])
@@ -341,7 +345,6 @@
 
 			$scope.isMarked = false;
 			$scope.mark = function(id) {
-				
 				var self = this;
 
 				$http.post('http://localhost:3000/hint/mark',{
@@ -349,15 +352,18 @@
 					id: id
 				}).success(function (data) {
 					
+					self.isMarked = true;
+					modifyHint();
+
 				}).error(function (error) {
 					console.log(error);
 				});
-				self.isMarked = true;
-				modifyHint();
 			}
 
 
 			$scope.isAccepted = false;
+			$scope.friends = AuthFactory.getAuth('User').friends;
+
 			$scope.accept = function(id) {
 
 				var self = this;
@@ -397,13 +403,14 @@
 					}).error(function (error) {
 						console.log(error);
 					})
+					
+					socket.emit('update friends',AuthFactory.getAuth('User').id);
+
+					returnMessage(senderId,'i accept your request , we are friend now .');
 
 				}).error(function (error) {
 					console.log(error);
 				})
-				socket.emit('update friends',AuthFactory.getAuth('User').id);
-
-				returnMessage(senderId,'i accept your request , we are friend now .');
 			}
 
 			function returnMessage(targetId,hintContent) {
@@ -425,6 +432,41 @@
 		.controller('CircleController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket){
 			
 			socket.emit('update friends',AuthFactory.getAuth('User').id);
+			socket.emit('update news',AuthFactory.getAuth('User').id);
+
+			function updateNews(){
+				$http.get('http://localhost:3000/news/all?id=' + AuthFactory.getAuth('User').id)
+					.success(function (data) {
+						$scope.newsList = data;
+					}).error(function (error) {
+						console.log(error);
+					});
+			}
+			socket.on('update news',function (id) {
+				if(AuthFactory.checkAuth('User')) {
+					var user = AuthFactory.getAuth('User');
+					if(user.id === id || user.friends.indexOf(id) >= 0) {
+						updateNews();
+						console.log('sender id : ',id);
+					}
+				}
+			})
+			
+			$scope.writeContent = '';
+			$scope.publish = function(){
+				$http.post('http://localhost:3000/news/create',{
+					publishId: AuthFactory.getAuth('User').id,
+					publishContent: $scope.writeContent,
+					date: moment().format('YYYY-MM-DD HH:mm:ss')
+				}).success(function (data) {
+
+					socket.emit('update news',AuthFactory.getAuth('User').id);
+					$scope.writeContent = '';
+
+				}).error(function (error) {
+					console.log(error);
+				});
+			}
 
 			function updateFriends(){
 
@@ -435,7 +477,6 @@
 						console.log(error);
 					});
 			}
-
 			socket.on('update friends',function(id){
 				if(AuthFactory.checkAuth('User')) {
 					var user = AuthFactory.getAuth('User');
@@ -444,17 +485,7 @@
 					}
 				}
 			});
-			
 		}])
-		.controller('GenerateRoomController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
-			
-			$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
-				.success(function (data) {
-					$scope.friends = data;
-				}).error(function (error) {
-					console.log(error);
-				});
-
-		}])
+		
 })();
 

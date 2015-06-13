@@ -5,13 +5,21 @@
 		<div class="circle-left">
 			<div class="panel">
 				<div class="header">
-					new things
+					<span>今天的新鲜事 ， 写点什么</span>
+					<span><a href="" class="btn btn-sm btn-success circle-wirte-submit" ng-click="publish()" ng-disabled="!writeContent">submit</a></span>
 				</div>
 				<div class="content">
+					<textarea class="circle-write-area" ng-model="writeContent" placeholder="what's happened today ?"></textarea>
+				</div>
+			</div>
+			<div class="panel" ng-repeat="nl in newsList">
+				<div class="content">
 					
-
-					xxxxxx
-					xxxxx
+					<h3>{{nl.publishId}}</h3>
+					<p>
+						{{nl.publishContent}}
+					</p>
+					<i>{{nl.date}}</i>
 				</div>
 			</div>	
 		</div>

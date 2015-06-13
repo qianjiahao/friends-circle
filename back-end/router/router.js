@@ -1,5 +1,6 @@
 var User = require('../model/user.js');
 var Hint = require('../model/hint.js');
+var News = require('../model/news.js');
 var bcrypt = require('bcrypt');
 var flash = require('../util/flash.js');
 var moment = require('moment');
@@ -203,6 +204,7 @@ module.exports = function (app) {
 					if(err) return next(err);
 
 					console.log('mark : ',user);
+					res.send({});
 
 				});
 			});
@@ -238,18 +240,24 @@ module.exports = function (app) {
 		User.findOne({ '_id': req.body.senderId }, function (err, user) {
 			if(err) return next(err);
 
-			user.update({ '$push': { 'friends': req.body.targetId } }, function (err, user) {
-				if(err) return next(err);
-			});
+			if(user.friends.indexOf(req.body.targetId) < 0) {
+				
+				user.update({ '$push': { 'friends': req.body.targetId } }, function (err, user) {
+					if(err) return next(err);
+				});
+			}
 		});
 
 		User.findOne({ '_id': req.body.targetId }, function (err, user) {
 			if(err) return next(err);
 
-			user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
-				if(err) return next(err);
-		
-			});
+			if(user.friends.indexOf(req.body.senderId) < 0) {
+				
+				user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
+					if(err) return next(err);
+			
+				});
+			}
 
 		});
 
@@ -265,7 +273,6 @@ module.exports = function (app) {
 			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1, 'online':1 }, function (err, users) {
 				if(err) return next(err);
 
-				console.log(users);
 				res.send(users);
 			});
 		});
@@ -285,7 +292,33 @@ module.exports = function (app) {
 			});
 		});
 	});
+	app.post('/news/create', function (req, res, next) {
+		News.create({
+			publishId: req.body.publishId,
+			publishContent: req.body.publishContent,
+			date: req.body.date
+		}, function (err, news) {
+			if(err) return next(err);
 
+			res.send({});
+		});
+	});
+
+	app.get('/news/all', function (req, res, next) {
+		User.findOne({ '_id': req.query.id }, function (err, user) {
+			if(err) return next(err);
+
+			var array = user.friends;
+			array.push(req.query.id);
+			News.find({ 'publishId': { '$in':array } }, function (err, news) {
+				if(err) return next(err);
+
+
+				res.send(news);
+			})
+			
+		})
+	})
 
 
 }

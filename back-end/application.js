@@ -33,7 +33,11 @@ io.on('connection',function (socket) {
 
 	socket.on('update friends',function (id) {
 		io.emit('update friends', id);
-	})
+	});
+
+	socket.on('update news', function (id) {
+		io.emit('update news', id);
+	});
 
 	socket.on('disconnect',function() {
 		console.log('Goodbye : ', socket.id);

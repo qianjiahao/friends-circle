@@ -309,7 +309,17 @@ input:-webkit-autofill {
 	color: #666;
 }
 
+.circle-write-area{
+	width: 100%;
+	outline: none;
+	border: none;
+	overflow: scroll;
 
+}
+.circle-wirte-submit{
+	float: right;
+    margin-top: -5px;
+}
 
 /*
 	circle style
