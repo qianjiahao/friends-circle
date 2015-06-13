@@ -7,7 +7,8 @@ var UesrSchema = new Schema({
 	email: String,
 	signature: String,
 	hints: Number,
-	friends: Array
+	friends: Array,
+	online: Boolean
 });
 
 var User = mongoose.model('User',UesrSchema);

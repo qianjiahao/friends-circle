@@ -29,6 +29,10 @@ io.on('connection',function (socket) {
 
 	socket.on('send hint',function(data) {
 		io.emit('receive hint',data);
+	});
+
+	socket.on('update friends',function (id) {
+		io.emit('update friends', id);
 	})
 
 	socket.on('disconnect',function() {

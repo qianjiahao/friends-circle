@@ -22,8 +22,13 @@
 				</div>
 				<div class="content">
 					<table class="table">
+						<tr>
+							<td>online</td>
+							<td>nickname</td>
+						</tr>
 						<tr ng-repeat="f in friends">
-							<td>{{f.username}}</td>
+
+							<td><span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span></td><td>{{f.username}}</td>
 						</tr>
 					</table>
 				</div>

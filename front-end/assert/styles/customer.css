@@ -302,6 +302,12 @@ input:-webkit-autofill {
 	float: right;
 }
 
+.online{
+	color: seagreen;
+}
+.offline{
+	color: #666;
+}
 
 
 

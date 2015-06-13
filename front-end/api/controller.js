@@ -44,7 +44,7 @@
 
 			}
 		}])
-		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', function ($scope, $rootScope, $location, $http, AuthFactory){
+		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', 'socket', function ($scope, $rootScope, $location, $http, AuthFactory, socket){
 			/*
 				check not authentication .
 			 */
@@ -75,6 +75,7 @@
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User').username;
 						$rootScope.hintChanged = !$rootScope.hintChanged;
+						socket.emit('update friends',AuthFactory.getAuth('User').id);
 	 					$location.path('/chatroom');
 	 					console.log(data)
 					}
@@ -84,7 +85,7 @@
 			}
 
 		}])
-		.controller('SigninController', ['$scope', '$rootScope', '$location', 'AuthFactory', function ($scope, $rootScope, $location, AuthFactory){
+		.controller('SigninController', ['$scope', '$rootScope', '$location', 'AuthFactory', 'socket', function ($scope, $rootScope, $location, AuthFactory, socket){
 			
 			/*
 				check authentication .
@@ -126,6 +127,7 @@
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
 						$rootScope.username = AuthFactory.getAuth('User').username;
 						$rootScope.totalHints = 0;
+						socket.emit('update friends',AuthFactory.getAuth('User').id);
 						$location.path('/chatroom');
 						console.log(data);
 					}
@@ -135,12 +137,19 @@
 			}
 
 		}])
-		.controller('LogoutController', ['$scope','$rootScope','AuthFactory','socket', function ($scope, $rootScope, AuthFactory, socket){
+		.controller('LogoutController', ['$scope','$rootScope', '$http', 'AuthFactory','socket', function ($scope, $rootScope, $http, AuthFactory, socket){
 			
 			/*
 				{logout} logout the system .
 			 */
 			$scope.logout = function () {
+				$http.post('http://localhost:3000/logout?id=' + AuthFactory.getAuth('User').id)
+					.success(function (data){
+
+					}).error(function (error) {
+						console.log(error);
+					});
+				socket.emit('update friends',AuthFactory.getAuth('User').id);
 				AuthFactory.removeAuth('User');
 				$rootScope.isAuth = AuthFactory.checkAuth('User');
 				$rootScope.username = null;
@@ -180,7 +189,7 @@
 
 					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
 							$rootScope.totalHints = data.total;
-							console.log('total hints :' + data.total);
+							// console.log('total hints :' + data.total);
 						}).error(function (error) {
 							console.log(error);
 						});
@@ -192,13 +201,12 @@
 
 				$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
-						console.log(data);
 						AuthFactory.setAuth('User', data);
 					}).error(function (error) {
 						console.log(error);
 					})
 
-				console.log(AuthFactory.getAuth('User'))
+				// console.log(AuthFactory.getAuth('User'))
 				/*
 					[message] contain chatroom message .	
 				 */
@@ -382,16 +390,19 @@
 					senderId: senderId
 				}).success(function (date) {
 
-					$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
-						.success(function (data) {
-							console.log(data);
-							AuthFactory.setAuth('User', data);
-						}).error(function (error) {
-							console.log(error);
-						})
+				$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
+					.success(function (data) {
+						console.log(data);
+						AuthFactory.setAuth('User', data);
+					}).error(function (error) {
+						console.log(error);
+					})
+
 				}).error(function (error) {
 					console.log(error);
 				})
+				socket.emit('update friends',AuthFactory.getAuth('User').id);
+
 				returnMessage(senderId,'i accept your request , we are friend now .');
 			}
 
@@ -408,16 +419,31 @@
 					socket.emit('send hint',data);
 				}).error(function (error) {
 					console.log(error);
-				})
+				});
 			}
 		}])
-		.controller('CircleController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){
-			$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
-				.success(function (data) {
-					$scope.friends = data;
-				}).error(function (error) {
-					console.log(error);
-				});
+		.controller('CircleController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket){
+			
+			socket.emit('update friends',AuthFactory.getAuth('User').id);
+
+			function updateFriends(){
+
+				$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
+					.success(function (data) {
+						$scope.friends = data;
+					}).error(function (error) {
+						console.log(error);
+					});
+			}
+
+			socket.on('update friends',function(id){
+				if(AuthFactory.checkAuth('User')) {
+					var user = AuthFactory.getAuth('User');
+					if(user.id === id || user.friends.indexOf(id) >= 0) {
+						updateFriends();
+					}
+				}
+			});
 			
 		}])
 		.controller('GenerateRoomController', ['$scope', '$http', 'AuthFactory', function ($scope, $http, AuthFactory){

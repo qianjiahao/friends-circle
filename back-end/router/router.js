@@ -46,18 +46,36 @@ module.exports = function (app) {
 						signature: user.signature,
 						id: user._id
 					}));
+					user.update({ 'online': true }, function (err) {
+						if(err) return next(err);
+					})
 				});
 			});
 		});
 	});
 
+	app.post('/logout', function (req, res, next) {
+		User.findOne()
+			.where('_id')
+			.equals(req.query.id)
+			.exec(function (err, user) {
+				if(err) return next(err);
+
+				user.update({ 'online':false }, function (err, user) {
+					if(err) return next(err);
+
+					console.log('logout : ' + user);
+				});
+			});
+	});
 	app.post('/signin', function (req, res, next) {
 		var temp = {
 			username: req.body.username,
 			encryptedPassword: req.body.password,
 			email: req.body.email,
 			signature: req.body.signature,
-			hints: 0
+			hints: 0,
+			online: true
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -244,7 +262,7 @@ module.exports = function (app) {
 		User.findOne({ '_id': req.query.id }, function (err, user) {
 			if(err) next(err);
 
-			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1 }, function (err, users) {
+			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1, 'online':1 }, function (err, users) {
 				if(err) return next(err);
 
 				console.log(users);

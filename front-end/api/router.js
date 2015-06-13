@@ -15,10 +15,6 @@
 					url: '/circle',
 					templateUrl: '../views/templates/circle.html'
 				})
-				.state('generate_room', {
-					url: '/generate_room',
-					templateUrl: '../views/templates/generate_room.html'
-				})
 				.state('chatroom', {
 					url: '/chatroom',
 					templateUrl: '../views/templates/chatroom.html'
