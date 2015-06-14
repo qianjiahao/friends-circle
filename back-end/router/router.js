@@ -78,7 +78,8 @@ module.exports = function (app) {
 			email: req.body.email,
 			signature: req.body.signature,
 			hints: 0,
-			online: true
+			online: true,
+			room: ''
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -287,7 +288,8 @@ module.exports = function (app) {
 					email: user.email,
 					signature: user.signature,
 					id: user._id,
-					friends: user.friends
+					friends: user.friends,
+					currentRoom: user.currentRoom
 				});
 			});
 	});
@@ -311,7 +313,7 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			var array = user.friends;
-			array.push(req.query.id);
+			array.push(req.params.userId);
 			News.find({ 'publishId': { '$in':array } }, { 'date':1, 'publishId':1, 'publishContent':1 }, function (err, news) {
 				if(err) return next(err);
 
@@ -334,8 +336,87 @@ module.exports = function (app) {
 
 			res.send({
 				room: room
-			})
+			});
 		});
+	});
+
+	app.get('/rooms/:userId', function (req, res, next) {
+		Room.find()
+			.where('members')
+			.equals(req.params.userId)
+			.exec(function (err, rooms) {
+				if(err) return next(err);
+
+				res.send({
+					rooms: rooms
+				});
+			});
+	});
+
+	app.post('/room/join', function (req, res, next) {
+		User.findOne()
+			.where('_id')
+			.equals(req.body.userId)
+			.exec(function (err, user) {
+				if(err) return next(err);
+
+				var oldRoomId = user.currentRoom;
+				if(oldRoomId) {
+					
+					Room.findOne()
+						.where('_id')
+						.equals(oldRoomId)
+						.exec(function (err, room) {
+							if(err) return next(err);
+
+							var index = room.currentMembers.indexOf(req.body.userId);
+							if(index >= 0) {
+								room.currentMembers.splice(index,1);
+							}
+
+							room.save(function (err) {
+								if(err) return next(err);
+
+							});
+						});
+				}
+
+				user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
+					if(err) return next(err);
+
+				});
+
+				Room.findOne()
+					.where('_id')
+					.equals(req.body.roomId)
+					.exec(function (err, room) {
+						if(err) return next(err);
+
+						if(room.currentMembers.indexOf(req.body.userId) < 0) {
+							room.currentMembers.push(req.body.userId);
+							
+							room.save(function (err) {
+								if(err) return next(err);
+
+								res.send({});
+							});
+						}
+					});
+			});
+	});
+
+	app.get('/room/:roomId', function (req, res, next) {
+
+		Room.findOne()
+			.where('_id')
+			.equals(req.params.roomId)
+			.exec(function (err, room) {
+				if(err) return next(err);
+
+				res.send({
+					room: room
+				});
+			});
 	});
 
 

@@ -4,7 +4,7 @@
 			<div class="panel">
 				<form name="chatroom">
 					<div class="header">
-						Room : {{room}}
+						{{room.roomInfo}}
 					</div>
 					<div class="content chat">
 						<div class="chat-content" ng-model="message" ng-repeat="m in message">
@@ -51,14 +51,11 @@
 					<span>房间信息</span>
 				</div>
 				<div class="content">
-					<div ng-show="isCreate" name="createRoomForm">
-						<input type="text" autocomplete="off" ng-model="createRoomContent">
-						<a href="" class="button button-input" ng-show="createRoomContent">create room</a>
-					</div>
-					<div>
-						<input type="text" autocomplete="off">
-						<a href="">search</a>
-					</div>
+					<table class="table">
+						<tr ng-repeat="cm in room.currentMembers">
+							<td>{{cm}}</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>

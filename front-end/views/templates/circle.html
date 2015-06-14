@@ -12,9 +12,9 @@
 			</div>
 			<div class="panel" ng-repeat="nl in newsList | orderBy :'date' :true">
 				<div class="content">
-					<h3>{{nl.publishId}}</h3>
-					<p>{{nl.publishContent}}</p>
-					<i>{{nl.date | date : 'yyyy-MM-dd hh:mm:ss'}}</i>
+					<h3><span ng-bind="nl.publishId"></span></h3>
+					<p ng-bind="nl.publishContent"></p>
+					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
 				</div>
 			</div>	
 		</div>
@@ -46,7 +46,7 @@
 							<td>
 								<span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span>
 							</td>
-							<td>{{f.username}}</td>
+							<td><span ng-bind="f.username"></span></td>
 							<td ng-show="isCreateRoom">
 								<a href="" ng-click="toggleCheck(f._id)">
 									<span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isChecked]" aira-hidden="true"></span>
@@ -62,10 +62,14 @@
 			</div>
 			<div class="panel">
 				<div class="header">
-					<span>加入过的房间</span>
+					<span>房间列表</span>
 				</div>
 				<div class="content">
-					xxxxx
+					<table class="table">
+						<tr ng-repeat="r in rooms | orderBy:'createdDate':true">
+							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="r.createrId"></span></td><td><a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</div>

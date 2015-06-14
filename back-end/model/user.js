@@ -8,7 +8,8 @@ var UesrSchema = new Schema({
 	signature: String,
 	hints: Number,
 	friends: Array,
-	online: Boolean
+	online: Boolean,
+	currentRoom: String
 });
 
 var User = mongoose.model('User',UesrSchema);

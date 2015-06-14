@@ -27,8 +27,8 @@ io.on('connection',function (socket) {
 		io.emit('receive message',data);
 	});
 
-	socket.on('send hint',function(data) {
-		io.emit('receive hint',data);
+	socket.on('update hints',function(data) {
+		io.emit('update hints',data);
 	});
 
 	socket.on('update friends',function (id) {
@@ -37,6 +37,10 @@ io.on('connection',function (socket) {
 
 	socket.on('update news', function (id) {
 		io.emit('update news', id);
+	});
+
+	socket.on('update rooms', function (members) {
+		io.emit('update rooms', members);
 	});
 
 	socket.on('disconnect',function() {

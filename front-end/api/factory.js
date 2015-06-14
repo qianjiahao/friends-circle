@@ -32,6 +32,13 @@
 				},
 				removeAuth: function(target) {
 					$cookies.remove(target);
+				},
+				checkJoinRoom: function (target) {
+					if(!$cookies.getObject(target).currentRoom) {
+						$location.path('/circle');
+						return false;
+					}
+					return true;
 				}
 
 
