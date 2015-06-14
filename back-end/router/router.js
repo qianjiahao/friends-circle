@@ -23,42 +23,43 @@ module.exports = function (app) {
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
-
 			if(err) return next(err);
 
-			User.findOne({
-				email: temp.email
-			}, function (err, user) {
-				if(err) return next(err);
-
-				if(!user) {
-					res.send(flash('error','user not exist',temp));
-				}
-				bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
+			User.findOne()
+				.where('email')
+				.equals(temp.email)
+				.exec(function (err, user) {
 					if(err) return next(err);
 
-					if(!valid) {
-						res.send(flash('error','password not match',temp));
-						return ;
+					if(!user) {
+						res.send(flash('error','user not exist',temp));
 					}
-					res.send(flash('success','login success',{
-						username: user.username,
-						email: user.email,
-						signature: user.signature,
-						id: user._id
-					}));
-					user.update({ 'online': true }, function (err) {
+					bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
 						if(err) return next(err);
-					})
+
+						if(!valid) {
+							res.send(flash('error','password not match',temp));
+							return ;
+						}
+						res.send(flash('success','login success',{
+							username: user.username,
+							email: user.email,
+							signature: user.signature,
+							id: user._id
+						}));
+						user.update({ 'online': true }, function (err) {
+							if(err) return next(err);
+						});
+					});
+					
 				});
 			});
-		});
 	});
 
 	app.post('/logout', function (req, res, next) {
 		User.findOne()
 			.where('_id')
-			.equals(req.query.id)
+			.equals(req.body.id)
 			.exec(function (err, user) {
 				if(err) return next(err);
 
@@ -82,29 +83,32 @@ module.exports = function (app) {
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
 			if(err) return next(err);
 
-			User.findOne({
-				email: temp.email
-			}, function (err, user) {
-				if(err) return next(err);
-				if(user) {
-					res.send(flash('error','user already exist',temp));
-					return ;
-				}
-				temp.encryptedPassword = encryptedPassword;
-				var user = new User(temp);
+			User.findOne()
+				.where('email')
+				.equals(temp.email)
+				.exec(function (err, user) {
 
-				User.create(user,function (err, user) {
 					if(err) return next(err);
+					if(user) {
+						res.send(flash('error','user already exist',temp));
+						return ;
+					}
+					
+					temp.encryptedPassword = encryptedPassword;
+					var user = new User(temp);
 
-					res.send(flash('success','register success',{
-						username: user.username,
-						email: user.email,
-						signature: user.signature,
-						id: user._id
-					}));
+					User.create(user,function (err, user) {
+						if(err) return next(err);
+
+						res.send(flash('success','register success',{
+							username: user.username,
+							email: user.email,
+							signature: user.signature,
+							id: user._id
+						}));
+					});
 				});
 			});
-		});
 	});
 
 	app.post('/search', function (req, res, next) {
@@ -142,7 +146,6 @@ module.exports = function (app) {
 				user.update({ '$inc' : { 'hints': 1 } }, function (err, user) {
 					if(err) return(err);
 					
-					console.log(user);	
 					res.send({
 						targetId: req.body.targetId
 					});
@@ -154,31 +157,30 @@ module.exports = function (app) {
 	/*
 		get all hints .
 	 */
-	app.get('/hints/all', function (req, res, next) {
+	app.get('/hints/all/:targetId', function (req, res, next) {
 		Hint.find()
 			.where('targetId')
-			.equals(req.query.targetId)
+			.equals(req.param('targetId'))
 			.sort('mark')
 			.sort('-date')
 			.exec(function (err, hints) {
 
 				if(err) return next(err);
-
 				res.send({
 					hints: hints
 				});
-		})
+		});
 	});
 
 	/*
 		get total count of unmarked hint .
 	 */
-	app.get('/hints/count', function (req, res, next) {
+	app.get('/hints/count/:targetId/:mark', function (req, res, next) {
 		Hint.count()
 			.where('targetId')
-			.equals(req.query.id)
+			.equals(req.param('targetId'))
 			.where('mark')
-			.equals(false)
+			.equals(req.param('mark'))
 			.exec(function (err, total) {
 				if(err) return next(err);
 
@@ -227,7 +229,6 @@ module.exports = function (app) {
 					res.send({
 						hint: hint
 					});
-					console.log('accept : ',user);
 				});
 			});
 		});
@@ -250,24 +251,19 @@ module.exports = function (app) {
 
 		User.findOne({ '_id': req.body.targetId }, function (err, user) {
 			if(err) return next(err);
-
 			if(user.friends.indexOf(req.body.senderId) < 0) {
-
 				user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
 					if(err) return next(err);
 			
 				});
 			}
-
 		});
-
-		res.send({})
-
+		res.send({});
 	});
 
-	app.get('/friends/all', function (req, res, next) {
+	app.get('/friends/all/:userId', function (req, res, next) {
 
-		User.findOne({ '_id': req.query.id }, function (err, user) {
+		User.findOne({ '_id': req.param('userId') }, function (err, user) {
 			if(err) next(err);
 
 			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1, 'online':1 }, function (err, users) {
@@ -276,36 +272,41 @@ module.exports = function (app) {
 				res.send(users);
 			});
 		});
-
 	});
 
-	app.get('/user', function (req, res, next) {
-		User.findOne({ '_id': req.query.id }, function (err, user) {
-			if(err) return next(err);
-
-			res.send({
-				username: user.username,
-				email: user.email,
-				signature: user.signature,
-				id: user._id,
-				friends: user.friends
+	app.get('/user/:userId', function (req, res, next) {
+		User.findOne()
+			.where('_id')
+			.equals(req.param('userId'))
+			.exec(function (err, user) {
+				if(err) return next(err);
+				
+				res.send({
+					username: user.username,
+					email: user.email,
+					signature: user.signature,
+					id: user._id,
+					friends: user.friends
+				});
 			});
-		});
 	});
+
 	app.post('/news/create', function (req, res, next) {
-		News.create({
+		var temp = {
 			publishId: req.body.publishId,
 			publishContent: req.body.publishContent,
 			date: new Date()
-		}, function (err, news) {
+		};
+
+		News.create(temp, function (err) {
 			if(err) return next(err);
 
 			res.send({});
 		});
 	});
 
-	app.get('/news/all', function (req, res, next) {
-		User.findOne({ '_id': req.query.id }, function (err, user) {
+	app.get('/news/all/:userId', function (req, res, next) {
+		User.findOne({ '_id': req.param('userId') }, function (err, user) {
 			if(err) return next(err);
 
 			var array = user.friends;
@@ -313,12 +314,8 @@ module.exports = function (app) {
 			News.find({ 'publishId': { '$in':array } }, { 'date':1, 'publishId':1, 'publishContent':1 }, function (err, news) {
 				if(err) return next(err);
 
-
 				res.send(news);
-			})
-			
-		})
-	})
-
-
+			});
+		});
+	});
 }

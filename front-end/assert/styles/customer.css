@@ -299,8 +299,10 @@ input:-webkit-autofill {
 .chat-submit-area{
 	width: 10%;
 	float: right;
-	padding: 10px;
 	text-align: center;
+	height: 100%;
+	padding: 13px 0;
+	display: block;
 	border-radius: 5px;
 	background-color: #eee;
 	color: #555;
@@ -308,8 +310,8 @@ input:-webkit-autofill {
 	font-size: 20px;
 }
 .chat-submit-area:hover{
-	background-color: #eee;
-	color: lightseagreen;
+	background-color: #888;
+	color: #fff;
 }
 
 /**

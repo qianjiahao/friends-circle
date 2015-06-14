@@ -143,8 +143,11 @@
 				{logout} logout the system .
 			 */
 			$scope.logout = function () {
-				$http.post('http://localhost:3000/logout?id=' + AuthFactory.getAuth('User').id)
-					.success(function (data){
+				$http.post('http://localhost:3000/logout',{
+					
+						id: AuthFactory.getAuth('User').id
+					
+					}).success(function (data){
 
 					}).error(function (error) {
 						console.log(error);
@@ -187,9 +190,10 @@
 			$scope.$watch('hintChanged', function(newValue) {
 				if(AuthFactory.checkAuth('User')) {
 
-					$http.get('http://localhost:3000/hints/count?id=' + AuthFactory.getAuth('User').id).success(function (data) {
+					$http.get('http://localhost:3000/hints/count/' + AuthFactory.getAuth('User').id + '/' + false)
+						.success(function (data) {
 							$rootScope.totalHints = data.total;
-							// console.log('total hints :' + data.total);
+							console.log('total hints :' + data.total);
 						}).error(function (error) {
 							console.log(error);
 						});
@@ -199,7 +203,7 @@
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
 			if(AuthFactory.checkAuth('User')) {
 
-				$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
+				$http.get('http://localhost:3000/user/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						AuthFactory.setAuth('User', data);
 					}).error(function (error) {
@@ -337,7 +341,7 @@
 		}])
 		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', 'socket', function ($scope, $http, $location, $rootScope, AuthFactory, socket){
 			
-			$http.get('http://localhost:3000/hints/all?targetId=' + AuthFactory.getAuth('User').id)
+			$http.get('http://localhost:3000/hints/all/'+ AuthFactory.getAuth('User').id)
 				.success(function (data) {
 					$scope.hintsList = data.hints;
 				}).error(function (error) {
@@ -398,7 +402,7 @@
 					senderId: senderId
 				}).success(function (date) {
 
-				$http.get('http://localhost:3000/user?id=' + AuthFactory.getAuth('User').id)
+				$http.get('http://localhost:3000/user/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						console.log(data);
 						AuthFactory.setAuth('User', data);
@@ -437,7 +441,7 @@
 			socket.emit('update news',AuthFactory.getAuth('User').id);
 
 			function updateNews(){
-				$http.get('http://localhost:3000/news/all?id=' + AuthFactory.getAuth('User').id)
+				$http.get('http://localhost:3000/news/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 
 						// $scope.newsList = convertIdToUsername(AuthFactory.getAuth('User').friends,data);
@@ -478,7 +482,7 @@
 
 			function updateFriends(){
 
-				$http.get('http://localhost:3000/friends/all?id=' + AuthFactory.getAuth('User').id)
+				$http.get('http://localhost:3000/friends/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						$scope.friends = data;
 					}).error(function (error) {

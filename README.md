@@ -6,34 +6,37 @@
 
 #Usage
 
-clone & enter
+##clone & enter
 
     git clone git@github.com:qianjiahao/friends-circle.git
     cd friends-circle
 
-install dependencies
+##install dependencies
 
 	bower install && npm install
     
-start node server
+##start node server
 
     cd back-end && node application.js
     
-start front end server
+##start front end server
 
     cd .. && http-server .
     
-open brwser
+##open brwser
 
     http://localhost:8080/front-end/views/layout.html
 
 #Description
   
-    login & signin
-    realtime chatroom
-    search friends
-    information hint : pub/sub
-    to be continue ...
+    登录、注册
+    实时聊天室 [ only friends ]
+    查询用户 [ by nickname or email ]
+    好友申请 [ dynamic update by socket.io ]
+    接受申请或标记已读 [ dynamic update by socket.io ]
+    好友列表 [ online or offline dynamic update by socket.io ]
+    to be continued ...
 
-if you like it , don't forget to star ~ thanks a lot .
+
+> If you like it , don't forget to star ~ thanks a lot .
 
