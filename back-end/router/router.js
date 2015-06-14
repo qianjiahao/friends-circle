@@ -1,6 +1,7 @@
 var User = require('../model/user.js');
 var Hint = require('../model/hint.js');
 var News = require('../model/news.js');
+var Room = require('../model/room.js');
 var bcrypt = require('bcrypt');
 var flash = require('../util/flash.js');
 var moment = require('moment');
@@ -160,7 +161,7 @@ module.exports = function (app) {
 	app.get('/hints/all/:targetId', function (req, res, next) {
 		Hint.find()
 			.where('targetId')
-			.equals(req.param('targetId'))
+			.equals(req.params.targetId)
 			.sort('mark')
 			.sort('-date')
 			.exec(function (err, hints) {
@@ -178,9 +179,9 @@ module.exports = function (app) {
 	app.get('/hints/count/:targetId/:mark', function (req, res, next) {
 		Hint.count()
 			.where('targetId')
-			.equals(req.param('targetId'))
+			.equals(req.params.targetId)
 			.where('mark')
-			.equals(req.param('mark'))
+			.equals(req.params.mark)
 			.exec(function (err, total) {
 				if(err) return next(err);
 
@@ -263,7 +264,7 @@ module.exports = function (app) {
 
 	app.get('/friends/all/:userId', function (req, res, next) {
 
-		User.findOne({ '_id': req.param('userId') }, function (err, user) {
+		User.findOne({ '_id': req.params.userId }, function (err, user) {
 			if(err) next(err);
 
 			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1, 'online':1 }, function (err, users) {
@@ -277,7 +278,7 @@ module.exports = function (app) {
 	app.get('/user/:userId', function (req, res, next) {
 		User.findOne()
 			.where('_id')
-			.equals(req.param('userId'))
+			.equals(req.params.userId)
 			.exec(function (err, user) {
 				if(err) return next(err);
 				
@@ -306,7 +307,7 @@ module.exports = function (app) {
 	});
 
 	app.get('/news/all/:userId', function (req, res, next) {
-		User.findOne({ '_id': req.param('userId') }, function (err, user) {
+		User.findOne({ '_id': req.params.userId }, function (err, user) {
 			if(err) return next(err);
 
 			var array = user.friends;
@@ -318,4 +319,27 @@ module.exports = function (app) {
 			});
 		});
 	});
+
+	app.post('/room/create', function (req, res, next) {
+		var temp = {
+			roomInfo: req.body.roomInfo,
+			createrId: req.body.createrId,
+			createdDate: req.body.createdDate,
+			members: req.body.members,
+			currentMembers: req.body.currentMembers
+		}
+		console.log(temp);
+		Room.create(temp, function (err, room) {
+			if(err) return next(err);
+
+			res.send({
+				room: room
+			})
+		});
+	});
+
+
+
+
+
 }

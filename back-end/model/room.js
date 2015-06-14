@@ -2,12 +2,11 @@ var mongoose = require('../config.js').mongoose;
 var Schema = mongoose.Schema;
 
 var RoomSchema = new Schema({
-	roomName: String,
 	roomInfo: String,
-	creatorId: String,
-	createDate: Date,
+	createrId: String,
+	createdDate: Date,
 	members: Array,
-	current: Array
+	currentMembers: Array
 });
 
 var Room = mongoose.model('Room',RoomSchema);

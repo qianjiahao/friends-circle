@@ -24,9 +24,7 @@
 					<ul class="navbar-nav nav header-link">
 						<li>
 							<a href="#/hint" ng-if="isAuth">
-								<span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[totalHints>0]">
-									<i ng-bind="totalHints" ng-show="totalHints>0"></i>
-								</span>
+								<span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[totalHints>0]"><i ng-bind="totalHints" ng-show="totalHints>0"></i></span>
 							</a>
 							<a href="" ng-if="!isAuth">
 								<span class="glyphicon glyphicon-flag" aria-hidden="true" ></span>

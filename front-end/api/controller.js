@@ -2,23 +2,21 @@
 
 	app
 		.controller('NavbarController', ['$scope','$rootScope', '$location','$window','AuthFactory', function ($scope, $rootScope, $location, $window, AuthFactory){
-
-			/*
-				policy control .
-			 */
-			$rootScope.isAuth = AuthFactory.checkAuth('User');
-
-			$rootScope.totalHints = 0;
-
+			$rootScope.isAuth,
+			$rootScope.totalHints,
+			$scope.isFolded;
 
 			/*
 				[isNeedFoldCurrent] : save the current the boolean if window need fold or not , 
 				[isNeedFoldCache] : save the last value of boolean , if value change and then apply the viewmodel ,
 				[minWindowSize] : the boundary value of the navbar hide or show .
 			 */
-			var isNeedFoldCurrent, isNeedFoldCache, minWindowSize = 768;
+			var isNeedFoldCurrent,
+				isNeedFoldCache,
+				minWindowSize = 768;
 
-
+			$rootScope.isAuth = AuthFactory.checkAuth('User');
+			$rootScope.totalHints = 0;
 			$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent =  $window.document.documentElement.offsetWidth <= minWindowSize ? true : false;
 
 			/*
@@ -45,10 +43,15 @@
 			}
 		}])
 		.controller('LoginController', ['$scope','$rootScope', '$location', '$http', 'AuthFactory', 'socket', function ($scope, $rootScope, $location, $http, AuthFactory, socket){
-			/*
-				check not authentication .
-			 */
+			
 			AuthFactory.checkNotAuth('User');
+			
+			$rootScope.isSignin,
+			$rootScope.hintChanged,
+			$rootScope.username,
+			$scope.loginEmail,
+			$scope.loginPassword;
+
 
 			/*
 				{toggleSignin} toggle signin button .
@@ -87,14 +90,19 @@
 		}])
 		.controller('SigninController', ['$scope', '$rootScope', '$location', 'AuthFactory', 'socket', function ($scope, $rootScope, $location, AuthFactory, socket){
 			
-			/*
-				check authentication .
-			 */
 			AuthFactory.checkAuth('User');
+			
+			$rootScope.isSignin,
+			$rootScope.isAuth,
+			$rootScope.username,
+			$rootScope.totalHints
+			$scope.isMatch,
+			$scope.signinUsername,
+			$scope.signinPassword,
+			$scope.signinEmail,
+			$scope.signinSignature;
 
-			/*
-				[isSignin] show or hide sign in content .
-			 */
+
 			$rootScope.isSignin = true;
 
 			/*
@@ -139,6 +147,12 @@
 		}])
 		.controller('LogoutController', ['$scope','$rootScope', '$http', 'AuthFactory','socket', function ($scope, $rootScope, $http, AuthFactory, socket){
 			
+			AuthFactory.checkAuth('User');
+
+			$rootScope.isAuth,
+			$rootScope.username,
+			$rootScope.totalHints;
+
 			/*
 				{logout} logout the system .
 			 */
@@ -161,21 +175,16 @@
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', '$http', 'AuthFactory', 'socket' ,function ($scope, $rootScope, $http, AuthFactory, socket) {
 			
-			/*
-				[username] , [signature] show username and user signature .
-			 */
-			var user = AuthFactory.getAuth('User');
-			if(user) {
-				$rootScope.username = user.username;
-				$scope.signature = user.signature;
-				$rootScope.hintChanged = !$rootScope.hintChanged;
+			AuthFactory.checkAuth('User');
+			
+			$rootScope.username,
+			$rootScope.hintChanged,
+			$rootScope.totalHints,
+			$scope.signature;
 
-			}
-			/*
-				[isHint] flag there is hint or not .	
-			 */
-
-			 $rootScope.hintChanged = false;
+			$rootScope.hintChanged = false;
+			$rootScope.username = AuthFactory.getAuth('User').username;
+			$scope.signature = AuthFactory.getAuth('User').signature;
 
 			/*
 				subscribe the hint by socket.io .
@@ -189,7 +198,6 @@
 				
 			$scope.$watch('hintChanged', function(newValue) {
 				if(AuthFactory.checkAuth('User')) {
-
 					$http.get('http://localhost:3000/hints/count/' + AuthFactory.getAuth('User').id + '/' + false)
 						.success(function (data) {
 							$rootScope.totalHints = data.total;
@@ -201,93 +209,75 @@
 			});
 		}])
 		.controller('ChatController', ['$scope', '$http', 'socket', 'AuthFactory', function ($scope, $http, socket, AuthFactory) {
-			if(AuthFactory.checkAuth('User')) {
+			
+			AuthFactory.checkAuth('User');
 
-				$http.get('http://localhost:3000/user/' + AuthFactory.getAuth('User').id)
-					.success(function (data) {
-						AuthFactory.setAuth('User', data);
-					}).error(function (error) {
-						console.log(error);
-					})
+			$scope.message,
+			$scope.room,
+			$scope.content;
 
-				// console.log(AuthFactory.getAuth('User'))
-				/*
-					[message] contain chatroom message .	
-				 */
-				$scope.message = [];
+			$scope.message = [];
+			$scope.room = '公共频道';
 
-				/*
-					[room] type of chatroom .
-				 */
-				$scope.room = '公共频道';
-
-				/*
-					{sendMessage} send message to server by socket.io .
-				 */
-				$scope.sendMessage = function(content) {
-					if(content) {
-						socket.emit('send message',{
-							username: AuthFactory.getAuth('User').username,
-							id: AuthFactory.getAuth('User').id,
-							message: content,
-							date: moment().format('HH:mm:ss')
-						});
-						$scope.content = '';
-					}
-				}
-
-				/*
-					{receive message} receive message from server .
-				 */
-				socket.on('receive message', function (data) {
-					if(checkSelf(data)) {
-						console.log('self')
-						data.isSelf = checkSelf(data);
-						$scope.message.push(data);
-					}else if(checkFriends(data)) {
-						console.log('friends')
-						$scope.message.push(data);						
-					}else{
-						console.log('stranger');
-					}
-
-
+			$http.get('http://localhost:3000/user/' + AuthFactory.getAuth('User').id)
+				.success(function (data) {
+					AuthFactory.setAuth('User', data);
+				}).error(function (error) {
+					console.log(error);
 				});
-				function checkSelf(data) {
-					return data.id == AuthFactory.getAuth('User').id ? true : false;
+			/*
+				{sendMessage} send message to server by socket.io .
+			 */
+			$scope.sendMessage = function(content) {
+				if(content) {
+					socket.emit('send message',{
+						username: AuthFactory.getAuth('User').username,
+						id: AuthFactory.getAuth('User').id,
+						message: content,
+						date: moment().format('HH:mm:ss')
+					});
+					$scope.content = '';
 				}
-				function checkFriends(data) {
-					var friends = AuthFactory.getAuth('User').friends;
-					console.log(friends);
-					if(friends && friends.length) {
+			}
 
-						console.log(friends.indexOf(data.id));
-						if(friends.indexOf(data.id) >= 0) {
-							return true;
-						}else{
-							return false;
-						}
-					}
+			/*
+				{receive message} receive message from server .
+			 */
+			socket.on('receive message', function (data) {
+				if(checkSelf(data)) {
+					data.isSelf = checkSelf(data);
+					$scope.message.push(data);
+				}
+				if(checkFriends(data)) {
+					$scope.message.push(data);						
+				}
+			});
+			function checkSelf(data) {
+				return data.id == AuthFactory.getAuth('User').id ? true : false;
+			}
+			function checkFriends(data) {
+				var friends = AuthFactory.getAuth('User').friends;
+				if(friends && friends.length) {
+					return friends.indexOf(data.id) >= 0 ? true : false ;
 				}
 			}
 		}])
 		.controller('SearchFriendController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket) {
 			
-			/*
-				[searchFriendContent] search bar content .
-			 */
+			AuthFactory.checkAuth('User');
+
+			$scope.searchFriendContent,
+			$scope.noSearchResult,
+			$scope.selfId,
+			$scope.isApplied,
+			$scope.friends;
+
+			$scope.isApplied = false;
+			$scope.friends = AuthFactory.getAuth('User').friends;
+			$scope.selfId = AuthFactory.getAuth('User').id;
+			$scope.noSearchResult = false;
 			$scope.searchFriendContent = '';
 
-			/*
-				[noSearchResult] flag no search result .
-			 */
-			$scope.noSearchResult = false;
-
-
-			$scope.selfId = AuthFactory.getAuth('User').id;
-			/*
-				{search} search friends by email or nickname .
-			 */
 			$scope.search = function() {
 				$scope.searchResult = null;
 
@@ -312,8 +302,6 @@
 				{applyFor} apply for other people to be friend .
 			 */
 			
-			$scope.isApply = false;
-			$scope.friends = AuthFactory.getAuth('User').friends;
 			$scope.applyFor = function(targetId,hintContent){
 				var self = this;
 				if(targetId !== AuthFactory.getAuth('User').id) {
@@ -329,7 +317,7 @@
 					}).success(function (data) {
 						
 						socket.emit('send hint',data);
-						self.isApply = true;
+						self.isApplied = true;
 						self.applyContent = '';
 						
 					}).error(function (error) {
@@ -341,6 +329,18 @@
 		}])
 		.controller('HintController', ['$scope', '$http', '$location', '$rootScope', 'AuthFactory', 'socket', function ($scope, $http, $location, $rootScope, AuthFactory, socket){
 			
+			AuthFactory.checkAuth('User');
+
+			$rootScope.totalHints,
+			$scope.isMarked,
+			$scope.hintsList,
+			$scope.isAccepted,
+			$scope.friends;
+
+			$scope.isMarked = false;
+			$scope.isAccepted = false;
+			$scope.friends = AuthFactory.getAuth('User').friends;
+
 			$http.get('http://localhost:3000/hints/all/'+ AuthFactory.getAuth('User').id)
 				.success(function (data) {
 					$scope.hintsList = data.hints;
@@ -349,26 +349,19 @@
 				});
 
 
-			$scope.isMarked = false;
 			$scope.mark = function(id) {
 				var self = this;
-
 				$http.post('http://localhost:3000/hint/mark',{
 					targetId: AuthFactory.getAuth('User').id,
 					id: id
 				}).success(function (data) {
-					
 					self.isMarked = true;
 					modifyHint();
-
 				}).error(function (error) {
 					console.log(error);
 				});
 			}
 
-
-			$scope.isAccepted = false;
-			$scope.friends = AuthFactory.getAuth('User').friends;
 
 			$scope.accept = function(id) {
 
@@ -404,16 +397,12 @@
 
 				$http.get('http://localhost:3000/user/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
-						console.log(data);
 						AuthFactory.setAuth('User', data);
 					}).error(function (error) {
 						console.log(error);
 					})
-					
 					socket.emit('update friends',AuthFactory.getAuth('User').id);
-
 					returnMessage(senderId,'i accept your request , we are friend now .');
-
 				}).error(function (error) {
 					console.log(error);
 				})
@@ -437,6 +426,21 @@
 		}])
 		.controller('CircleController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket){
 			
+			AuthFactory.checkAuth('User');
+
+			$scope.newsList,
+			$scope.writeContent,
+			$scope.isCreateRoom,
+			$scope.isChecked,
+			$scope.members,
+			$scope.roomInfo
+
+			$scope.isCreateRoom = false;
+			$scope.isChecked = false;
+			$scope.members = [];
+			$scope.writeContent = '';
+
+
 			socket.emit('update friends',AuthFactory.getAuth('User').id);
 			socket.emit('update news',AuthFactory.getAuth('User').id);
 
@@ -456,12 +460,10 @@
 					var user = AuthFactory.getAuth('User');
 					if(user.id === id || user.friends.indexOf(id) >= 0) {
 						updateNews();
-						console.log('sender id : ',id);
 					}
 				}
-			})
+			});
 			
-			$scope.writeContent = '';
 			$scope.publish = function(){
 				$http.post('http://localhost:3000/news/create',{
 					publishId: AuthFactory.getAuth('User').id,
@@ -494,11 +496,7 @@
 				}
 			});
 
-			$scope.isCreated = false;
-
-			$scope.isChecked = false;
-			$scope.members = [];
-
+			
 			$scope.toggleCheck = function (id) {
 				if($scope.members.indexOf(id) >= 0) {
 					var index = $scope.members.indexOf(id);
@@ -511,12 +509,24 @@
 				console.log($scope.members)
 			}
 
+			$scope.finish = function (roomInfo) {
+				$scope.members.push(AuthFactory.getAuth('User').id);
+				$http.post('http://localhost:3000/room/create',{
+					roomInfo: roomInfo,
+					createrId: AuthFactory.getAuth('User').id,
+					createdDate: new Date(),
+					members: $scope.members,
+					currentMembers: []
+				}).success(function (data) {
+					console.log(data.room);
+				}).error(function (error) {
+					console.log(error);
+				});
+				$scope.roomInfo = '';
+				$scope.members = [];
+				$scope.isCreateRoom = false;
 
-
-
-
-
-
+			}
 		}])
 		
 })();
