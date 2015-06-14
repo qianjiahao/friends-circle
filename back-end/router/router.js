@@ -93,7 +93,7 @@ module.exports = function (app) {
 						res.send(flash('error','user already exist',temp));
 						return ;
 					}
-					
+
 					temp.encryptedPassword = encryptedPassword;
 					var user = new User(temp);
 

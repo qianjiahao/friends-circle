@@ -1,19 +1,17 @@
 <div class="container">
-	<h2>Circle</h2>
 	<div ng-controller="CircleController" class="rows">
 		<div class="col-md-7">
 			<div class="panel">
 				<div class="header">
-					<span>今天的新鲜事 ， 写点什么</span>
+					<span>写点什么</span>
 					<span><a href="" class="btn btn-sm btn-success circle-wirte-submit" ng-click="publish()" ng-disabled="!writeContent">submit</a></span>
 				</div>
 				<div class="content">
-					<textarea class="circle-write-area" ng-model="writeContent" placeholder="what's happened today ?"></textarea>
+					<textarea class="circle-write-area" ng-model="writeContent" placeholder="今天有哪些新鲜事？"></textarea>
 				</div>
 			</div>
 			<div class="panel" ng-repeat="nl in newsList | orderBy :'date' :true">
 				<div class="content">
-					
 					<h3>{{nl.publishId}}</h3>
 					<p>{{nl.publishContent}}</p>
 					<i>{{nl.date | date : 'yyyy-MM-dd hh:mm:ss'}}</i>
@@ -23,22 +21,33 @@
 		<div class="col-md-5">
 			<div class="panel">
 				<div class="header">
-					<span>friends list</span>		
+					<span>好友列表</span><a href="" ng-show="friends.length" class="btn btn-sm btn-primary circle-create-room" ng-click="isCreated=!isCreated">create room</a>
 				</div>
 				<div class="content">
-					<table class="table">
-						<tr>
-							<td>online</td>
-							<td>nickname</td>
-						</tr>
+					<div ng-show="!friends.length">
+						<span>暂时没有好友在线</span>
+					</div>
+					<table class="table" ng-show="friends.length">
 						<tr ng-repeat="f in friends">
-
 							<td>
 								<span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span>
 							</td>
 							<td>{{f.username}}</td>
+							<td ng-show="isCreated">
+								<a href="" ng-click="toggleCheck(f._id)">
+									<span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isChecked]" aira-hidden="true"></span>
+								</a>
+							</td>
 						</tr>
 					</table>
+				</div>
+			</div>
+			<div class="panel">
+				<div class="header">
+					<span>加入过的房间</span>
+				</div>
+				<div class="content">
+					xxxxx
 				</div>
 			</div>
 		</div>

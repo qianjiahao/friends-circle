@@ -1,7 +1,7 @@
 <div class="container" ng-controller="SearchFriendController">
 	<div class="jumbotron">
 		<div class="text-center">
-			<h1>Search Your Friend</h1>
+			<h1>搜搜</h1>
 		</div>
 		<form>
 			<div class="search-friend-bar">
@@ -18,22 +18,23 @@
 	<table class="table table-hover table-bordered" ng-if="searchResult.length">
 		<tr class="text-center">
 			<td>#</td>
-			<td>nickname</td>
-			<td>signature</td>
-			<td>apply content</td>
-			<td>operation</td>
+			<td>昵称</td>
+			<td>签名</td>
+			<td>内容</td>
+			<td>#</td>
 		</tr>
 		<tr ng-repeat="sr in searchResult track by $index" class="text-center">
 			<td ng-bind="$index+1"></td>
 			<td ng-bind="sr.username"></td>
 			<td ng-bind="sr.signature"></td>
 			<td><input type="text" ng-model="applyContent" class="apply-content" placeholder="fill your apply content"></td>
-			<td><a class="btn btn-sm btn-primary" ng-click="applyFor(sr._id,applyContent)" ng-disabled="isApply || sr._id==selfId || friends.indexOf(sr._id) >= 0">apply for</a></td>
+			<td><a class="btn btn-sm btn-primary" ng-hide="friends.indexOf(sr._id) >= 0" ng-click="applyFor(sr._id,applyContent)" ng-disabled="isApply || sr._id==selfId">friend request</a><a href="" class="btn btn-sm btn-success" ng-disabled="true" ng-show="friends.indexOf(sr._id) >= 0">friend</a></td>
 
 		</tr>
 	</table>
 	<div ng-if="noSearchResult" class="text-center">
-		<h3>There is nothing via searching , try anthor key word .</h3>
+		<h3>什么也没有搜到，尝试其他的昵称或者邮箱</h3>
 		<hr/>
 	</div>
 </div>
+

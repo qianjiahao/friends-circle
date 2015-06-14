@@ -443,16 +443,12 @@
 			function updateNews(){
 				$http.get('http://localhost:3000/news/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
-
-						// $scope.newsList = convertIdToUsername(AuthFactory.getAuth('User').friends,data);
 						$scope.newsList = data;
 					}).error(function (error) {
 						console.log(error);
 					});
 			}
 			function convertIdToUsername(friends,newsData){
-
-				
 
 			}
 			socket.on('update news',function (id) {
@@ -481,7 +477,6 @@
 			}
 
 			function updateFriends(){
-
 				$http.get('http://localhost:3000/friends/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						$scope.friends = data;
@@ -489,6 +484,7 @@
 						console.log(error);
 					});
 			}
+
 			socket.on('update friends',function(id){
 				if(AuthFactory.checkAuth('User')) {
 					var user = AuthFactory.getAuth('User');
@@ -497,6 +493,30 @@
 					}
 				}
 			});
+
+			$scope.isCreated = false;
+
+			$scope.isChecked = false;
+			$scope.members = [];
+
+			$scope.toggleCheck = function (id) {
+				if($scope.members.indexOf(id) >= 0) {
+					var index = $scope.members.indexOf(id);
+					$scope.members.splice(index,1);
+					this.isChecked = false;
+				}else{
+					$scope.members.push(id);
+					this.isChecked = true;
+				}
+				console.log($scope.members)
+			}
+
+
+
+
+
+
+
 		}])
 		
 })();

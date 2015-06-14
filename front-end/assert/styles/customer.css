@@ -237,6 +237,10 @@ input:-webkit-autofill {
 	float: right;
     margin-top: -5px;
 }
+.circle-create-room{
+	float: right;
+	margin-top: -5px;
+}
 
 /*
 	circle style
