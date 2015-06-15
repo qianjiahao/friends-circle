@@ -1,23 +1,5 @@
 <div class="container">
 	<div ng-controller="CircleController" class="rows">
-		<div class="col-md-7">
-			<div class="panel">
-				<div class="header">
-					<span>写点什么</span>
-					<span><a href="" class="btn btn-sm btn-success circle-wirte-submit" ng-click="publish()" ng-disabled="!writeContent">submit</a></span>
-				</div>
-				<div class="content">
-					<textarea class="circle-write-area" ng-model="writeContent" placeholder="今天有哪些新鲜事？"></textarea>
-				</div>
-			</div>
-			<div class="panel" ng-repeat="nl in newsList | orderBy :'date' :true">
-				<div class="content">
-					<h3><span ng-bind="nl.publishId"></span></h3>
-					<p ng-bind="nl.publishContent"></p>
-					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
-				</div>
-			</div>	
-		</div>
 		<div class="col-md-5">
 			<div class="panel">
 				<div class="header">
@@ -67,11 +49,29 @@
 				<div class="content">
 					<table class="table">
 						<tr ng-repeat="r in rooms | orderBy:'createdDate':true">
-							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="r.createrId"></span></td><td><a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a></td>
+							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="convertIdToUsername(r.createrId)"></span></td><td><a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a></td>
 						</tr>
 					</table>
 				</div>
 			</div>
+		</div>
+		<div class="col-md-7">
+			<div class="panel">
+				<div class="header">
+					<span>写点什么</span>
+					<span><a href="" class="btn btn-sm btn-success circle-wirte-submit" ng-click="publish()" ng-disabled="!writeContent">submit</a></span>
+				</div>
+				<div class="content">
+					<textarea class="circle-write-area" ng-model="writeContent" placeholder="今天有哪些新鲜事？"></textarea>
+				</div>
+			</div>
+			<div class="panel" ng-repeat="nl in newsList | orderBy :'date' :true">
+				<div class="content">
+					<h3><span ng-bind="convertIdToUsername(nl.publishId)"></span></h3>
+					<p ng-bind="nl.publishContent"></p>
+					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
+				</div>
+			</div>	
 		</div>
 	</div>
 </div>

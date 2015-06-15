@@ -222,9 +222,12 @@
 					});
 
 				$scope.message,
-				$scope.content;
-
+				$scope.content,
+				$scope.selfId;
+				
 				$scope.message = [];
+				$scope.selfId = AuthFactory.getAuth('User').id;
+
 				var timer;
 
 				/*
@@ -280,6 +283,27 @@
 						return friends.indexOf(data.id) >= 0 ? true : false ;
 					}
 				}
+
+				$http.get('http://localhost:3000/friends/all/' + AuthFactory.getAuth('User').id)
+					.success(function (data) {
+
+						$scope.convertIdToUsername = function (input){
+							var friends = data
+							var length = friends.length;
+							for(var i=0; i<length;i++) {
+								if(input === friends[i]['_id']) {
+									return friends[i]['username'];
+								}
+								if(input === AuthFactory.getAuth('User').id) {
+									return AuthFactory.getAuth('User').username;
+								}
+							}
+
+						}
+					}).error(function (error) {
+						console.log(error);
+					});
+
 
 
 			}
@@ -454,7 +478,8 @@
 			$scope.isChecked,
 			$scope.members,
 			$scope.roomInfo,
-			$scope.rooms;
+			$scope.friends,
+			$scope.rooms,
 
 			$scope.isCreateRoom = false;
 			$scope.isChecked = false;
@@ -469,11 +494,22 @@
 				$http.get('http://localhost:3000/news/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						$scope.newsList = data;
+
 					}).error(function (error) {
 						console.log(error);
 					});
 			}
-			function convertIdToUsername(friends,newsData){
+
+			$scope.convertIdToUsername = function (input){
+				var friends = $scope.friends;
+				for(var i=0,length=friends.length; i<length;i++) {
+					if(input === friends[i]['_id']) {
+						return friends[i]['username'];
+					}
+					if(input === AuthFactory.getAuth('User').id) {
+						return AuthFactory.getAuth('User').username;
+					}
+				}
 
 			}
 			socket.on('update news',function (id) {
@@ -501,6 +537,7 @@
 				$http.get('http://localhost:3000/friends/all/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
 						$scope.friends = data;
+						console.log(data);
 					}).error(function (error) {
 						console.log(error);
 					});

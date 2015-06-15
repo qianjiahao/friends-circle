@@ -55,8 +55,13 @@
 				</div>
 				<div class="content">
 					<table class="table">
+						<tr>
+							<td><span>创建时间</span></td>
+							<td><span ng-bind="room.createdDate | date : 'yyyy-MM-dd hh:mm:ss'"></span></td>
+						</tr>
 						<tr ng-repeat="cm in room.currentMembers">
-							<td>{{cm}}</td>
+							<td><span ng-bind="convertIdToUsername(cm)"></span></td>
+							<td><span ng-show="room.createrId==selfId" class="badge">创建者</span></td>
 						</tr>
 					</table>
 				</div>
