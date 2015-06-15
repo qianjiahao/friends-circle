@@ -79,7 +79,7 @@ module.exports = function (app) {
 			signature: req.body.signature,
 			hints: 0,
 			online: true,
-			room: ''
+			currentRoom: ''
 		}
 
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
@@ -360,48 +360,53 @@ module.exports = function (app) {
 			.exec(function (err, user) {
 				if(err) return next(err);
 
-				var oldRoomId = user.currentRoom;
-				if(oldRoomId) {
-					
+				if(user.currentRoom !== req.body.roomId) {
+
+					console.log('enter different room !')
 					Room.findOne()
 						.where('_id')
-						.equals(oldRoomId)
+						.equals(req.body.roomId)
 						.exec(function (err, room) {
 							if(err) return next(err);
 
 							var index = room.currentMembers.indexOf(req.body.userId);
 							if(index >= 0) {
 								room.currentMembers.splice(index,1);
+								console.log('remove old room members ')
 							}
 
-							room.save(function (err) {
+							room.save(function (err, room) {
 								if(err) return next(err);
-
 							});
 						});
-				}
 
-				user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
-					if(err) return next(err);
-
-				});
-
-				Room.findOne()
-					.where('_id')
-					.equals(req.body.roomId)
-					.exec(function (err, room) {
+					user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
 						if(err) return next(err);
 
-						if(room.currentMembers.indexOf(req.body.userId) < 0) {
-							room.currentMembers.push(req.body.userId);
-							
+						console.log('update' + user);
+					});
+
+					Room.findOne()
+						.where('_id')
+						.equals(req.body.roomId)
+						.exec(function (err, room) {
+							if(err) return next(err);
+
+							if(room.currentMembers.indexOf(req.body.userId) < 0) {
+								console.log('first time join room...')
+								room.currentMembers.push(req.body.userId);
+								
+							}
+							console.log('second time join room...');
 							room.save(function (err) {
 								if(err) return next(err);
 
 								res.send({});
 							});
-						}
-					});
+						});
+				}else{
+					console.log('enter same room !');
+				}
 			});
 	});
 
