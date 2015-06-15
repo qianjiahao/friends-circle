@@ -12,6 +12,9 @@
 				signin: function (data, success, error) {
 					$http.post(baseUrl + '/signin', data).success(success).error(error);
 				},
+				logout: function (data, success, error) {
+					$http.post(baseUrl + '/logout', data).success(success).error(error);
+				},
 				checkAuth: function (target) {
 					if(!$cookies.getObject(target)) {
 						$location.path('/auth');
@@ -40,10 +43,82 @@
 					}
 					return true;
 				}
-
-
 			}
 		}])
-		
+		.factory('SearchFactory', ['$http', function ($http){
+			var baseUrl = 'http://localhost:3000';
+
+			return {
+				searchUser: function (data, success, error) {
+					$http.post(baseUrl + '/search', data).success(success).error(error);
+				}
+			};
+		}])
+		.factory('HintFactory', ['$http', function ($http){
+			var baseUrl = 'http://localhost:3000';
+
+			return {
+				getHintsCount: function (data, success, error) {
+					$http.get(baseUrl + '/hints/count/' + data).success(success).error(error);
+				},
+				getAllHints: function (data, success, error) {
+					$http.get(baseUrl + '/hints/all/' + data).success(success).error(error);
+				},
+				pullRequest: function (data, success, error) {
+					$http.post(baseUrl + '/hint', data).success(success).error(error);
+				},
+				markHint: function (data, success, error) {
+					$http.post(baseUrl + '/hint/mark', data).success(success).error(error);
+				},
+				acceptHint: function (data, success, error) {
+					$http.post(baseUrl + '/hint/accept', data).success(success).error(error);
+				}
+			};
+		}])
+		.factory('FriendFactory', ['$http', function ($http){
+			var baseUrl = 'http://localhost:3000';
+
+			return {
+				getAll: function (data, success, error) {
+					$http.get(baseUrl + '/friends/all/' + data).success(success).error(error);
+				},
+				toBeFriends: function (data, success, error) {
+					$http.post(baseUrl + '/friend/accept', data).success(success).error(error);
+				},
+				getOne: function (data, success, error) {
+					$http.get(baseUrl + '/user/' + data).success(success).error(error);
+				}
+			};
+		}])
+		.factory('NewsFactory', ['$http', function ($http){
+			var baseUrl = 'http://localhost:3000';
+
+			return {
+				getAll: function (data, success, error) {
+					$http.get(baseUrl + '/news/all/' + data).success(success).error(error);
+				},
+				create: function (data, success, error) {
+					$http.post(baseUrl + '/news/create', data).success(success).error(error);
+				}
+			};
+		}])
+		.factory('RoomFactory', ['$http', function ($http){
+			var baseUrl = 'http://localhost:3000';
+
+			return {
+				getOne: function (data, success, error) {
+					$http.get(baseUrl + '/room/' + data).success(success).error(error);
+				},
+				getRooms: function (data, success, error) {
+					$http.get(baseUrl + '/rooms/' + data).success(success).error(error);
+				},
+				create: function (data, success, error) {
+					$http.post(baseUrl + '/room/create', data).success(success).error(error);
+				},
+				join: function (data, success, error) {
+					$http.post(baseUrl + '/room/join', data).success(success).error(error);
+				}
+			};
+		}])
 
 })();

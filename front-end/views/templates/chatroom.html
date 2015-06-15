@@ -61,7 +61,7 @@
 						</tr>
 						<tr ng-repeat="cm in room.currentMembers">
 							<td><span ng-bind="convertIdToUsername(cm)"></span></td>
-							<td><span ng-show="room.createrId==selfId" class="badge">创建者</span></td>
+							<td><span ng-show="room.createrId==cm" class="badge">创建者</span><span class="badge" ng-show="room.createrId!=cm">成员</span></td>
 						</tr>
 					</table>
 				</div>

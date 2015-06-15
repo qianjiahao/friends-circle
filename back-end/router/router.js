@@ -67,7 +67,7 @@ module.exports = function (app) {
 				user.update({ 'online':false }, function (err, user) {
 					if(err) return next(err);
 
-					console.log('logout : ' + user);
+					res.send({});
 				});
 			});
 	});
@@ -247,20 +247,22 @@ module.exports = function (app) {
 				
 				user.update({ '$push': { 'friends': req.body.targetId } }, function (err, user) {
 					if(err) return next(err);
-				});
-			}
-		});
 
-		User.findOne({ '_id': req.body.targetId }, function (err, user) {
-			if(err) return next(err);
-			if(user.friends.indexOf(req.body.senderId) < 0) {
-				user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
-					if(err) return next(err);
-			
+					User.findOne({ '_id': req.body.targetId }, function (err, user) {
+						if(err) return next(err);
+						
+						if(user.friends.indexOf(req.body.senderId) < 0) {
+							user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
+								if(err) return next(err);
+						
+								res.send({});
+
+							});
+						}
+					});
 				});
 			}
 		});
-		res.send({});
 	});
 
 	app.get('/friends/all/:userId', function (req, res, next) {
@@ -406,6 +408,7 @@ module.exports = function (app) {
 						});
 				}else{
 					console.log('enter same room !');
+					res.send({});
 				}
 			});
 	});

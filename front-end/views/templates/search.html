@@ -28,7 +28,7 @@
 			<td ng-bind="sr.username"></td>
 			<td ng-bind="sr.signature"></td>
 			<td><input type="text" ng-model="applyContent" class="apply-content" placeholder="fill your apply content"></td>
-			<td><a class="btn btn-sm btn-primary" ng-hide="friends.indexOf(sr._id) >= 0" ng-click="applyFor(sr._id,applyContent)" ng-disabled="isApplied || sr._id==selfId">friend request</a><a href="" class="btn btn-sm btn-success" ng-disabled="true" ng-show="friends.indexOf(sr._id) >= 0">friend</a></td>
+			<td><a class="btn btn-sm btn-primary" ng-hide="friends.indexOf(sr._id) >= 0" ng-click="pullRequest(sr._id,applyContent)" ng-disabled="isApplied || sr._id==selfId">friend request</a><a href="" class="btn btn-sm btn-success" ng-disabled="true" ng-show="friends.indexOf(sr._id) >= 0">friend</a></td>
 
 		</tr>
 	</table>
