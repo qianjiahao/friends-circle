@@ -4,7 +4,10 @@
 			<div class="panel">
 				<form name="chatroom">
 					<div class="header">
-						{{room.roomInfo}}
+						<div class="text-center">
+							<span ng-hide="isTyping">{{room.roomInfo}}</span>
+							<span ng-show="isTyping">{{typingUsername}} is typing</span>
+						</div>
 					</div>
 					<div class="content chat">
 						<div class="chat-content" ng-model="message" ng-repeat="m in message">
@@ -27,7 +30,7 @@
 					</div>
 					<div class="chat-operate-area content">
 						<div class="chat-input-area">
-							<textarea class="chat-input" placeholder="input something ... " rows="2" ng-bind="content" ng-model="content" name="content" autocomplete="off" required></textarea>
+							<textarea class="chat-input" placeholder="input something ... " rows="2" ng-bind="content" ng-model="content" name="content" autocomplete="off" ng-change="typing()" required></textarea>
 						</div>
 						<a href="" ng-click="sendMessage(content)">
 							<span class="glyphicon glyphicon-send chat-submit-area" aira-hidden="true"></span>

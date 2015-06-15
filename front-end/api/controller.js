@@ -209,7 +209,7 @@
 			});
 			
 		}])
-		.controller('ChatController', ['$scope', '$rootScope', '$http', 'socket', 'AuthFactory', function ($scope, $rootScope, $http, socket, AuthFactory) {
+		.controller('ChatController', ['$scope', '$rootScope', '$http', '$timeout', 'socket', 'AuthFactory', function ($scope, $rootScope, $http, $timeout, socket, AuthFactory) {
 			AuthFactory.checkAuth('User');
 			
 			if(AuthFactory.checkJoinRoom('User')) {
@@ -225,6 +225,7 @@
 				$scope.content;
 
 				$scope.message = [];
+				var timer;
 
 				/*
 					{sendMessage} send message to server by socket.io .
@@ -242,13 +243,14 @@
 					}
 				}
 
+				$scope.typing = function () {
+					socket.emit('typing', AuthFactory.getAuth('User').username);
+				}
 				/*
 					{receive message} receive message from server .
 				 */
 				socket.on('receive message', function (data) {
-					console.log('room : ',data.currentRoom == AuthFactory.getAuth('User').currentRoom,data.currentRoom + ' - ' + AuthFactory.getAuth('User').currentRoom);
 					if($scope.room.members.indexOf(data.id) >= 0 && data.currentRoom == AuthFactory.getAuth('User').currentRoom) {
-
 						if(checkSelf(data)) {
 							data.isSelf = checkSelf(data);
 							$scope.message.push(data);
@@ -258,6 +260,17 @@
 						}
 					}
 				});
+				socket.on('typing', function (username) {
+
+					$scope.typingUsername = username;
+					if(timer){
+						$timeout.cancel(timer);
+					}
+					timer = $timeout(function(){
+						$scope.isTyping = false;
+					},350);
+					$scope.isTyping = true;					
+				})
 				function checkSelf(data) {
 					return data.id == AuthFactory.getAuth('User').id ? true : false;
 				}
@@ -267,6 +280,8 @@
 						return friends.indexOf(data.id) >= 0 ? true : false ;
 					}
 				}
+
+
 			}
 		}])
 		.controller('SearchFriendController', ['$scope', '$http', 'AuthFactory', 'socket', function ($scope, $http, AuthFactory, socket) {
@@ -322,15 +337,12 @@
 						mark: false,
 						accept: false
 					}).success(function (data) {
-						
 						socket.emit('update hints',data.targetId);
 						self.isApplied = true;
 						self.applyContent = '';
-						
 					}).error(function (error) {
 						console.log(error);
 					});
-
 				}
 			}
 		}])
@@ -354,8 +366,6 @@
 				}).error(function (error) {
 					console.log(error)
 				});
-
-
 			$scope.mark = function(id) {
 				var self = this;
 				$http.post('http://localhost:3000/hint/mark',{
@@ -368,8 +378,6 @@
 					console.log(error);
 				});
 			}
-
-
 			$scope.accept = function(id) {
 
 				var self = this;
@@ -388,13 +396,11 @@
 					console.log(error);
 				});
 			}
-			
 			function modifyHint(){
 				if($rootScope.totalHints) {
 					$rootScope.totalHints -= 1;
 				}
 			}
-
 			function addFriend(targetId,senderId) {
 
 				$http.post('http://localhost:3000/friend/accept',{
@@ -413,7 +419,7 @@
 					returnMessage(senderId,'i accept your request , we are friend now .');
 				}).error(function (error) {
 					console.log(error);
-				})
+				});
 			}
 
 			function returnMessage(targetId,hintContent) {
@@ -426,7 +432,7 @@
 					mark: false,
 					accept: true
 				}).success(function (data) {
-					console.log(data);
+					// console.log(data);
 				}).error(function (error) {
 					console.log(error);
 				});
@@ -442,8 +448,6 @@
 				}).error(function (error) {
 					console.log(error);
 				});
-			
-
 			$scope.newsList,
 			$scope.writeContent,
 			$scope.isCreateRoom,
@@ -457,7 +461,6 @@
 			$scope.members = [];
 			$scope.writeContent = '';
 
-			socket.emit('update hints', AuthFactory.getAuth('User').id);
 			socket.emit('update friends',AuthFactory.getAuth('User').id);
 			socket.emit('update news',AuthFactory.getAuth('User').id);
 			socket.emit('update rooms',AuthFactory.getAuth('User').id);
@@ -487,10 +490,8 @@
 					publishId: AuthFactory.getAuth('User').id,
 					publishContent: $scope.writeContent
 				}).success(function (data) {
-
 					socket.emit('update news',AuthFactory.getAuth('User').id);
 					$scope.writeContent = '';
-
 				}).error(function (error) {
 					console.log(error);
 				});
@@ -513,8 +514,6 @@
 					}
 				}
 			});
-
-			
 			$scope.toggleCheck = function (id) {
 				if($scope.members.indexOf(id) >= 0) {
 					var index = $scope.members.indexOf(id);
@@ -525,7 +524,6 @@
 					this.isChecked = true;
 				}
 			}
-
 			$scope.finish = function (roomInfo) {
 				$scope.members.push(AuthFactory.getAuth('User').id);
 				$http.post('http://localhost:3000/room/create',{
@@ -542,9 +540,7 @@
 				$scope.roomInfo = '';
 				$scope.members = [];
 				$scope.isCreateRoom = false;
-
 			}
-
 			function updateRoom(){
 				$http.get('http://localhost:3000/rooms/' + AuthFactory.getAuth('User').id)
 					.success(function (data) {
@@ -553,13 +549,11 @@
 						console.log(error);
 					});
 			}
-
 			socket.on('update rooms', function (members) {
 				if(members.indexOf(AuthFactory.getAuth('User').id) >= 0) {
 					updateRoom();
 				}
 			});
-
 			$scope.join = function (roomId) {
 				$http.post('http://localhost:3000/room/join',{
 					roomId: roomId,

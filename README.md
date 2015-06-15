@@ -1,6 +1,6 @@
 # friends-circle
 
-# 朋友圈
+# 好友圈
 
 ## use Mongoose , Express , Angular.js , Node.js , Socket.io .
 
@@ -30,11 +30,12 @@
 #Description
   
     登录、注册
-    实时聊天室 [ only friends ]
     查询用户 [ by nickname or email ]
     好友申请 [ dynamic update by socket.io ]
     接受申请或标记已读 [ dynamic update by socket.io ]
     好友列表 [ online or offline dynamic update by socket.io ]
+    创建聊天组 [dynamic update by socket.io]
+    群组聊天 [ 基于 socket.io 仅支持同一时间单一群组聊天，可切换聊天组 ]
     to be continued ...
 
 

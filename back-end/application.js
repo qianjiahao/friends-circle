@@ -27,6 +27,10 @@ io.on('connection',function (socket) {
 		io.emit('receive message',data);
 	});
 
+	socket.on('typing', function (username) {
+		io.emit('typing', username);
+	});
+
 	socket.on('update hints',function(id) {
 		io.emit('update hints',id);
 	});
