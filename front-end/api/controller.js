@@ -394,8 +394,7 @@
 					FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
 						AuthFactory.setAuth('User', data);
 						
-						socket.emit('update hints', senderId);
-						socket.emit('update friends',AuthFactory.getAuth('User').id);
+						
 						
 						HintFactory.pullRequest({
 							targetId: senderId,
@@ -407,6 +406,9 @@
 							accept: true
 						}, function (data) {
 
+							socket.emit('update hints', senderId);
+							socket.emit('update friends',AuthFactory.getAuth('User').id);
+						
 						}, function (error) {
 							console.log(error);
 						});
@@ -417,6 +419,8 @@
 				}, function (error) {
 					console.log(error);
 				});
+				
+
 			}
 
 		}])
@@ -436,6 +440,7 @@
 				$scope.writeContent = '';
 				$scope.selfId = AuthFactory.getAuth('User').id;
 				$scope.page = 1;
+
 
 				var minWindowSize = 768;
 				$scope.isShowFriends = $scope.isShowRooms = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
@@ -529,10 +534,12 @@
 						this.isChecked = true;
 					}
 				}
-				$scope.finish = function (roomInfo) {
+
+
+				$scope.finish = function () {
 					$scope.members.push(AuthFactory.getAuth('User').id);
 					RoomFactory.create({
-						roomInfo: roomInfo,
+						roomInfo: $scope.roomInfo,
 						createrId: AuthFactory.getAuth('User').id,
 						createdDate: new Date(),
 						members: $scope.members,

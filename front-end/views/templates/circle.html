@@ -5,7 +5,7 @@
 				<div class="header">
 					<span><a href="" ng-click="isShowFriends=!isShowFriends">好友列表</a></span><a href="" ng-show="friends.length" class="btn btn-sm btn-primary header-button" ng-click="isCreateRoom=!isCreateRoom">create room</a>
 				</div>
-				<div class="content" ng-if="isCreateRoom">
+				<div class="content" ng-show="isCreateRoom">
 					<ul class="auth-list">
 						<li class="input-normal">
 							<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
@@ -39,14 +39,14 @@
 				</div>
 				<div class="header" ng-show="isCreateRoom">
 				<span class="glyphicon glyphicon-ok" aira-hidden="true"></span>
-					<a href="" class="btn btn-sm btn-success header-button" ng-disabled="!roomInfo" ng-click="finish(roomInfo)">Finish</a>
+					<a href="" class="btn btn-sm btn-success header-button" ng-disabled="!roomInfo" ng-click="finish()">Finish</a>
 				</div>
 			</div>
 			<div class="panel">
 				<div class="header">
 					<span><a href="" ng-click="isShowRooms=!isShowRooms">房间列表</a></span>
 				</div>
-				<div class="content" ng-if="isShowRooms">
+				<div class="content" ng-show="isShowRooms">
 					<table class="table  text-center">
 						<tr ng-repeat="r in rooms | orderBy:'createdDate':true">
 							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="convertIdToUsername(r.createrId,friends)"></span></td>

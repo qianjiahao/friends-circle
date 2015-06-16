@@ -12,19 +12,13 @@
 					<div class="content chat">
 						<div class="chat-content" ng-model="message" ng-repeat="m in message">
 							<div class="chat-username" ng-class="{true : 'text-right',false : 'text-left'}[m.isSelf]">
-								<span>
-									{{m.username}}
-								</span>
+								<span ng-bind="m.username"></span>
 							</div>
 							<div class="chat-date" ng-class="{true : 'text-right',false : 'text-left'}[m.isSelf]">
-								<span >
-									{{m.date}}
-								</span>
+								<span ng-bind="m.date"></span>
 							</div>
 							<div class="chat-message">
-								<p>
-									{{m.message}}
-								</p>
+								<p ng-bind-html="m.message"></p>
 							</div>
 						</div>
 					</div>

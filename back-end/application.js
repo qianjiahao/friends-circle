@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var bodyParser = require('body-parser');
+var markdown = require('markdown').markdown;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,6 +26,7 @@ io.on('connection',function (socket) {
 
 	socket.on('send message',function (data) {
 		console.log('User ' + socket.id  + ', nickname : ' + data.username + ', send message :' + data.message + ', date : ' + data.date);
+		data.message = markdown.toHTML(data.message);
 		io.emit('receive message',data);
 	});
 
