@@ -113,6 +113,11 @@ input:-webkit-autofill {
 .text-left{
 	text-align: left;
 }
+
+.header-button{
+	float: right;
+    margin-top: -5px;
+}
 /**
  *  authentication style 
  */
@@ -239,14 +244,7 @@ input:-webkit-autofill {
 	border: none;
 	overflow: scroll;
 }
-.circle-wirte-submit{
-	float: right;
-    margin-top: -5px;
-}
-.circle-create-room{
-	float: right;
-	margin-top: -5px;
-}
+
 
 /*
 	circle style

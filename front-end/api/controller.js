@@ -6,7 +6,7 @@
 			$rootScope.hintChanged = false;
 			$rootScope.totalHints = 0;
 			$rootScope.isSignin = false;
-
+			$rootScope.currentRoom = '';
 
 		}])
 		.controller('NavbarController', ['$scope','$rootScope','$window','socket','AuthFactory','HintFactory', function ($scope, $rootScope, $window, socket, AuthFactory, HintFactory){
@@ -18,6 +18,10 @@
 			$rootScope.isAuth = AuthFactory.checkAuth('User');
 			if(AuthFactory.checkAuth('User')) {
 				$rootScope.username = AuthFactory.getAuth('User').username;
+
+				if(AuthFactory.getAuth('User').currentRoom) {
+					$rootScope.isChatroomAccess = true;
+				}
 			}
 			$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent =  $window.document.documentElement.offsetWidth <= minWindowSize ? true : false;
 
@@ -56,6 +60,8 @@
 					});
 				}
 			});
+
+
 		}])
 		.controller('LoginController', ['$scope','$rootScope', 'AuthFactory', 'socket', function ($scope, $rootScope, AuthFactory, socket){
 			
@@ -80,6 +86,7 @@
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User').username;
 						$rootScope.hintChanged = !$rootScope.hintChanged;
+						$rootScope.isChatroomAccess = false;
 	 					AuthFactory.checkNotAuth('User');
 	 					console.log(data)
 					}
@@ -116,6 +123,7 @@
 						AuthFactory.setAuth('User',data.data);
 						$rootScope.isAuth = AuthFactory.checkAuth('User');
 						$rootScope.username = AuthFactory.getAuth('User').username;
+						$rootScope.isChatroomAccess = false;
 						AuthFactory.checkNotAuth('User');
 						console.log(data);
 					}
@@ -125,24 +133,32 @@
 			}
 
 		}])
-		.controller('LogoutController', ['$scope','$rootScope', 'AuthFactory','socket', function ($scope, $rootScope, AuthFactory, socket){
+		.controller('LogoutController', ['$scope','$rootScope','socket', 'AuthFactory','RoomFactory', function ($scope, $rootScope, socket, AuthFactory, RoomFactory){
 			
 			AuthFactory.checkAuth('User');
-
 			$scope.logout = function () {
+				var user = AuthFactory.getAuth('User');
+				if(user.currentRoom) {
+					RoomFactory.exit({
+						userId: user.id
+					}, function (data) {
+						socket.emit('update room info', user.currentRoom);
+					}, function (error) {
+
+					});
+				}
 				AuthFactory.logout({
-					id: AuthFactory.getAuth('User').id
+					id: user.id
 				}, function (data) {
-
-					socket.emit('update friends',AuthFactory.getAuth('User').id);
-
+					socket.emit('update friends',user.id);
 				}, function (error) {
 					console.log(error);
 				});
-				AuthFactory.removeAuth('User');
-				$rootScope.isAuth = AuthFactory.checkAuth('User');
+
+				$rootScope.isAuth = false;
 				$rootScope.username = null;
 				$rootScope.totalHints = 0;
+				AuthFactory.removeAuth('User');
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', 'socket', 'AuthFactory', function ($scope, $rootScope, socket, AuthFactory) {
@@ -154,93 +170,117 @@
 			}
 
 		}])
-		.controller('ChatController', ['$scope', '$rootScope', '$timeout', 'socket', 'AuthFactory','FriendFactory','RoomFactory', function ($scope, $rootScope, $timeout, socket, AuthFactory, FriendFactory, RoomFactory) {
+		.controller('ChatController', ['$scope', '$rootScope', '$timeout','$location', 'socket', 'AuthFactory','FriendFactory','RoomFactory', function ($scope, $rootScope, $timeout, $location, socket, AuthFactory, FriendFactory, RoomFactory) {
 			AuthFactory.checkAuth('User');
-			
-			if(AuthFactory.checkJoinRoom('User')) {
-				console.log(AuthFactory.getAuth('User'));
-				updateRoom();
+			RoomFactory.checkAccess('User');
 
-				$scope.message = [];
+			if(RoomFactory.checkAccess('User')) {
 
-				var timer;
+				socket.emit('update room info',AuthFactory.getAuth('User').currentRoom);
+			}			
 
-				function updateRoom() {
-					RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (data) {
-						$scope.room = data.room;
-					}, function (error) {
-						console.log(error);	
+			$scope.message = [];
+
+			var timer;
+
+			function updateRoom() {
+				RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (data) {
+					$scope.room = data.room;
+				}, function (error) {
+					console.log(error);	
+				});
+			}
+
+			socket.on('update room info', function (id) {
+				if(AuthFactory.getAuth('User') && id === AuthFactory.getAuth('User').currentRoom) {
+					updateRoom();
+				}
+			})
+
+			$scope.sendMessage = function(content) {
+				if(content && AuthFactory.getAuth('User').currentRoom) {
+					socket.emit('send message',{
+						username: AuthFactory.getAuth('User').username,
+						id: AuthFactory.getAuth('User').id,
+						message: content,
+						date: moment().format('HH:mm:ss'),
+						currentRoom: AuthFactory.getAuth('User').currentRoom
 					});
+					$scope.content = '';
 				}
+			}
 
-				$scope.sendMessage = function(content) {
-					if(content && AuthFactory.getAuth('User').currentRoom) {
-						socket.emit('send message',{
-							username: AuthFactory.getAuth('User').username,
-							id: AuthFactory.getAuth('User').id,
-							message: content,
-							date: moment().format('HH:mm:ss'),
-							currentRoom: AuthFactory.getAuth('User').currentRoom
-						});
-						$scope.content = '';
+			$scope.typing = function () {
+				socket.emit('typing', AuthFactory.getAuth('User').username);
+			}
+
+			socket.on('receive message', function (data) {
+				if($scope.room.members.indexOf(data.id) >= 0 && data.currentRoom == AuthFactory.getAuth('User').currentRoom) {
+					if(checkSelf(data)) {
+						data.isSelf = checkSelf(data);
+						$scope.message.push(data);
+					}
+					if(checkFriends(data)) {
+						$scope.message.push(data);						
 					}
 				}
+			});
 
-				$scope.typing = function () {
-					socket.emit('typing', AuthFactory.getAuth('User').username);
+			socket.on('typing', function (username) {
+
+				$scope.typingUsername = username;
+				if(timer){
+					$timeout.cancel(timer);
 				}
+				timer = $timeout(function(){
+					$scope.isTyping = false;
+				},350);
+				$scope.isTyping = true;					
+			});
 
-				socket.on('receive message', function (data) {
-					if($scope.room.members.indexOf(data.id) >= 0 && data.currentRoom == AuthFactory.getAuth('User').currentRoom) {
-						if(checkSelf(data)) {
-							data.isSelf = checkSelf(data);
-							$scope.message.push(data);
+			function checkSelf(data) {
+				return data.id == AuthFactory.getAuth('User').id ? true : false;
+			}
+
+			function checkFriends(data) {
+				var friends = AuthFactory.getAuth('User').friends;
+				if(friends && friends.length) {
+					return friends.indexOf(data.id) >= 0 ? true : false ;
+				}
+			}
+
+
+			FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
+				$scope.friends = data;
+			}, function (error) {
+				console.log(error);
+			});
+
+			$scope.convertIdToUsername = function (input, data){
+				if(input && data) {
+
+					var friends = data
+					var length = friends.length;
+					for(var i=0; i<length;i++) {
+						if(input === friends[i]['_id']) {
+							return friends[i]['username'];
 						}
-						if(checkFriends(data)) {
-							$scope.message.push(data);						
+						if(AuthFactory.getAuth('User') && input === AuthFactory.getAuth('User').id) {
+							return AuthFactory.getAuth('User').username;
 						}
-					}
-				});
-
-				socket.on('typing', function (username) {
-
-					$scope.typingUsername = username;
-					if(timer){
-						$timeout.cancel(timer);
-					}
-					timer = $timeout(function(){
-						$scope.isTyping = false;
-					},350);
-					$scope.isTyping = true;					
-				});
-
-				function checkSelf(data) {
-					return data.id == AuthFactory.getAuth('User').id ? true : false;
-				}
-
-				function checkFriends(data) {
-					var friends = AuthFactory.getAuth('User').friends;
-					if(friends && friends.length) {
-						return friends.indexOf(data.id) >= 0 ? true : false ;
 					}
 				}
 
-
-				FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
-
-					$scope.convertIdToUsername = function (input){
-						var friends = data
-						var length = friends.length;
-						for(var i=0; i<length;i++) {
-							if(input === friends[i]['_id']) {
-								return friends[i]['username'];
-							}
-							if(AuthFactory.getAuth('User') && input === AuthFactory.getAuth('User').id) {
-								return AuthFactory.getAuth('User').username;
-							}
-						}
-
-					}
+			}
+			$scope.exit = function() {
+				RoomFactory.exit({
+					userId: AuthFactory.getAuth('User').id
+				}, function (data) {
+					socket.emit('update room info',AuthFactory.getAuth('User').currentRoom);
+					console.log('exit success');
+					$rootScope.isChatroomAccess = false;
+					$location.path('/circle');
+					$rootScope.currentRoom = '';
 				}, function (error) {
 					console.log(error);
 				});
@@ -384,6 +424,8 @@
 				}, function (error) {
 					console.log(error);
 				});
+				$rootScope.currentRoom = AuthFactory.getAuth('User').currentRoom;
+
 				$scope.isCreateRoom = false;
 				$scope.isChecked = false;
 				$scope.members = [];
@@ -393,14 +435,17 @@
 				socket.emit('update news',AuthFactory.getAuth('User').id);
 				socket.emit('update rooms',AuthFactory.getAuth('User').id);
 
-				$scope.convertIdToUsername = function (input){
-					var friends = $scope.friends;
-					for(var i=0,length=friends.length; i<length;i++) {
-						if(input === friends[i]['_id']) {
-							return friends[i]['username'];
-						}
-						if(AuthFactory.getAuth('User') && input === AuthFactory.getAuth('User').id) {
-							return AuthFactory.getAuth('User').username;
+				$scope.convertIdToUsername = function (input, data){
+					if(input && data) {
+
+						var friends = data
+						for(var i=0,length=friends.length; i<length;i++) {
+							if(input === friends[i]['_id']) {
+								return friends[i]['username'];
+							}
+							if(AuthFactory.getAuth('User') && input === AuthFactory.getAuth('User').id) {
+								return AuthFactory.getAuth('User').username;
+							}
 						}
 					}
 				}
@@ -477,7 +522,7 @@
 						console.log(error);
 					});
 				}
-				function updateRoom(){
+				function updateRooms(){
 					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (data) {
 						$scope.rooms = data.rooms;
 					}, function (error) {
@@ -486,7 +531,7 @@
 				}
 				socket.on('update rooms', function (members) {
 					if(members.indexOf(AuthFactory.getAuth('User').id) >= 0) {
-						updateRoom();
+						updateRooms();
 					}
 				});
 				$scope.join = function (roomId) {
@@ -496,16 +541,22 @@
 						roomId: roomId
 					}, function (data) {
 
-						updateFriends();
-						console.log('join success');
-						$location.path('/chatroom');
-
+						FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
+							AuthFactory.setAuth('User',data);
+							$rootScope.isChatroomAccess = true;
+							$rootScope.currentRoom = roomId;
+							$location.path('/chatroom');
+							
+						}, function (error) {
+							console.log(error);
+						});
 					}, function (error) {
 						console.log(error);
 					});
+					
 				}
-			}
 
+			}
 		}])
 		
 })();

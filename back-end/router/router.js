@@ -355,64 +355,6 @@ module.exports = function (app) {
 			});
 	});
 
-	app.post('/room/join', function (req, res, next) {
-		User.findOne()
-			.where('_id')
-			.equals(req.body.userId)
-			.exec(function (err, user) {
-				if(err) return next(err);
-
-				if(user.currentRoom !== req.body.roomId) {
-
-					console.log('enter different room !')
-					Room.findOne()
-						.where('_id')
-						.equals(req.body.roomId)
-						.exec(function (err, room) {
-							if(err) return next(err);
-
-							var index = room.currentMembers.indexOf(req.body.userId);
-							if(index >= 0) {
-								room.currentMembers.splice(index,1);
-								console.log('remove old room members ')
-							}
-
-							room.save(function (err, room) {
-								if(err) return next(err);
-							});
-						});
-
-					user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
-						if(err) return next(err);
-
-						console.log('update' + user);
-					});
-
-					Room.findOne()
-						.where('_id')
-						.equals(req.body.roomId)
-						.exec(function (err, room) {
-							if(err) return next(err);
-
-							if(room.currentMembers.indexOf(req.body.userId) < 0) {
-								console.log('first time join room...')
-								room.currentMembers.push(req.body.userId);
-								
-							}
-							console.log('second time join room...');
-							room.save(function (err) {
-								if(err) return next(err);
-
-								res.send({});
-							});
-						});
-				}else{
-					console.log('enter same room !');
-					res.send({});
-				}
-			});
-	});
-
 	app.get('/room/:roomId', function (req, res, next) {
 
 		Room.findOne()
@@ -425,6 +367,88 @@ module.exports = function (app) {
 					room: room
 				});
 			});
+	});
+
+	app.post('/room/join', function (req, res, next) {
+		User.findOne({ '_id':req.body.userId }, function (err, user) {
+			
+			if(err) return next(err);
+
+			if(user.currentRoom !== req.body.roomId) {
+
+				Room.findOne({ '_id':req.body.roomId }, function (err, room) {
+
+					if(err) return next(err);
+
+					var index = room.currentMembers.indexOf(req.body.userId);
+					if(index >= 0) {
+						room.currentMembers.splice(index,1);
+						console.log('remove old room members ')
+					}
+
+					room.save(function (err, room) {
+						if(err) return next(err);
+
+
+						user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
+							if(err) return next(err);
+
+							console.log('update' + user);
+
+
+							Room.findOne({ '_id':req.body.roomId }, function (err, room) {
+
+								if(err) return next(err);
+
+								if(room.currentMembers.indexOf(req.body.userId) < 0) {
+									console.log('first time join room...')
+									room.currentMembers.push(req.body.userId);
+									
+								}
+								console.log('second time join room...');
+								room.save(function (err) {
+									if(err) return next(err);
+
+									res.send({});
+								});
+							})
+						});
+					});
+				})
+			}else{
+				console.log('enter same room !');
+				res.send({});
+			}
+		})
+	});
+
+	app.post('/room/exit', function (req, res, next) {
+		User.findOne({ '_id': req.body.userId }, function (err, user) {
+			if(err) return next(err);
+
+			if(user.currentRoom) {
+				
+				Room.findOne({ '_id': user.currentRoom }, function (err, room) {
+
+					if(err) return next(err);
+
+					var index = room.currentMembers.indexOf(user._id);
+					if(index >= 0) {
+						room.currentMembers.splice(index,1);
+						console.log('splice success');
+					}
+					room.save(function (err) {
+						if(err) return next(err);
+					
+						user.update({ 'currentRoom': '' }, function (err, user) {
+							if(err) return next(err);
+
+							res.send({});
+						});
+					});
+				});
+			}
+		});
 	});
 
 

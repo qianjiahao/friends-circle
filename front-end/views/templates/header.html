@@ -13,7 +13,7 @@
 				<ul class="navbar-nav nav header-link">
 					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="search">搜搜</a></li>
 					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="circle">好友圈</a></li>
-					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="chatroom">聊天室</a></li>
+					<li ui-sref-active="active" ng-if="isAuth && isChatroomAccess" ng-disabled="!isChatroomAccess"><a ui-sref="chatroom">聊天室</a></li>
 				</ul>
 				
 				<div class="navbar-right" ng-controller="LogoutController" >

@@ -47,6 +47,10 @@ io.on('connection',function (socket) {
 		io.emit('update rooms', members);
 	});
 
+	socket.on('update room info', function (id) {
+		io.emit('update room info', id);
+	});
+	
 	socket.on('disconnect',function() {
 		console.log('Goodbye : ', socket.id);
 	});

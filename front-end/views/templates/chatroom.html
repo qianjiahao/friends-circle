@@ -51,7 +51,7 @@
 			</div>
 			<div class="panel">
 				<div class="header">
-					<span>房间信息</span>
+					<span>房间信息</span><a href="" ng-click="exit()" class="btn btn-sm btn-warning header-button">exit</a>
 				</div>
 				<div class="content">
 					<table class="table">
@@ -60,7 +60,7 @@
 							<td><span ng-bind="room.createdDate | date : 'yyyy-MM-dd hh:mm:ss'"></span></td>
 						</tr>
 						<tr ng-repeat="cm in room.currentMembers">
-							<td><span ng-bind="convertIdToUsername(cm)"></span></td>
+							<td><span ng-bind="convertIdToUsername(cm,friends)"></span></td>
 							<td><span ng-show="room.createrId==cm" class="badge">创建者</span><span class="badge" ng-show="room.createrId!=cm">成员</span></td>
 						</tr>
 					</table>

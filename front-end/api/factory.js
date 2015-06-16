@@ -102,10 +102,17 @@
 				}
 			};
 		}])
-		.factory('RoomFactory', ['$http', function ($http){
+		.factory('RoomFactory', ['$http','$location','AuthFactory', function ($http, $location, AuthFactory){
 			var baseUrl = 'http://localhost:3000';
 
 			return {
+				checkAccess: function (target) {
+					if(!AuthFactory.getAuth(target).currentRoom) {
+						$location.path('/circle');
+						return false;
+					}
+					return true;
+				},
 				getOne: function (data, success, error) {
 					$http.get(baseUrl + '/room/' + data).success(success).error(error);
 				},
@@ -117,6 +124,9 @@
 				},
 				join: function (data, success, error) {
 					$http.post(baseUrl + '/room/join', data).success(success).error(error);
+				},
+				exit: function (data, success, error) {
+					$http.post(baseUrl + '/room/exit', data).success(success).error(error);
 				}
 			};
 		}])
