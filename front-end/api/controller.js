@@ -435,7 +435,7 @@
 				$scope.members = [];
 				$scope.writeContent = '';
 				$scope.selfId = AuthFactory.getAuth('User').id;
-
+				$scope.page = 1;
 
 				var minWindowSize = 768;
 				$scope.isShowFriends = $scope.isShowRooms = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
@@ -443,6 +443,8 @@
 				socket.emit('update friends',AuthFactory.getAuth('User').id);
 				socket.emit('update news',AuthFactory.getAuth('User').id);
 				socket.emit('update rooms',AuthFactory.getAuth('User').id);
+
+				
 
 				$scope.convertIdToUsername = function (input, data){
 					if(input && data) {
@@ -459,8 +461,8 @@
 					}
 				}
 
-				function updateNews(){
-					NewsFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
+				function updateNews(page){
+					NewsFactory.getAll(AuthFactory.getAuth('User').id + '/' + page, function (data) {
 						$scope.newsList = data;
 					}, function (error) {
 						console.log(error);
@@ -471,11 +473,23 @@
 					if(AuthFactory.checkAuth('User')) {
 						var user = AuthFactory.getAuth('User');
 						if(user.id === id || user.friends.indexOf(id) >= 0) {
-							updateNews();
+							updateNews($scope.page);
 						}
 					}
 				});
 
+				$scope.hasNext = true;
+				$scope.loadNextPage = function () {
+					if($scope.newsList && $scope.newsList.length < $scope.page * 7) {
+						$scope.hasNext = false;
+
+					}else{
+						$scope.hasNext = true;
+						$scope.page = $scope.page + 1;
+						updateNews($scope.page);
+						console.log($scope.page);
+					}
+				}
 
 				function updateFriends(callback){
 					FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {

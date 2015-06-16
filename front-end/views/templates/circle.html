@@ -101,7 +101,13 @@
 						</a>
 					</div>
 				</div>
-			</div>	
+			</div>
+			<div class="content load-news">
+				<a href="" ng-click="loadNextPage()" ng-disabled="!hasNext">
+					<span ng-show="hasNext">加载下一页</span>
+					<span ng-show="!hasNext">已经到最底啦</span>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>

@@ -347,7 +347,9 @@ module.exports = function (app) {
 		});
 	});
 
-	app.get('/news/all/:userId', function (req, res, next) {
+	app.get('/news/all/:userId/:page', function (req, res, next) {
+		var page = req.params.page;
+		var limit = 7;
 		User.findOne({ '_id': req.params.userId }, function (err, user) {
 			if(err) return next(err);
 
@@ -355,8 +357,8 @@ module.exports = function (app) {
 			array.push(req.params.userId);
 			News.find({ 'publishId': { '$in':array } }, function (err, newsList) {
 				if(err) return next(err);
-				console.log(newsList);
 
+				newsList = newsList.slice(-page*limit,newsList.length);
 				res.send(newsList);
 			});
 		});
