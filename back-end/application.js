@@ -23,8 +23,6 @@ http.listen(port,function(){
 io.on('connection',function (socket) {
 	console.log('Welcome on : ', socket.id);
 
-	var room = [];
-
 	socket.on('send message',function (data) {
 		console.log('User ' + socket.id  + ', nickname : ' + data.username + ', send message :' + data.message + ', date : ' + data.date);
 		io.emit('receive message',data);

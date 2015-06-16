@@ -12,6 +12,7 @@
     "angular-ui-router": "~0.2.15",
     "angular-cookies": "~1.4.0",
     "angular-socket-io": "~0.7.0",
-    "moment": "~2.10.3"
+    "moment": "~2.10.3",
+    "angular-sanitize": "~1.4.0"
   }
 }

@@ -5,7 +5,7 @@
 				<div class="header">
 					<span><a href="" ng-click="isShowFriends=!isShowFriends">好友列表</a></span><a href="" ng-show="friends.length" class="btn btn-sm btn-primary header-button" ng-click="isCreateRoom=!isCreateRoom">create room</a>
 				</div>
-				<div class="content" ng-show="isCreateRoom">
+				<div class="content" ng-if="isCreateRoom">
 					<ul class="auth-list">
 						<li class="input-normal">
 							<span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span>
@@ -23,7 +23,7 @@
 					<div ng-show="!friends.length">
 						<span>暂时没有好友在线</span>
 					</div>
-					<table class="table" ng-show="friends.length">
+					<table class="table text-center" ng-show="friends.length">
 						<tr ng-repeat="f in friends | orderBy:'online':true">
 							<td>
 								<span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span>
@@ -46,8 +46,8 @@
 				<div class="header">
 					<span><a href="" ng-click="isShowRooms=!isShowRooms">房间列表</a></span>
 				</div>
-				<div class="content" ng-show="isShowRooms">
-					<table class="table">
+				<div class="content" ng-if="isShowRooms">
+					<table class="table  text-center">
 						<tr ng-repeat="r in rooms | orderBy:'createdDate':true">
 							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="convertIdToUsername(r.createrId,friends)"></span></td>
 							<td><a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a></td>
@@ -60,7 +60,12 @@
 			<div class="panel">
 				<div class="header">
 					<span>写点什么</span>
-					<span><a href="" class="btn btn-sm btn-success header-button" ng-click="publish()" ng-disabled="!writeContent">submit</a></span>
+					<span>
+						<a href="" class="btn btn-sm btn-success header-button" ng-click="publish()" ng-disabled="!writeContent">submit</a>
+					</span>
+					<a href="" ng-click="isMarkdown=!isMarkdown" class="text-right" style="display:inline-block;float: right;margin-right: 10px;">
+						markdown <span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isMarkdown]" aira-hidden="true"></span>
+					</a>
 				</div>
 				<div class="content">
 					<textarea class="circle-write-area" ng-model="writeContent" placeholder="今天有哪些新鲜事？"></textarea>
@@ -71,22 +76,28 @@
 					<h3>
 						<span ng-bind="convertIdToUsername(nl.publishId,friends)"></span>
 					</h3>
-					<div class="news-operater" ng-show="nl.publishId==selfId">
-						<a href="" ng-click="edit(nl._id,nl.publishContent)">
+					<div class="news-operater operater-top" ng-show="nl.publishId==selfId">
+						<a href="" ng-click="toggleEdit(nl._id,nl.publishContent)">
 							<span class="glyphicon glyphicon-edit" aira-hidden="true"></span>
 						</a>
 						<a href="" ng-click="remove(nl._id)">
 							<span class="glyphicon glyphicon-remove" aira-hidden="true"></span>
 						</a>
 					</div>
-					<p ng-bind="nl.publishContent" ng-show="!isEdit"></p>
+					<p ng-bind-html="nl.publishContent" ng-show="!isEdit"></p>
 					<p >
-						<textarea class="news-edit-area" ng-model="editContentResult" ng-show="isEdit" rows="2"></textarea>
+						<textarea class="news-edit-area" ng-model="editContentResult" ng-show="isEdit" rows="5"></textarea>
 					</p>
 					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
 					<div class="news-save" ng-show="isEdit">
-						<a href="" ng-click="save(nl._id)">
-							<span class="glyphicon glyphicon-floppy-save" aira-hidden="true"></span>
+						
+					</div>
+					<div class="news-operater operater-bottom">
+						<a href="" ng-click="support(nl._id)" ng-show="!isEdit">
+							<span class="glyphicon glyphicon-thumbs-up" aira-hidden="true" ng-class="{ true:'news-support',false:'news-normal' }[nl.support.indexOf(selfId) >= 0]" ng-bind="nl.support.length"></span>
+						</a>
+						<a href="" ng-click="save(nl._id)" ng-show="isEdit">
+							<span class="glyphicon glyphicon-floppy-save news-save" aira-hidden="true"></span>
 						</a>
 					</div>
 				</div>

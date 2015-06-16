@@ -159,6 +159,7 @@
 				$rootScope.username = null;
 				$rootScope.totalHints = 0;
 				AuthFactory.removeAuth('User');
+				AuthFactory.checkAuth('User');
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', 'socket', 'AuthFactory', function ($scope, $rootScope, socket, AuthFactory) {
@@ -474,18 +475,7 @@
 						}
 					}
 				});
-				
-				$scope.publish = function(){
-					NewsFactory.create({
-						publishId: AuthFactory.getAuth('User').id,
-						publishContent: $scope.writeContent
-					}, function (data) {
-						socket.emit('update news',AuthFactory.getAuth('User').id);
-						$scope.writeContent = '';
-					}, function (error) {
-						console.log(error);
-					})
-				}
+
 
 				function updateFriends(callback){
 					FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
@@ -501,6 +491,18 @@
 						if(user.id === id || user.friends.indexOf(id) >= 0) {
 							updateFriends();
 						}
+					}
+				});
+				function updateRooms(){
+					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (data) {
+						$scope.rooms = data.rooms;
+					}, function (error) {
+						console.log(error);
+					});
+				}
+				socket.on('update rooms', function (members) {
+					if(members.indexOf(AuthFactory.getAuth('User').id) >= 0) {
+						updateRooms();
 					}
 				});
 				$scope.toggleCheck = function (id) {
@@ -530,18 +532,6 @@
 						console.log(error);
 					});
 				}
-				function updateRooms(){
-					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (data) {
-						$scope.rooms = data.rooms;
-					}, function (error) {
-						console.log(error);
-					});
-				}
-				socket.on('update rooms', function (members) {
-					if(members.indexOf(AuthFactory.getAuth('User').id) >= 0) {
-						updateRooms();
-					}
-				});
 				$scope.join = function (roomId) {
 
 					console.log(roomId);
@@ -564,10 +554,34 @@
 					});
 					
 				}
+
+				$scope.isMarkdown = false;
+		
+				$scope.publish = function(){
+					NewsFactory.create({
+						publishId: AuthFactory.getAuth('User').id,
+						publishContent: $scope.writeContent,
+						isMarkdown: $scope.isMarkdown
+					}, function (data) {
+						socket.emit('update news',AuthFactory.getAuth('User').id);
+						$scope.writeContent = '';
+					}, function (error) {
+						console.log(error);
+					})
+					$scope.isMarkdown = false;
+				}
+
+
 				$scope.isEdit = false;
-				$scope.edit = function (newsId,newsContent) {
-					this.isEdit = true;
-					this.editContentResult = newsContent;
+
+				$scope.toggleEdit = function (newsId,newsContent) {
+					if(this.isEdit === false) {
+						this.isEdit = true;
+						this.editContentResult = newsContent;
+					}else{
+						this.isEdit = false;
+						this.editContentResult = newsContent;
+					}
 				}
 
 				$scope.save = function (newsId) {
@@ -586,6 +600,19 @@
 					NewsFactory.remove({
 						newsId: newsId
 					}, function (data) {
+						socket.emit('update news', AuthFactory.getAuth('User').id);
+					}, function (error) {
+						console.log(error);
+					});
+				}
+
+				$scope.support = function (newsId) {
+					console.log('lala');
+					NewsFactory.support({
+						newsId: newsId,
+						supporter: AuthFactory.getAuth('User').id
+					}, function (data) {
+						console.log($scope.newsList);
 						socket.emit('update news', AuthFactory.getAuth('User').id);
 					}, function (error) {
 						console.log(error);

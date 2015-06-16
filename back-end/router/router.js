@@ -5,6 +5,7 @@ var Room = require('../model/room.js');
 var bcrypt = require('bcrypt');
 var flash = require('../util/flash.js');
 var moment = require('moment');
+var markdown = require('markdown').markdown;
 
 module.exports = function (app) {
 
@@ -298,8 +299,14 @@ module.exports = function (app) {
 		var temp = {
 			publishId: req.body.publishId,
 			publishContent: req.body.publishContent,
-			date: new Date()
+			date: new Date(),
+			isMarkdown: req.body.isMarkdown,
+			support: []
 		};
+
+		if(temp.isMarkdown) {
+			temp.publishContent = markdown.toHTML(temp.publishContent);
+		}
 
 		News.create(temp, function (err) {
 			if(err) return next(err);
@@ -311,15 +318,10 @@ module.exports = function (app) {
 	app.post('/news/save', function (req, res, next) {
 		News.findOne({ '_id':req.body.newsId }, function (err, news) {
 			if(err) return next(err);
-			
-			console.log('1  ',news);
-			console.log('333 ',req.body.publishContent);
 			news.publishContent = req.body.publishContent;
-
 			news.save(function (err, news) {
 				if(err) return next(err);
 
-				console.log('2   ',news);
 				res.send({});
 			});
 		});
@@ -332,17 +334,30 @@ module.exports = function (app) {
 			res.send({});
 		});
 	});
-	
+
+	app.post('/news/support', function (req, res, next) {
+		News.findOne({ '_id':req.body.newsId }, function (err, news) {
+			if(err) return next(err);
+
+			news.update({ '$push':{ 'support':req.body.supporter } }, function (err) {
+				if(err) return next(err);
+
+				res.send({});
+			});
+		});
+	});
+
 	app.get('/news/all/:userId', function (req, res, next) {
 		User.findOne({ '_id': req.params.userId }, function (err, user) {
 			if(err) return next(err);
 
 			var array = user.friends;
 			array.push(req.params.userId);
-			News.find({ 'publishId': { '$in':array } }, { 'date':1, 'publishId':1, 'publishContent':1 }, function (err, news) {
+			News.find({ 'publishId': { '$in':array } }, function (err, newsList) {
 				if(err) return next(err);
+				console.log(newsList);
 
-				res.send(news);
+				res.send(newsList);
 			});
 		});
 	});

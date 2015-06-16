@@ -267,17 +267,25 @@ input:-webkit-autofill {
 	display: inline-block;
 	position: absolute;
 	right: 10px;
-	top: 10px;
 }
+.operater-top{
+	top: 10px;	
+}
+.operater-bottom{
+	bottom: 10px;
+}
+
 .news-operater a{
 	color: #666;
 }
 .news-save{
 	color: lightseagreen;
-	display: inline-block;
-	position: absolute;
-	right: 10px;
-	bottom: 10px;
+}
+.news-support{
+	color: lightcoral;
+}
+.news-normal{
+	color: #666;
 }
 .news-edit-area{
 	width: 100%;

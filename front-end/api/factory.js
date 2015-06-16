@@ -98,6 +98,9 @@
 				},
 				remove: function (data, success, error) {
 					$http.post(baseUrl + '/news/remove', data).success(success).error(error);
+				},
+				support: function (data, success, error) {
+					$http.post(baseUrl + '/news/support', data).success(success).error(error);
 				}
 			};
 		}])
