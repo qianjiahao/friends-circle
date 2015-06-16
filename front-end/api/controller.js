@@ -23,7 +23,7 @@
 					$rootScope.isChatroomAccess = true;
 				}
 			}
-			$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent =  $window.document.documentElement.offsetWidth <= minWindowSize ? true : false;
+			$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent =  $window.document.documentElement.offsetWidth < minWindowSize ? true : false;
 
 			$scope.toggleNavbar = function () {
 				if(isNeedFoldCurrent) {
@@ -34,7 +34,7 @@
 			}
 
 			$window.onresize = function() {
-				isNeedFoldCurrent = $window.document.documentElement.offsetWidth <= 768 ? true : false
+				isNeedFoldCurrent = $window.document.documentElement.offsetWidth < 768 ? true : false
 				if(isNeedFoldCache !== isNeedFoldCurrent) {
 					$scope.isFolded = isNeedFoldCache = isNeedFoldCurrent;
 					$scope.$apply();
@@ -170,7 +170,7 @@
 			}
 
 		}])
-		.controller('ChatController', ['$scope', '$rootScope', '$timeout','$location', 'socket', 'AuthFactory','FriendFactory','RoomFactory', function ($scope, $rootScope, $timeout, $location, socket, AuthFactory, FriendFactory, RoomFactory) {
+		.controller('ChatController', ['$scope', '$rootScope', '$timeout','$location', '$window', 'socket', 'AuthFactory','FriendFactory','RoomFactory', function ($scope, $rootScope, $timeout, $location, $window, socket, AuthFactory, FriendFactory, RoomFactory) {
 			AuthFactory.checkAuth('User');
 			RoomFactory.checkAccess('User');
 
@@ -178,6 +178,9 @@
 
 				socket.emit('update room info',AuthFactory.getAuth('User').currentRoom);
 			}			
+
+			var minWindowSize = 768;
+			$scope.isShowSelfInfo = $scope.isShowRoomInfo = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
 
 			$scope.message = [];
 
@@ -416,7 +419,7 @@
 			}
 
 		}])
-		.controller('CircleController', ['$scope', '$rootScope', '$location', 'socket', 'AuthFactory','HintFactory','FriendFactory', 'NewsFactory','RoomFactory', function ($scope, $rootScope, $location, socket, AuthFactory, HintFactory, FriendFactory, NewsFactory, RoomFactory){
+		.controller('CircleController', ['$scope', '$rootScope', '$location', '$window','socket', 'AuthFactory','HintFactory','FriendFactory', 'NewsFactory','RoomFactory', function ($scope, $rootScope, $location, $window, socket, AuthFactory, HintFactory, FriendFactory, NewsFactory, RoomFactory){
 			
 			if(AuthFactory.checkAuth('User')) {
 				FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
@@ -430,6 +433,11 @@
 				$scope.isChecked = false;
 				$scope.members = [];
 				$scope.writeContent = '';
+				$scope.selfId = AuthFactory.getAuth('User').id;
+
+
+				var minWindowSize = 768;
+				$scope.isShowFriends = $scope.isShowRooms = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
 
 				socket.emit('update friends',AuthFactory.getAuth('User').id);
 				socket.emit('update news',AuthFactory.getAuth('User').id);
@@ -536,6 +544,7 @@
 				});
 				$scope.join = function (roomId) {
 
+					console.log(roomId);
 					RoomFactory.join({
 						userId: AuthFactory.getAuth('User').id,
 						roomId: roomId
@@ -555,7 +564,33 @@
 					});
 					
 				}
+				$scope.isEdit = false;
+				$scope.edit = function (newsId,newsContent) {
+					this.isEdit = true;
+					this.editContentResult = newsContent;
+				}
 
+				$scope.save = function (newsId) {
+					this.isEdit = false;
+
+					NewsFactory.save({
+						newsId: newsId,
+						publishContent: this.editContentResult
+					}, function (data) {
+						socket.emit('update news', AuthFactory.getAuth('User').id);
+					}, function (error) {
+						console.log(error);
+					});
+				}
+				$scope.remove = function (newsId) {
+					NewsFactory.remove({
+						newsId: newsId
+					}, function (data) {
+						socket.emit('update news', AuthFactory.getAuth('User').id);
+					}, function (error) {
+						console.log(error);
+					});
+				}
 			}
 		}])
 		

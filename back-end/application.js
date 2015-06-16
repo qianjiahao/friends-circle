@@ -4,14 +4,17 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var bodyParser = require('body-parser');
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-
 require('./router/router.js')(app);
+
+
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    console.log(err);
+});
+
 
 http.listen(port,function(){
 	console.log('server on port : %d',port);
@@ -50,7 +53,7 @@ io.on('connection',function (socket) {
 	socket.on('update room info', function (id) {
 		io.emit('update room info', id);
 	});
-	
+
 	socket.on('disconnect',function() {
 		console.log('Goodbye : ', socket.id);
 	});

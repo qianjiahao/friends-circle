@@ -33,7 +33,7 @@ input:-webkit-autofill {
 	/* ------------------------------------------------------------------------------------  */
 
 /**
- * class
+ * common
  */
 .theme-white {
   background-color: #F9F9F5;
@@ -68,20 +68,6 @@ input:-webkit-autofill {
 	min-height: 300px;
 }
 
-.header-title{
-	font-size: 20px;
-	font-weight: 400;
-	letter-spacing:1px;
-}
-
-.header-title-first{
-	color: #F9F9F5;
-}
-
-.header-link{
-	font-size: 16px;
-}
-
 .panel{
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -102,6 +88,7 @@ input:-webkit-autofill {
 	padding: 10px;
 	border: 1px solid #e7e7e7;
 	background-color: #fff;
+	position: relative;
 }
 
 .text-center{
@@ -118,6 +105,32 @@ input:-webkit-autofill {
 	float: right;
     margin-top: -5px;
 }
+
+/*
+	common style
+ */
+
+
+/*
+	header style
+ */
+
+.header-title{
+	font-size: 20px;
+	font-weight: 400;
+	letter-spacing:1px;
+}
+
+.header-title-first{
+	color: #F9F9F5;
+}
+
+.header-link{
+	font-size: 16px;
+}
+/*
+	header style
+ */
 /**
  *  authentication style 
  */
@@ -243,6 +256,33 @@ input:-webkit-autofill {
 	outline: none;
 	border: none;
 	overflow: scroll;
+}
+
+.panel-editing{
+	border: 1px solid lightcoral;
+}
+
+.news-operater{
+	color: #666;
+	display: inline-block;
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+.news-operater a{
+	color: #666;
+}
+.news-save{
+	color: lightseagreen;
+	display: inline-block;
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+}
+.news-edit-area{
+	width: 100%;
+	border: none;
+	outline: none;
 }
 
 

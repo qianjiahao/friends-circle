@@ -35,13 +35,6 @@
 				},
 				removeAuth: function(target) {
 					$cookies.remove(target);
-				},
-				checkJoinRoom: function (target) {
-					if(!$cookies.getObject(target).currentRoom) {
-						$location.path('/circle');
-						return false;
-					}
-					return true;
 				}
 			}
 		}])
@@ -99,6 +92,12 @@
 				},
 				create: function (data, success, error) {
 					$http.post(baseUrl + '/news/create', data).success(success).error(error);
+				},
+				save: function (data, success, error) {
+					$http.post(baseUrl + '/news/save', data).success(success).error(error);
+				},
+				remove: function (data, success, error) {
+					$http.post(baseUrl + '/news/remove', data).success(success).error(error);
 				}
 			};
 		}])

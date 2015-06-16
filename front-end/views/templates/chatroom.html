@@ -42,18 +42,18 @@
 		<div class="col-md-3">
 			<div class="panel" ng-controller="UserInfoController">
 				<div class="header">
-					<span>用户信息</span>
+					<span><a href="" ng-click="isShowSelfInfo=!isShowSelfInfo">用户信息</a></span>
 				</div>
-				<div class="content">
+				<div class="content" ng-show="isShowSelfInfo">
 					<h2>{{username}}</h2>
 					<i>{{signature}}</i>
 				</div>
 			</div>
 			<div class="panel">
 				<div class="header">
-					<span>房间信息</span><a href="" ng-click="exit()" class="btn btn-sm btn-warning header-button">exit</a>
+					<span><a href="" ng-click="isShowRoomInfo=!isShowRoomInfo">房间信息</a></span><a href="" ng-click="exit()" class="btn btn-sm btn-warning header-button">exit</a>
 				</div>
-				<div class="content">
+				<div class="content" ng-show="isShowRoomInfo">
 					<table class="table">
 						<tr>
 							<td><span>创建时间</span></td>

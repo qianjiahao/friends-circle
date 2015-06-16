@@ -202,12 +202,10 @@ module.exports = function (app) {
 
 			hint.update({ 'mark': true }, function (err, hint) {
 				if(err) return next(err);
-				console.log(hint);
 
 				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
 					if(err) return next(err);
 
-					console.log('mark : ',user);
 					res.send({});
 
 				});
@@ -310,6 +308,31 @@ module.exports = function (app) {
 		});
 	});
 
+	app.post('/news/save', function (req, res, next) {
+		News.findOne({ '_id':req.body.newsId }, function (err, news) {
+			if(err) return next(err);
+			
+			console.log('1  ',news);
+			console.log('333 ',req.body.publishContent);
+			news.publishContent = req.body.publishContent;
+
+			news.save(function (err, news) {
+				if(err) return next(err);
+
+				console.log('2   ',news);
+				res.send({});
+			});
+		});
+	});
+
+	app.post('/news/remove', function (req, res, next) {
+		News.remove({ '_id':req.body.newsId }, function (err) {
+			if(err) return next(err);
+
+			res.send({});
+		});
+	});
+	
 	app.get('/news/all/:userId', function (req, res, next) {
 		User.findOne({ '_id': req.params.userId }, function (err, user) {
 			if(err) return next(err);
@@ -332,7 +355,6 @@ module.exports = function (app) {
 			members: req.body.members,
 			currentMembers: req.body.currentMembers
 		}
-		console.log(temp);
 		Room.create(temp, function (err, room) {
 			if(err) return next(err);
 
@@ -383,29 +405,21 @@ module.exports = function (app) {
 					var index = room.currentMembers.indexOf(req.body.userId);
 					if(index >= 0) {
 						room.currentMembers.splice(index,1);
-						console.log('remove old room members ')
 					}
 
 					room.save(function (err, room) {
 						if(err) return next(err);
 
-
 						user.update({ 'currentRoom': req.body.roomId }, function (err, user) {
 							if(err) return next(err);
-
-							console.log('update' + user);
-
 
 							Room.findOne({ '_id':req.body.roomId }, function (err, room) {
 
 								if(err) return next(err);
 
 								if(room.currentMembers.indexOf(req.body.userId) < 0) {
-									console.log('first time join room...')
 									room.currentMembers.push(req.body.userId);
-									
 								}
-								console.log('second time join room...');
 								room.save(function (err) {
 									if(err) return next(err);
 
@@ -416,7 +430,6 @@ module.exports = function (app) {
 					});
 				})
 			}else{
-				console.log('enter same room !');
 				res.send({});
 			}
 		})
@@ -427,7 +440,7 @@ module.exports = function (app) {
 			if(err) return next(err);
 
 			if(user.currentRoom) {
-				
+
 				Room.findOne({ '_id': user.currentRoom }, function (err, room) {
 
 					if(err) return next(err);
@@ -435,7 +448,6 @@ module.exports = function (app) {
 					var index = room.currentMembers.indexOf(user._id);
 					if(index >= 0) {
 						room.currentMembers.splice(index,1);
-						console.log('splice success');
 					}
 					room.save(function (err) {
 						if(err) return next(err);
