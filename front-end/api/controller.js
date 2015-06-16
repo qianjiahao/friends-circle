@@ -135,14 +135,14 @@
 				}, function (data) {
 
 					socket.emit('update friends',AuthFactory.getAuth('User').id);
-					AuthFactory.removeAuth('User');
-					$rootScope.isAuth = AuthFactory.checkAuth('User');
-					$rootScope.username = null;
-					$rootScope.totalHints = 0;
 
 				}, function (error) {
 					console.log(error);
 				});
+				AuthFactory.removeAuth('User');
+				$rootScope.isAuth = AuthFactory.checkAuth('User');
+				$rootScope.username = null;
+				$rootScope.totalHints = 0;
 			}
 		}])
 		.controller('UserInfoController',['$scope', '$rootScope', 'socket', 'AuthFactory', function ($scope, $rootScope, socket, AuthFactory) {
@@ -349,9 +349,10 @@
 
 					FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
 						AuthFactory.setAuth('User', data);
+						
+						socket.emit('update hints', senderId);
 						socket.emit('update friends',AuthFactory.getAuth('User').id);
-						socket.emit('update hints', AuthFactory.getAuth('User').id);
-
+						
 						HintFactory.pullRequest({
 							targetId: senderId,
 							hintType: 'accept request',
@@ -371,7 +372,7 @@
 						
 				}, function (error) {
 					console.log(error);
-				})
+				});
 			}
 
 		}])

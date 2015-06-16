@@ -1,6 +1,7 @@
 /**
  * tag
  */
+
 footer{
 	text-align: center;
 	font-size: 18px;
@@ -40,6 +41,12 @@ input:-webkit-autofill {
 }
 .navbar{
 	border-radius: 0;
+}
+
+.user-select-none{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 }
 
 .input-normal{
@@ -184,7 +191,6 @@ input:-webkit-autofill {
  */
 
 .search-friend-bar{
-	margin:10px;
 	overflow: hidden;
 	background-color: #fff;
 	width: 100%;
