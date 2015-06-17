@@ -10,12 +10,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./router/router.js')(app);
 
-
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     console.log(err);
 });
-
 
 http.listen(port,function(){
 	console.log('server on port : %d',port);

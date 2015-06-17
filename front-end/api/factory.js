@@ -75,11 +75,11 @@
 				getAll: function (data, success, error) {
 					$http.get(baseUrl + '/friends/all/' + data).success(success).error(error);
 				},
-				toBeFriends: function (data, success, error) {
-					$http.post(baseUrl + '/friend/accept', data).success(success).error(error);
-				},
 				getOne: function (data, success, error) {
 					$http.get(baseUrl + '/user/' + data).success(success).error(error);
+				},
+				toBeFriends: function (data, success, error) {
+					$http.post(baseUrl + '/friend/accept', data).success(success).error(error);
 				}
 			};
 		}])
