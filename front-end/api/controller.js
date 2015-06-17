@@ -432,6 +432,10 @@
 				}, function (error) {
 					console.log(error);
 				});
+
+
+				updateRooms();
+				
 				$rootScope.currentRoom = AuthFactory.getAuth('User').currentRoom;
 
 				$scope.isCreateRoom = false;
@@ -447,7 +451,7 @@
 
 				socket.emit('update friends',AuthFactory.getAuth('User').id);
 				socket.emit('update news',AuthFactory.getAuth('User').id);
-				socket.emit('update rooms',AuthFactory.getAuth('User').id);
+				// socket.emit('update rooms',AuthFactory.getAuth('User').id);
 
 				
 
@@ -496,7 +500,7 @@
 					}
 				}
 
-				function updateFriends(callback){
+				function updateFriends(){
 					FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
 						$scope.friends = data;
 					}, function (error) {
