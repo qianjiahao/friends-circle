@@ -23,7 +23,7 @@
 				<span>operation</span>
 			</td>
 		</tr>
-		<tr ng-repeat="hl in hintsList">
+		<tr ng-repeat="hl in hintsList | orderBy:'date':true | orderBy:'mark'">
 			<td>
 				<span ng-bind="hl.senderName"></span>
 			</td>

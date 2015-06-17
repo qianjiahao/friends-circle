@@ -3,7 +3,6 @@
 	app
 		.controller('BodyController', ['$rootScope', function ($rootScope){
 			
-			$rootScope.hintChanged = false;
 			$rootScope.totalHints = 0;
 			$rootScope.isSignin = false;
 			$rootScope.currentRoom = '';
@@ -18,7 +17,7 @@
 			$rootScope.isAuth = AuthFactory.checkAuth('User');
 			if(AuthFactory.checkAuth('User')) {
 				$rootScope.username = AuthFactory.getAuth('User').username;
-
+				socket.emit('update hints', AuthFactory.getAuth('User').id);
 				if(AuthFactory.getAuth('User').currentRoom) {
 					$rootScope.isChatroomAccess = true;
 				}
@@ -44,24 +43,13 @@
 			socket.on('update hints',function (id) {
 				if(AuthFactory.getAuth('User') && AuthFactory.getAuth('User').id === id) {
 					HintFactory.getHintsCount(AuthFactory.getAuth('User').id + '/' + false, function (data) {
+						console.log('get hints ');
 						$rootScope.totalHints = data.total;
 					}, function (error) {
 						console.log(error);
 					});
 				}
 			});
-			
-			$scope.$watch('hintChanged', function(newValue) {
-				if(AuthFactory.checkAuth('User')) {
-					HintFactory.getHintsCount(AuthFactory.getAuth('User').id + '/' + false, function (data) {
-						$rootScope.totalHints = data.total;
-					}, function (error) {
-						console.log(error);
-					});
-				}
-			});
-
-
 		}])
 		.controller('LoginController', ['$scope','$rootScope', 'AuthFactory', 'socket', function ($scope, $rootScope, AuthFactory, socket){
 			
@@ -85,8 +73,8 @@
 						AuthFactory.setAuth('User',data.data);
 	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
 	 					$rootScope.username = AuthFactory.getAuth('User').username;
-						$rootScope.hintChanged = !$rootScope.hintChanged;
 						$rootScope.isChatroomAccess = false;
+						socket.emit('update hints', AuthFactory.getAuth('User').id);
 	 					AuthFactory.checkNotAuth('User');
 	 					console.log(data)
 					}
@@ -332,7 +320,7 @@
 						mark: false,
 						accept: false
 					}, function (data) {
-						socket.emit('update hints',data.targetId);
+						socket.emit('update hints',targetId);
 						self.isApplied = true;
 						self.applyContent = '';
 					}, function (error) {
@@ -435,7 +423,7 @@
 
 
 				updateRooms();
-				
+
 				$rootScope.currentRoom = AuthFactory.getAuth('User').currentRoom;
 
 				$scope.isCreateRoom = false;
@@ -451,10 +439,7 @@
 
 				socket.emit('update friends',AuthFactory.getAuth('User').id);
 				socket.emit('update news',AuthFactory.getAuth('User').id);
-				// socket.emit('update rooms',AuthFactory.getAuth('User').id);
-
 				
-
 				$scope.convertIdToUsername = function (input, data){
 					if(input && data) {
 
