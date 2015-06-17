@@ -56,7 +56,7 @@ socket.io做聊天室和订阅、发布
 
 ##项目图片 [friends-circle](http://www.angularjs.cn/A1aQ)
 
->希望大神们能star一下，鼓励鼓励，꒰･◡･๑꒱
+>觉得凑合的话，记得star哦꒰･◡･๑꒱
 
 > If you like it , don't forget to star ~ thanks a lot .
 
