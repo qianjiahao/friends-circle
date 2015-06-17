@@ -1,10 +1,17 @@
 <div class="container">
 	<div ng-controller="CircleController" class="rows">
 		<div class="col-md-5">
+			
+			<!-- friends list -->
+
 			<div class="panel">
 				<div class="header">
-					<span><a href="" ng-click="isShowFriends=!isShowFriends">好友列表</a></span><a href="" ng-show="friends.length" class="btn btn-sm btn-primary header-button" ng-click="isCreateRoom=!isCreateRoom">create room</a>
+					<a href="" ng-click="isShowFriends=!isShowFriends">好友列表</a>
+					<a href="" ng-show="friends.length" class="btn btn-sm btn-primary header-button" ng-click="isCreateRoom=!isCreateRoom">create room</a>
 				</div>
+				
+				<!-- create room area -->
+				
 				<div class="content" ng-show="isCreateRoom">
 					<ul class="auth-list">
 						<li class="input-normal">
@@ -15,10 +22,17 @@
 						</li>
 						<li class="input-normal">
 							<span class="glyphicon glyphicon-user" aira-hidden="true"></span>
-							<span><input type="text" ng-model="username" disabled="true"></span>
+							<span>
+								<input type="text" ng-model="username" disabled="true">
+							</span>
 						</li>
 					</ul>
 				</div>
+
+				<!-- create room area -->
+
+				<!-- friends list area -->
+
 				<div class="content" ng-show="isShowFriends">
 					<div ng-show="!friends.length">
 						<span>暂时没有好友在线</span>
@@ -28,7 +42,9 @@
 							<td>
 								<span class="glyphicon glyphicon-user" aira-hidden="true" ng-class="{true:'online', false:'offline'}[f.online]"></span>
 							</td>
-							<td><span ng-bind="f.username"></span></td>
+							<td>
+								<span ng-bind="f.username"></span>
+							</td>
 							<td ng-show="isCreateRoom">
 								<a href="" ng-click="toggleCheck(f._id)">
 									<span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isChecked]" aira-hidden="true"></span>
@@ -37,26 +53,54 @@
 						</tr>
 					</table>
 				</div>
+
+				<!-- friends list area -->
+
+				<!-- finish create room area -->
+
 				<div class="header" ng-show="isCreateRoom">
 				<span class="glyphicon glyphicon-ok" aira-hidden="true"></span>
 					<a href="" class="btn btn-sm btn-success header-button" ng-disabled="!roomInfo" ng-click="finish()">Finish</a>
 				</div>
+				<!-- finish create room area -->
+
 			</div>
+
+			<!-- friends list -->
+
+			<!-- rooms list -->
+
 			<div class="panel">
 				<div class="header">
 					<span><a href="" ng-click="isShowRooms=!isShowRooms">房间列表</a></span>
 				</div>
+
+				<!-- rooms list area -->
+
 				<div class="content" ng-show="isShowRooms">
 					<table class="table  text-center">
 						<tr ng-repeat="r in rooms | orderBy:'createdDate':true">
-							<td><span ng-bind="r.roomInfo"></span></td><td><span ng-bind="convertIdToUsername(r.createrId,friends)"></span></td>
-							<td><a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a></td>
+							<td>
+								<span ng-bind="r.roomInfo"></span>
+							</td>
+							<td>
+								<span ng-bind="convertIdToUsername(r.createrId,friends)"></span>
+							</td>
+							<td>
+								<a href="" class="btn btn-sm btn-primary" ng-click="join(r._id)">join</a>
+							</td>
 						</tr>
 					</table>
 				</div>
+				
+				<!-- rooms list area -->
+
 			</div>
 		</div>
 		<div class="col-md-7">
+
+			<!-- write news area -->
+
 			<div class="panel">
 				<div class="header">
 					<span>写点什么</span>
@@ -64,13 +108,19 @@
 						<a href="" class="btn btn-sm btn-success header-button" ng-click="publish()" ng-disabled="!writeContent">submit</a>
 					</span>
 					<a href="" ng-click="isMarkdown=!isMarkdown" class="text-right" style="display:inline-block;float: right;margin-right: 10px;">
-						markdown <span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isMarkdown]" aira-hidden="true"></span>
+						<span>markdown </span>
+						<span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isMarkdown]" aira-hidden="true"></span>
 					</a>
 				</div>
 				<div class="content">
 					<textarea class="circle-write-area" ng-model="writeContent" placeholder="今天有哪些新鲜事？"></textarea>
 				</div>
 			</div>
+
+			<!-- write news area -->
+
+			<!-- news list area -->
+
 			<div class="panel" ng-class="{ true: 'panel-editing'}[isEdit]" ng-repeat="nl in newsList | orderBy :'date' :true">
 				<div class="content">
 					<h3>
@@ -89,9 +139,6 @@
 						<textarea class="news-edit-area" ng-model="editContentResult" ng-show="isEdit" rows="5"></textarea>
 					</p>
 					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
-					<div class="news-save" ng-show="isEdit">
-						
-					</div>
 					<div class="news-operater operater-bottom">
 						<a href="" ng-click="support(nl._id)" ng-show="!isEdit">
 							<span class="glyphicon glyphicon-thumbs-up" aira-hidden="true" ng-class="{ true:'news-support',false:'news-normal' }[nl.support.indexOf(selfId) >= 0]" ng-bind="nl.support.length"></span>
@@ -102,12 +149,20 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- news list area -->
+
+			<!-- load news bar -->
+
 			<div class="content load-news">
 				<a href="" ng-click="loadNextPage()" ng-disabled="!hasNext">
 					<span ng-show="hasNext">加载下一页</span>
 					<span ng-show="!hasNext">已经到最底啦</span>
 				</a>
 			</div>
+
+			<!-- load news bar -->
+			
 		</div>
 	</div>
 </div>

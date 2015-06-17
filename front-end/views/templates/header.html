@@ -10,18 +10,31 @@
 				<a href="" ui-sref="circle" class="navbar-brand header-title"><span class="header-title-first">F</span>riends <span class="header-title-first">C</span>ircle</a>
 			</div>
 			<div class="navbar-collapse" ng-if="!isFolded" ng-click="toggleNavbar()">
+				
+				<!-- navbar -->
+
 				<ul class="navbar-nav nav header-link">
 					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="search">搜搜</a></li>
 					<li ui-sref-active="active" ng-if="isAuth"><a ui-sref="circle">好友圈</a></li>
 					<li ui-sref-active="active" ng-if="isAuth && isChatroomAccess" ng-disabled="!isChatroomAccess"><a ui-sref="chatroom">聊天室</a></li>
 				</ul>
-				
+
+				<!-- navbar -->
+
+				<!-- logout button -->
+
 				<div class="navbar-right" ng-controller="LogoutController" >
 					<button class="btn btn-sm btn-danger navbar-btn" ng-click="logout()" ng-show="isAuth">logout</button>
 				</div>
+
+				<!-- logout button -->
+
 				<div class="navbar-right" ng-controller="UserInfoController">
 
 					<ul class="navbar-nav nav header-link">
+
+						<!-- hint area -->
+
 						<li>
 							<a href="#/hint" ng-if="isAuth">
 								<span class="glyphicon glyphicon-flag" aria-hidden="true" ng-class="{ true : 'hint'}[totalHints>0]"><i ng-bind="totalHints" ng-show="totalHints>0"></i></span>
@@ -30,9 +43,17 @@
 								<span class="glyphicon glyphicon-flag" aria-hidden="true" ></span>
 							</a>
 						</li>
+
+						<!-- hint area -->
+
+						<!-- username area -->
+
 						<li>
 							<a href="">{{username}}</a>
 						</li>
+
+						<!-- username area -->
+
 					</ul>
 				</div>
 			</div>

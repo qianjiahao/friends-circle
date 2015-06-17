@@ -8,8 +8,13 @@
 			</p>
 		</div>
 		<div class="col-md-6" ng-controller="LoginController">
+
+			<!-- login area -->
+
 			<form name="loginForm">
 				<ul class="auth-list">
+
+					<!-- login => email area -->
 					<li ng-class="{ true : 'input-error' , false : 'input-normal'}[loginForm.email.$dirty && loginForm.email.$invalid]">
 						<span>
 							<span class="glyphicon glyphicon-envelope icon" aira-hidden="true"></span>
@@ -22,6 +27,11 @@
 							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.email.$dirty && (loginForm.email.$error.required || loginForm.email.$error.email)"></span>
 						</span>
 					</li>
+
+					<!-- login => email area -->
+
+					<!-- login => password area -->
+
 					<li ng-class="{ true : 'input-error' , false : 'input-normal'}[loginForm.password.$dirty && loginForm.password.$invalid]">
 						<span>
 							<span class="glyphicon glyphicon-lock" aira-hidden="true"></span>
@@ -32,6 +42,11 @@
 							<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="loginForm.password.$dirty && (loginForm.password.$error.required || loginForm.password.$error.password || loginForm.password.$error.maxlength || loginForm.password.$error.minlength)"></span>
 						</span>
 					</li>
+
+					<!-- login => password area -->
+
+					<!-- login => login & signin area -->
+
 					<li>
 						<div class="rows">
 							<span class="col-sm-6">
@@ -42,13 +57,25 @@
 							</span>
 						</div>
 					</li>
+
+					<!-- login => login & signin area -->
+
 				</ul>
 			</form>
+
+			<!-- login area -->
+
 		</div>
 		<div class="signin-area" ng-if="isSignin" ng-controller="SigninController">
+
+			<!-- signin area -->
+
 			<form name="signinForm">
 				<div class="col-md-6">
 					<ul class="auth-list">
+
+						<!-- signin => username area -->
+
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.username.$dirty && signinForm.username.$invalid]">
 							<span>
 								<span class="glyphicon glyphicon-user icon" aira-hidden="true"></span>
@@ -61,6 +88,11 @@
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.username.$dirty && (signinForm.username.$error.required || signinForm.username.$error.minlength || signinForm.username.$error.maxlength)"></span>
 							</span>
 						</li>
+
+						<!-- signin => username area -->
+
+						<!-- signin => password area -->
+
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.password.$dirty && signinForm.password.$invalid]">
 							<span>
 								<span class="glyphicon glyphicon-lock icon" aira-hidden="true"></span>
@@ -73,6 +105,11 @@
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.password.$dirty && ( signinForm.password.$error.minlength || signinForm.password.$error.maxlength )"></span>
 							</span>
 						</li>
+
+						<!-- signin => password area -->
+
+						<!-- signin => password confiration area -->
+
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.confiration.$dirty && (signinForm.confiration.$invalid || !isMatch )]">
 							<span>
 								<span class="glyphicon glyphicon-lock icon" aira-hidden="true"></span>
@@ -84,10 +121,16 @@
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.confiration.$dirty && !isMatch"></span>
 							</span>
 						</li>
+
+						<!-- signin => password confiration area -->
+
 					</ul>
 				</div>
 				<div class="col-md-6">
 					<ul class="auth-list">
+
+						<!-- signin => email area -->						
+
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.email.$dirty && signinForm.email.$invalid]">
 							<span>
 								<span class="glyphicon glyphicon-envelope icon" aira-hidden="true"></span>
@@ -100,6 +143,11 @@
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.email.$dirty && signinForm.email.$error.email"></span>
 							</span>
 						</li>
+
+						<!-- signin => email area -->						
+
+						<!-- signin => signature area -->						
+
 						<li ng-class="{ true : 'input-error' , false : 'input-normal'}[signinForm.message.$dirty && signinForm.message.$invalid]">
 							<span>
 								<span class="glyphicon glyphicon-book icon" aira-hidden="true"></span>
@@ -111,6 +159,11 @@
 								<span class="glyphicon glyphicon-remove-sign icon" aira-hidden="true" ng-show="signinForm.username.$dirty && signinForm.username.$error.maxlength"></span>
 							</span>
 						</li>
+
+						<!-- signin => signature area -->						
+
+						<!-- signin => signin area -->						
+
 						<li>
 							<div class="rows">
 								<span class="col-sm-12">
@@ -118,9 +171,15 @@
 								</span>
 							</div>
 						</li>
+
+						<!-- signin => signin area -->						
+
 					</ul>					
 				</div>
 			</form>
+			
+			<!-- signin area -->
+
 		</div>
 	</div>
 </div>

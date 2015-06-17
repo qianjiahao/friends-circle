@@ -1,14 +1,25 @@
 <div class="container">
 	<div class="rows" ng-controller="ChatController">
 		<div class="col-md-9">
+
+			<!-- char content area -->
+
 			<div class="panel">
 				<form name="chatroom">
+					
+					<!-- room title & user typing hint -->
+
 					<div class="header">
 						<div class="text-center">
-							<span ng-hide="isTyping">{{room.roomInfo}}</span>
-							<span ng-show="isTyping">{{typingUsername}} is typing</span>
+							<span ng-show="!isTyping" ng-bind="room.roomInfo"></span>
+							<span ng-show="isTyping" ng-bind="typingUsername"></span>
+							<span> is typing</span>
 						</div>
 					</div>
+
+					<!-- room title & user typing hint -->
+
+					<!-- chat message content area -->
 					<div class="content chat">
 						<div class="chat-content" ng-model="message" ng-repeat="m in message">
 							<div class="chat-username" ng-class="{true : 'text-right',false : 'text-left'}[m.isSelf]">
@@ -22,44 +33,79 @@
 							</div>
 						</div>
 					</div>
+
+					<!--chat message content area -->
+
+					<!-- input chat content area -->
+
 					<div class="chat-operate-area content">
 						<div class="chat-input-area">
-							<textarea class="chat-input" placeholder="input something ... " rows="2" ng-bind="content" ng-model="content" name="content" autocomplete="off" ng-change="typing()" required></textarea>
+							<textarea class="chat-input" placeholder="input something ... " rows="2" ng-model="content" autocomplete="off" ng-change="typing()" required></textarea>
 						</div>
 						<a href="" ng-click="sendMessage(content)">
 							<span class="glyphicon glyphicon-send chat-submit-area" aira-hidden="true"></span>
 						</a>
 					</div>
+
+					<!-- input chat content area -->
+
  				</form>	
 			</div>
 		</div>
 		<div class="col-md-3">
+
+			<!-- user info area -->
+
 			<div class="panel" ng-controller="UserInfoController">
 				<div class="header">
-					<span><a href="" ng-click="isShowSelfInfo=!isShowSelfInfo">用户信息</a></span>
+					<span>
+						<a href="" ng-click="isShowSelfInfo=!isShowSelfInfo">用户信息</a>
+					</span>
 				</div>
 				<div class="content" ng-show="isShowSelfInfo">
-					<h2>{{username}}</h2>
-					<i>{{signature}}</i>
+					<h2>
+						<span ng-bind="username"></span>
+					</h2>
+					<i>
+						<span ng-bind="signature"></span>
+					</i>
 				</div>
 			</div>
+
+			<!-- user info area -->
+
+			<!-- room info & members info area -->
+
 			<div class="panel">
 				<div class="header">
-					<span><a href="" ng-click="isShowRoomInfo=!isShowRoomInfo">房间信息</a></span><a href="" ng-click="exit()" class="btn btn-sm btn-warning header-button">exit</a>
+					<a href="" ng-click="isShowRoomInfo=!isShowRoomInfo">房间信息</a>
+					<a href="" ng-click="exit()" class="btn btn-sm btn-warning header-button">exit</a>
 				</div>
 				<div class="content" ng-show="isShowRoomInfo">
 					<table class="table">
 						<tr>
-							<td><span>创建时间</span></td>
-							<td><span ng-bind="room.createdDate | date : 'yyyy-MM-dd hh:mm:ss'"></span></td>
+							<td>
+								<span>创建时间</span>
+							</td>
+							<td>
+								<span ng-bind="room.createdDate | date : 'yyyy-MM-dd hh:mm:ss'"></span>
+							</td>
 						</tr>
 						<tr ng-repeat="cm in room.currentMembers">
-							<td><span ng-bind="convertIdToUsername(cm,friends)"></span></td>
-							<td><span ng-show="room.createrId==cm" class="badge">创建者</span><span class="badge" ng-show="room.createrId!=cm">成员</span></td>
+							<td>
+								<span ng-bind="convertIdToUsername(cm,friends)"></span>
+							</td>
+							<td>
+								<span ng-show="room.createrId==cm" class="badge">创建者</span>
+								<span class="badge" ng-show="room.createrId!=cm">成员</span>
+							</td>
 						</tr>
 					</table>
 				</div>
 			</div>
+		
+			<!-- room info & members info area -->
+
 		</div>
 	</div>
 

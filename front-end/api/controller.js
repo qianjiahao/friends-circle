@@ -628,7 +628,6 @@
 				}
 
 				$scope.support = function (newsId) {
-					console.log('lala');
 					NewsFactory.support({
 						newsId: newsId,
 						supporter: AuthFactory.getAuth('User').id

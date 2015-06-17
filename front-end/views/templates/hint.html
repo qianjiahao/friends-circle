@@ -4,13 +4,38 @@
 
 	<table class="table hint-list table-bordered table-hover">
 		<tr >
-			<td>nickname</td><td>reason</td><td>content</td><td>date</td><td>mark</td><td>operation</td>
+			<td>
+				<span>nickname</span>
+			</td>
+			<td>
+				<span>reason</span>
+			</td>
+			<td>
+				<span>content</span>
+			</td>
+			<td>
+				<span>date</span>
+			</td>
+			<td>
+				<span>mark</span>
+			</td>
+			<td>
+				<span>operation</span>
+			</td>
 		</tr>
 		<tr ng-repeat="hl in hintsList">
-			<td>{{hl.senderName}}</td>
-			<td>{{hl.hintType}}</td>
-			<td style="width:200px;word-break: break-word;">{{hl.hintContent}}</td>
-			<td>{{hl.date}}</td>
+			<td>
+				<span ng-bind="hl.senderName"></span>
+			</td>
+			<td>
+				<span ng-bind="hl.hintType"></span>
+			</td>
+			<td style="max-width:200px;word-break: break-word;">
+				<span ng-bind="hl.hintContent"></span>
+			</td>
+			<td>
+				<span ng-bind="hl.date"></span>
+			</td>
 			<td>
 				<a href="" ng-show="!isMarked && !hl.mark" ng-class="{ true: 'marked-hint',false: 'unmarked-hint' }[isMarked || hl.mark]" ng-click="mark(hl._id)">
 					<span class="glyphicon glyphicon-bookmark" aira-hidden="true"></span>
