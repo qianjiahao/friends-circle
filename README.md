@@ -29,6 +29,7 @@
     http://localhost:8080/front-end/views/layout.html
 
 
+##Description
 
 新人练手，在学了一段时间angular后，结合node和socket.io弄个小东西
 
@@ -50,23 +51,12 @@ socket.io做聊天室和订阅、发布
     发布新鲜事 [ 仅好友可见 , 可选是否需要markdown]
     编辑，删除新鲜事 [ 仅发布者可操作 ]
     点赞新鲜事 [ 好友均可 ]
-	
-截了几张图
- ![QQ20150616-1@2x.png](//dn-cnode.qbox.me/FmxdYScRDiELWJHr808X8_sylKOf)
- 
- ![QQ20150616-2@2x.png](//dn-cnode.qbox.me/FuKbHqRE8twDQ8f2voxyHBTF-XXK)
-  
-![QQ20150616-3@2x.png](//dn-cnode.qbox.me/FhIBm0tIAWTUGEf9L1bHGLEP8liB)
-   
- ![QQ20150616-4@2x.png](//dn-cnode.qbox.me/FrBIFOptbfOvHYP2f10WhI0Diixx)
-	
- ![QQ20150616-6@2x.png](//dn-cnode.qbox.me/FrG-8cy2WbvKuU_ZcnoiE6d2joM1)
-	 
-  ![QQ20150616-7@2x.png](//dn-cnode.qbox.me/FuOViDt4PNppWWmKi3g39VIO2H7u)
-	  
-项目地址：[friends-circle](https://github.com/qianjiahao/friends-circle)
+    to be continue...
 
->希望大神们能star鼓励鼓励，꒰･◡･๑꒱
+
+##项目图片 [friends-circle](http://www.angularjs.cn/A1aQ)
+
+>希望大神们能star一下，鼓励鼓励，꒰･◡･๑꒱
 
 > If you like it , don't forget to star ~ thanks a lot .
 
