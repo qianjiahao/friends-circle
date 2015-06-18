@@ -212,6 +212,10 @@ input:-webkit-autofill {
 	vertical-align: center;
 }
 
+.hint-content{
+	max-width: 200px;
+	word-break: break-word;
+}
 .unmarked-hint{
 	color: orangered;
 	font-size: 20px;
