@@ -58,33 +58,35 @@
 			}
 
 			$scope.login = function () {
-
-				AuthFactory.login({
-					email: $scope.loginEmail, 
-					password: $scope.loginPassword
-				},function (data) {
-					if(data.status.code === 404) {
-						AuthFactory.checkAuth('User');
-						$scope.loginEmail = data.data.email;
-						$scope.loginPassword = data.data.password;
-						console.log(data.status);
-					}else if(data.status.code === 409) {
-						AuthFactory.checkAuth('User');
-						$scope.loginEmail = data.data.email;
-						$scope.loginPassword = data.data.password;
-						console.log(data.status);
-					}else if(data.status.code === 200){
-						AuthFactory.setAuth('User',data.data);
-	 					$rootScope.isAuth = AuthFactory.checkAuth('User');
-						$rootScope.isChatroomAccess = false;
-						socket.emit('update hints', AuthFactory.getAuth('User').id);
-						socket.emit('update friends', AuthFactory.getAuth('User').id);
-	 					AuthFactory.checkNotAuth('User');
-	 					console.log(data.status)
-					}
-				},function(error) {
-					console.log(error);
-				});
+				if($scope.loginEmail && $scope.loginPassword) {
+					
+					AuthFactory.login({
+						email: $scope.loginEmail, 
+						password: $scope.loginPassword
+					},function (data) {
+						if(data.status.code === 404) {
+							AuthFactory.checkAuth('User');
+							$scope.loginEmail = data.data.email;
+							$scope.loginPassword = data.data.password;
+							console.log(data.status);
+						}else if(data.status.code === 409) {
+							AuthFactory.checkAuth('User');
+							$scope.loginEmail = data.data.email;
+							$scope.loginPassword = data.data.password;
+							console.log(data.status);
+						}else if(data.status.code === 200){
+							AuthFactory.setAuth('User',data.data);
+		 					$rootScope.isAuth = AuthFactory.checkAuth('User');
+							$rootScope.isChatroomAccess = false;
+							socket.emit('update hints', AuthFactory.getAuth('User').id);
+							socket.emit('update friends', AuthFactory.getAuth('User').id);
+		 					AuthFactory.checkNotAuth('User');
+		 					console.log(data.status)
+						}
+					},function(error) {
+						console.log(error);
+					});
+				}
 			}
 
 		}])
@@ -431,7 +433,8 @@
 				$scope.isShowSelfInfo = $scope.isShowFriends = $scope.isShowRooms = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
 				
 				$rootScope.convertIdToUsername = function (input, data){
-					if(input) {
+					
+					if(AuthFactory.checkAuth('User') && input) {
 
 						if(input === AuthFactory.getAuth('User').id) {
 							return AuthFactory.getAuth('User').username;
@@ -646,7 +649,7 @@
 						AuthFactory.setAuth('User', user);
 
 						$rootScope.username = data.user.username;
-						
+
 						socket.emit('update friends', AuthFactory.getAuth('User').id);
 					}, function (error) {
 						console.log(error);

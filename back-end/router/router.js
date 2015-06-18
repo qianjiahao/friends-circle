@@ -29,7 +29,7 @@ module.exports = function (app) {
 			encryptedPassword: req.body.password
 		}
 
-
+		console.log(temp.email,temp.encryptedPassword);
 		User.findOne({ 'email':temp.email }, function (err, user) {
 			if(err) return next(err);
 

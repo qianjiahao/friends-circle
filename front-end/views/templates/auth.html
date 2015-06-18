@@ -50,10 +50,10 @@
 					<li>
 						<div class="rows">
 							<span class="col-sm-6">
-								<a href="" class="btn btn-block lightseagreen auth-a" ng-disabled="loginForm.$invalid" ng-click="login()">login</a>
+								<input type="submit" class="auth-login" ng-disabled="loginForm.$invalid" ng-click="login()" value="login">
 							</span>
 							<span class="col-sm-6">
-								<a href="" class="btn btn-block lightcoral auth-a" ng-click="toggleSignin()">signin</a>
+								<input type="button" class="auth-show-signin" ng-click="toggleSignin()" value="signin">
 							</span>
 						</div>
 					</li>
@@ -167,7 +167,7 @@
 						<li>
 							<div class="rows">
 								<span class="col-sm-12">
-									<a href="" class="btn btn-block lightseagreen auth-a" ng-disabled="signinForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)">signin</a>
+									<input type="submit" class="auth-signin" ng-disabled="signinForm.$invalid" ng-click="signin(signinUsername,signinPassword,signinConfiration,signinEmail,signinMessage)" value="signin">
 								</span>
 							</div>
 						</li>

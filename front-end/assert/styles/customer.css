@@ -9,9 +9,10 @@ footer{
 a{
 	text-decoration: none;
 }
-a:visited, a:active{
-	outline: none;
-}
+	a:visited, 
+	a:active{
+		outline: none;
+	}
 
 ul{
 	list-style-type: none;
@@ -20,10 +21,9 @@ input{
 	box-shadow:none;
 	outline: none;
 }
-input:-webkit-autofill {
-	-webkit-box-shadow: 0 0 0px 1000px #F9F9F5 inset;
-}
-
+	input:-webkit-autofill {
+		-webkit-box-shadow: 0 0 0px 1000px #F9F9F5 inset;
+	}
 
 
 /**
@@ -39,6 +39,7 @@ input:-webkit-autofill {
   background-color: #F9F9F5;
   color: #2C3E50;
 }
+
 .navbar{
 	border-radius: 0;
 }
@@ -117,6 +118,10 @@ input:-webkit-autofill {
 	position: absolute;
 	right: 10px;
 }
+	.operater a{
+		color: #666;
+	}
+
 .operater-top{
 	top: 10px;	
 }
@@ -124,12 +129,10 @@ input:-webkit-autofill {
 	bottom: 10px;
 }
 
-.operater a{
-	color: #666;
-}
 .save{
 	color: lightseagreen;
 }
+
 .edit-area{
 	width: 100%;
 	border: none;
@@ -161,39 +164,59 @@ input:-webkit-autofill {
 /*
 	header style
  */
-/**
- *  authentication style 
+
+/*
+   authentication style 
  */
 .auth-list{
-	/*list-style-type: none;*/
 	background-color: #F9F9F5;
 	padding: 10px;
-
-
 }
-.auth-list li{
-	width: 100%;
-	padding: 3px 9px;
-	margin:10px 0;
-	overflow: hidden;
-}
-.auth-list input, .auth-list input:focus{
-	padding: 5px;
+	.auth-list li{
+		width: 100%;
+		padding: 3px 9px;
+		margin:10px 0;
+		overflow: hidden;
+	}
+	.auth-list input, 
+	.auth-list input:focus{
+		padding: 5px;
+		outline: none;
+		border: none;
+		background-color: #F9F9F5;
+		cursor: pointer;
+		width: 60%;
+	}
+
+.auth-login, .auth-signin{
 	outline: none;
-	border: none;
-	background-color: #F9F9F5;
+	width: 100%;
+	display: block;
+	border-radius: 5px;
 	cursor: pointer;
-	width: 60%;
+	color: lightseagreen;
+	cursor: pointer;
+}
+input[type="submit"].auth-login,
+input[type="submit"].auth-signin{
+	width: 100%;
+	border: 1px solid lightseagreen;
 }
 
-.auth-a{
-	border: none;
-	background-color: #eee;
+.auth-show-signin{
+	outline: none;
+	width: 100%;
+	display: block;
+	border-radius: 5px;
+	cursor: pointer;
+	color: lightcoral;
+	cursor: pointer;
 }
-.auth-a:visited, .auth-a:active{
-	background-color: #eee;
-	color: inherit;
+input[type="button"].auth-show-signin{
+	width: 100%;
+	border: 1px solid lightcoral;
 }
+
 
 /**
  * authentication style
@@ -225,13 +248,15 @@ input:-webkit-autofill {
 	color: #666;
 	font-size: 20px;
 }
-.marked-hint:visited{
-	color: #666;
-}
-
-.unmarked-hint:hover,.unmarked-hint:active,.marked-hint:hover,.marked-hint:active{
-	color: inherit;
-}
+	.marked-hint:visited{
+		color: #666;
+	}
+	.unmarked-hint:hover,
+	.unmarked-hint:active,
+	.marked-hint:hover,
+	.marked-hint:active{
+		color: inherit;
+	}
 
 /*
 	hint style
@@ -249,11 +274,13 @@ input:-webkit-autofill {
 	padding: 7px 15px;
 	font-size: 20px;
 }
+
 .search-friend-input{
 	outline: none;
 	border: none;
 	width: 100%;
 }
+
 .search-friend-submit{
 	border: none;
 	background-color: #fff;
@@ -281,6 +308,7 @@ input:-webkit-autofill {
 .online{
 	color: seagreen;
 }
+
 .offline{
 	color: #666;
 }
@@ -296,16 +324,13 @@ input:-webkit-autofill {
 	border: 1px solid lightcoral;
 }
 
-
-
-
 .news-support{
 	color: lightcoral;
 }
+
 .news-normal{
 	color: #666;
 }
-
 
 .load-news{
 	text-align: center;
@@ -328,23 +353,19 @@ input:-webkit-autofill {
 }
 
 .chat-content{
-	clear: both;
-	width: 100%;
-	margin-bottom: 5px;
 	overflow: hidden;
+	width: 100%;
+}
 
-}
-.chat-content{
-	overflow: hidden;
-	width: 100%;
-}
 .chat-username{
 	font-weight: 500;
 	font-size: 18px;
 }
+
 .chat-date{
 
 }
+
 .chat-message{
 	width: 90%;
 	margin: 0 auto;
@@ -353,23 +374,26 @@ input:-webkit-autofill {
 	border-radius: 3px;
 	padding: 5px;
 }
-.chat-message p{
-	margin: 0;
-}
+	.chat-message p{
+		margin: 0;
+	}
+
 .chat-operate-area{
 	overflow: hidden;
 }
+
 .chat-input-area{
 	width: 90%;
-	float: left;
-	
+	float: left;	
 }
+
 .chat-input{
 	width: 100%;
 	height: auto;
 	border: none;
 	outline: none;
 }
+
 .chat-submit-area{
 	width: 10%;
 	float: right;
@@ -383,10 +407,10 @@ input:-webkit-autofill {
 	z-index: 10;
 	font-size: 20px;
 }
-.chat-submit-area:hover{
-	background-color: #888;
-	color: #fff;
-}
+	.chat-submit-area:hover{
+		background-color: #888;
+		color: #fff;
+	}
 
 /**
  * chatroom style
@@ -395,64 +419,58 @@ input:-webkit-autofill {
 	/* ------------------------------------------------------------------------------------  */
 
 /**
- * button style [common]
+ * color hover animation
  */
-.button{
-	height: 100%;
-	text-align: center;
-	display: inline-block;
-	outline: none;
-	cursor: pointer;
-}
 
-.button-normal{
-	padding: 7px;
-}
 
-.lightsalmon{
+.lightsalmon {
 	color:lightsalmon;
 }
-.lightsalmon:hover{
-	color:#fff;
+	.lightsalmon:hover, .lightsalmon:active{
+		color:#fff;
+		background-color: lightsalmon;
+		text-decoration: none;
+		-webkit-transition: color .2s linear;
+		-webkit-transition: background-color .2s linear;
+	}
+.lightsalmon:visited{
+	color: lightsalmon;
 	background-color: lightsalmon;
-	text-decoration: none;
-	-webkit-transition: color .2s linear;
-	-webkit-transition: background-color .2s linear;
 }
-.lightseagreen{
+.lightseagreen, .lightseagreen:visited{
 	color:lightseagreen;
 }
-.lightseagreen:hover{
-	color: #fff;
-	background-color: lightseagreen;
-	text-decoration: none;
-	-webkit-transition: color .2s linear;
-	-webkit-transition: background-color .2s linear;	
-}
+	.lightseagreen:hover, .lightseagreen:active{
+		color: #fff;
+		background-color: lightseagreen;
+		text-decoration: none;
+		-webkit-transition: color .2s linear;
+		-webkit-transition: background-color .2s linear;	
+	}
 
 .orangered{
 	color:orangered;
 }
-.orangered:hover{
-	color: #fff;
-	background-color: orangered;
-	text-decoration: none;
-	-webkit-transition: color .2s linear;
-	-webkit-transition: background-color .2s linear;	
-}
+	.orangered:hover, .orangered:active{
+		color: #fff;
+		background-color: orangered;
+		text-decoration: none;
+		-webkit-transition: color .2s linear;
+		-webkit-transition: background-color .2s linear;	
+	}
 
-.lightcoral{
+.lightcoral, .lightcoral:visited{
 	color:lightcoral;
 }
-.lightcoral:hover{
-	color: #fff;
-	background-color: lightcoral;
-	text-decoration: none;
-	-webkit-transition: color .2s linear;
-	-webkit-transition: background-color .2s linear;	
-}
+	.lightcoral:hover, .lightcoral:active{
+		color: #fff;
+		background-color: lightcoral;
+		text-decoration: none;
+		-webkit-transition: color .2s linear;
+		-webkit-transition: background-color .2s linear;	
+	}
 /**
- * button style [common]
+ * color hover animation
  */
 
 	/* ------------------------------------------------------------------------------------  */
