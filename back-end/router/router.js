@@ -29,39 +29,37 @@ module.exports = function (app) {
 			encryptedPassword: req.body.password
 		}
 
-		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
+
+		User.findOne({ 'email':temp.email }, function (err, user) {
 			if(err) return next(err);
 
-			User.findOne({ 'email':temp.email }, function (err, user) {
+			if(!user) {
+				res.send(flash(404,'user not exist',temp));
+				console.log('not exist')
+			}
+			bcrypt.compare(temp.encryptedPassword, user.encryptedPassword, function (err, valid) {
 				if(err) return next(err);
-
-				if(!user) {
-					res.send(flash(404,'user not exist',temp));
-					console.log('not exist')
-				}
-				bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
-					if(err) return next(err);
-					
-					if(!valid) {
-						res.send(flash(409,'password not match',temp));
-						console.log('not match');
-						return ;
-					}
-
-					console.log(user);
-					res.send(flash(200,'login success',{
-						username: user.username,
-						email: user.email,
-						signature: user.signature,
-						id: user._id
-					}));
-					user.update({ 'online': true }, function (err) {
-						if(err) return next(err);
-					});
-				});
 				
+				if(!valid) {
+					res.send(flash(409,'password not match',temp));
+					console.log('not match');
+					return ;
+				}
+
+				console.log(user);
+				res.send(flash(200,'login success',{
+					username: user.username,
+					email: user.email,
+					signature: user.signature,
+					id: user._id
+				}));
+				user.update({ 'online': true }, function (err) {
+					if(err) return next(err);
+				});
 			});
+			
 		});
+		
 	});
 
 	/*
