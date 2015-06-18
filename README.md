@@ -24,7 +24,9 @@
 ###start front end server
 
     cd .. && http-server .
-    `要在根路径下执行`
+    
+ 注意：**要在根路径下执行**
+
     
 ###open brwser
 
