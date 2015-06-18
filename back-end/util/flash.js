@@ -1,10 +1,12 @@
 
 
-module.exports = function(status, message, data) {
+module.exports = function(code, message, data) {
 	
 	return {
-		status: status,
-		message: message,
-		data: data
+		'status': {
+			'code': code,
+			'message': message
+		},
+		'data': data
 	}
 }

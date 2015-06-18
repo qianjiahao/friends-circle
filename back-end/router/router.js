@@ -9,14 +9,16 @@ var markdown = require('markdown').markdown;
 
 module.exports = function (app) {
 
-	app.all('*', function (req, res, next) {
-		res.header("Access-Control-Allow-Origin", "http://localhost:8080");
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-		res.header("X-Powered-By", ' 3.2.1');
-		res.header("Content-Type", "application/json;charset=utf-8");
-		next();
-	});
+	// use cors m instead of it 
+
+	// app.all('*', function (req, res, next) {
+	// 	res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+	// 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	// 	res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+	// 	res.header("X-Powered-By", ' 3.2.1');
+	// 	res.header("Content-Type", "application/json;charset=utf-8");
+	// 	next();
+	// });
 
 	/*
 		login system
@@ -34,16 +36,20 @@ module.exports = function (app) {
 				if(err) return next(err);
 
 				if(!user) {
-					res.send(flash('error','user not exist',temp));
+					res.send(flash(404,'user not exist',temp));
+					console.log('not exist')
 				}
 				bcrypt.compare(temp.encryptedPassword, encryptedPassword, function (err, valid) {
 					if(err) return next(err);
-
+					
 					if(!valid) {
-						res.send(flash('error','password not match',temp));
+						res.send(flash(409,'password not match',temp));
+						console.log('not match');
 						return ;
 					}
-					res.send(flash('success','login success',{
+
+					console.log(user);
+					res.send(flash(200,'login success',{
 						username: user.username,
 						email: user.email,
 						signature: user.signature,
@@ -86,7 +92,6 @@ module.exports = function (app) {
 			online: true,
 			currentRoom: ''
 		}
-
 		bcrypt.hash(temp.encryptedPassword, 10, function (err, encryptedPassword) {
 			if(err) return next(err);
 
@@ -94,19 +99,18 @@ module.exports = function (app) {
 				if(err) return next(err);
 
 				if(user) {
-					res.send(flash('error','user already exist',temp));
+					res.send(flash(409,'user already exist',temp));
 					return ;
 				}
 				temp.encryptedPassword = encryptedPassword;
-				var user = new User(temp);
 
-				User.create(user,function (err, user) {
+				User.create(temp, function (err, user) {
 					if(err) return next(err);
 
-					res.send(flash('success','register success',{
-						username: user.username,
-						email: user.email,
-						signature: user.signature,
+					res.send(flash(200,'register success',{
+						username: temp.username,
+						email: temp.email,
+						signature: temp.signature,
 						id: user._id
 					}));
 				});
@@ -288,6 +292,24 @@ module.exports = function (app) {
 				id: user._id,
 				friends: user.friends,
 				currentRoom: user.currentRoom
+			});
+		});
+	});
+
+	app.post('/user/save', function (req, res, next) {
+		User.findOne({ '_id':req.body.userId }, function (err, user) {
+			if(err) return next(err);
+
+			user.update({ 'username':req.body.username, 'signature':req.body.signature }, function (err) {
+				if(err) return next(err);
+
+				User.findOne({ '_id':req.body.userId }, function (err, user) {
+					if(err) return next(err);
+
+					res.send({
+						user: user
+					});
+				});
 			});
 		});
 	});

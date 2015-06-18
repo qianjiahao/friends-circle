@@ -80,6 +80,9 @@
 				},
 				toBeFriends: function (data, success, error) {
 					$http.post(baseUrl + '/friend/accept', data).success(success).error(error);
+				},
+				save: function (data, success, error) {
+					$http.post(baseUrl + '/user/save', data).success(success).error(error);
 				}
 			};
 		}])

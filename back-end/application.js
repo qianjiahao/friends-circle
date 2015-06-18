@@ -4,9 +4,11 @@ var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 var bodyParser = require('body-parser');
 var markdown = require('markdown').markdown;
+var cors = require('cors');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 require('./router/router.js')(app);
 

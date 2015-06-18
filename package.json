@@ -21,6 +21,7 @@
   "homepage": "https://github.com/qianjiahao/friends-circle",
   "dependencies": {
     "bcrypt": "^0.8.3",
+    "cors": "^2.7.1",
     "express": "^4.12.4",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",

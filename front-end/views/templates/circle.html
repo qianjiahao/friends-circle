@@ -2,6 +2,39 @@
 	<div ng-controller="CircleController" class="rows">
 		<div class="col-md-5">
 			
+
+			<!-- user info area -->
+
+			<div class="panel" ng-controller="UserInfoController" >
+				<div class="header">
+					<span>
+						<a href="" ng-click="isShowSelfInfo=!isShowSelfInfo">用户信息</a>
+					</span>
+				</div>
+				<div class="content" ng-show="isShowSelfInfo"  ng-class="{ true: 'panel-editing'}[isEdit]">
+					<div class="operater operater-top">
+						<a href="" ng-click="toggleEdit()">
+							<span class="glyphicon glyphicon-edit" aira-hidden="true"></span>
+						</a>
+					</div>
+					<div class="operater operater-bottom" ng-show="isEdit">
+						<a href="" ng-click="saveUserInfo(username,signature)">
+							<span class="glyphicon glyphicon-floppy-save save" aira-hidden="true"></span>
+						</a>
+					</div>
+					<h2>
+						<span ng-bind="username" ng-show="!isEdit"></span>
+						<input class="edit-area" type="text" ng-model="username" ng-show="isEdit">
+					</h2>
+					<i>
+						<span ng-bind="signature" ng-show="!isEdit"></span>
+						<input class="edit-area" type="text" ng-model="signature" ng-show="isEdit">
+					</i>
+				</div>
+			</div>
+
+			<!-- user info area -->
+
 			<!-- friends list -->
 
 			<div class="panel">
@@ -50,6 +83,9 @@
 									<span ng-class="{ true:'glyphicon glyphicon-check', false:'glyphicon glyphicon-unchecked' }[isChecked]" aira-hidden="true"></span>
 								</a>
 							</td>
+							<td ng-show="!isCreateRoom">
+								<a href="" ng-click="talk(f._id)" class="btn btn-sm btn-default">talk</a>
+							</td>
 						</tr>
 					</table>
 				</div>
@@ -96,6 +132,23 @@
 				<!-- rooms list area -->
 
 			</div>
+
+			<!-- talk area -->
+
+			<div class="panel">
+				<div class="header">
+					<span>talk with : xxx</span>
+					<a href="" ng-click="" class="header-a">
+						<span class="glyphicon glyphicon-remove" aira-hidden="true" style="color: #666;"></span>
+					</a>
+				</div>
+				<div class="content">
+					xxxxxx
+				</div>
+			</div>
+
+			<!-- talk area -->
+
 		</div>
 		<div class="col-md-7">
 
@@ -126,27 +179,28 @@
 					<h3>
 						<span ng-bind="convertIdToUsername(nl.publishId,friends)"></span>
 					</h3>
-					<div class="news-operater operater-top" ng-show="nl.publishId==selfId">
+					<div class="operater operater-top" ng-show="nl.publishId==selfId">
 						<a href="" ng-click="toggleEdit(nl._id,nl.publishContent)">
 							<span class="glyphicon glyphicon-edit" aira-hidden="true"></span>
 						</a>
-						<a href="" ng-click="remove(nl._id)">
+						<a href="" ng-click="removeNews(nl._id)">
 							<span class="glyphicon glyphicon-remove" aira-hidden="true"></span>
 						</a>
 					</div>
-					<p ng-bind-html="nl.publishContent" ng-show="!isEdit"></p>
-					<p >
-						<textarea class="news-edit-area" ng-model="editContentResult" ng-show="isEdit" rows="5"></textarea>
-					</p>
-					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
-					<div class="news-operater operater-bottom">
-						<a href="" ng-click="support(nl._id)" ng-show="!isEdit">
+					<div class="operater operater-bottom">
+						<a href="" ng-click="supportNews(nl._id)" ng-show="!isEdit">
 							<span class="glyphicon glyphicon-thumbs-up" aira-hidden="true" ng-class="{ true:'news-support',false:'news-normal' }[nl.support.indexOf(selfId) >= 0]" ng-bind="nl.support.length"></span>
 						</a>
-						<a href="" ng-click="save(nl._id)" ng-show="isEdit">
-							<span class="glyphicon glyphicon-floppy-save news-save" aira-hidden="true"></span>
+						<a href="" ng-click="saveNews(nl._id)" ng-show="isEdit">
+							<span class="glyphicon glyphicon-floppy-save save" aira-hidden="true"></span>
 						</a>
 					</div>
+
+					<p ng-bind-html="nl.publishContent" ng-show="!isEdit"></p>
+					<p >
+						<textarea class="edit-area" ng-model="editContentResult" ng-show="isEdit" rows="5"></textarea>
+					</p>
+					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
 				</div>
 			</div>
 
