@@ -1,30 +1,32 @@
-# friends-circle
-
 # 好友圈
+ 
+- Mongoose
+- Express 
+- Angular.js 
+- Node.js 
+- Socket.io 
 
-## use Mongoose , Express , Angular.js , Node.js , Socket.io .
+##Usage
 
-#Usage
-
-##clone & enter
+###clone & enter
 
     git clone git@github.com:qianjiahao/friends-circle.git
     cd friends-circle
 
-##install dependencies
+###install dependencies
 
 	bower install && npm install
     
-##start node server
+###start node server
 
     cd back-end && node application.js
     
-##start front end server
+###start front end server
 
     cd .. && http-server .
-    要在根路径下执行
+    `要在根路径下执行`
     
-##open brwser
+###open brwser
 
     http://localhost:8080/front-end/views/layout.html
 
