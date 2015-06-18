@@ -46,7 +46,6 @@ module.exports = function (app) {
 					return ;
 				}
 
-				console.log(user);
 				res.send(flash(200,'login success',{
 					username: user.username,
 					email: user.email,
@@ -184,7 +183,6 @@ module.exports = function (app) {
 		Hint.count({ 'targetId':req.params.targetId, 'mark':req.params.mark }, function (err, total) {
 			if(err) return next(err);
 
-			console.log('total : ' + total);
 			res.send({
 				total: total
 			});

@@ -82,6 +82,7 @@ input:-webkit-autofill {
 }
 
 .content{
+	word-break: break-word;
 	-moz-box-sizing:border-box;
 	-webkit-box-sizing:border-box;
 	box-sizing:border-box;
@@ -89,6 +90,7 @@ input:-webkit-autofill {
 	border: 1px solid #e7e7e7;
 	background-color: #fff;
 	position: relative;
+
 }
 
 .text-center{
