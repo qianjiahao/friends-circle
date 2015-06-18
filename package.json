@@ -1,6 +1,6 @@
 {
   "name": "friends-circle",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "a service for friends",
   "main": "index.js",
   "scripts": {

@@ -38,9 +38,13 @@ Node.js做后端api，提供数据
 Mongoose做orm
 socket.io做聊天室和订阅、发布
 
+###项目图片 [friends-circle](http://www.angularjs.cn/A1aQ)
+
+### 1.0.0 正式版 [2015-06-18]
+
 基本功能有
 
-    登录、注册
+    登录、注册 [ 含基本验证 ]
     查询用户 [ by nickname or email ]
     好友申请 [ dynamic update by socket.io ]
     接受申请或标记已读 [ dynamic update by socket.io ]
@@ -51,10 +55,8 @@ socket.io做聊天室和订阅、发布
     发布新鲜事 [ 仅好友可见 , 可选是否需要markdown]
     编辑，删除新鲜事 [ 仅发布者可操作 ]
     点赞新鲜事 [ 好友均可 ]
-    to be continue...
+    修改个人信息 [ username or signature ]
 
-
-##项目图片 [friends-circle](http://www.angularjs.cn/A1aQ)
 
 >觉得凑合的话，记得star哦꒰･◡･๑꒱
 
