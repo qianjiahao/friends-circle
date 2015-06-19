@@ -191,14 +191,14 @@
 						<a href="" ng-click="supportNews(nl._id)" ng-show="!isEdit">
 							<span class="glyphicon glyphicon-thumbs-up" aira-hidden="true" ng-class="{ true:'news-support',false:'news-normal' }[nl.support.indexOf(selfId) >= 0]" ng-bind="nl.support.length"></span>
 						</a>
-						<a href="" ng-click="saveNews(nl._id)" ng-show="isEdit">
+						<a href="" ng-click="saveNews(nl._id,nl.publishContent)" ng-show="isEdit">
 							<span class="glyphicon glyphicon-floppy-save save" aira-hidden="true"></span>
 						</a>
 					</div>
 
 					<p ng-bind-html="nl.publishContent" ng-show="!isEdit"></p>
 					<p >
-						<textarea class="edit-area" ng-model="editContentResult" ng-show="isEdit" rows="5"></textarea>
+						<textarea class="edit-area" ng-model="nl.publishContent" ng-show="isEdit" rows="5"></textarea>
 					</p>
 					<i ng-bind="nl.date | date : 'yyyy-MM-dd hh:mm:ss'"></i>
 				</div>

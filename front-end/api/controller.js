@@ -629,12 +629,12 @@
 				}
 
 
-				$scope.saveNews = function (newsId) {
+				$scope.saveNews = function (newsId,editContentResult) {
 					this.isEdit = false;
 
 					NewsFactory.save({
 						newsId: newsId,
-						publishContent: this.editContentResult
+						publishContent: editContentResult
 					}, function (data) {
 						console.log(data.status);
 						socket.emit('update news', AuthFactory.getAuth('User').id);
