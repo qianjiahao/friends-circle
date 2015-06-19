@@ -35,14 +35,13 @@ module.exports = function (app) {
 
 			if(!user) {
 				res.send(flash(404,'user not exist',temp));
-				console.log('not exist')
+				return ;
 			}
 			bcrypt.compare(temp.encryptedPassword, user.encryptedPassword, function (err, valid) {
 				if(err) return next(err);
 				
 				if(!valid) {
 					res.send(flash(409,'password not match',temp));
-					console.log('not match');
 					return ;
 				}
 
@@ -123,8 +122,15 @@ module.exports = function (app) {
 		var content = req.body.content;
 		var pattern = new RegExp('^.*' + content + '.*$')
 		
-		User.find({ '$or' :[{ 'username' : pattern },{ 'email' : content }]},{
-			'_id': 1, 'username': 1, 'signature': 1
+		User.find({ '$or' :
+			[
+				{ 'username' : pattern },
+				{ 'email' : content }
+			]
+		},{
+			'_id': 1, 
+			'username': 1, 
+			'signature': 1
 		}, function (err, users) {
 			if(err) return next(err);
 
@@ -222,9 +228,7 @@ module.exports = function (app) {
 				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
 					if(err) return next(err);
 
-					res.send({
-						hint: hint
-					});
+					res.send(hint);
 				});
 			});
 		});
@@ -302,9 +306,7 @@ module.exports = function (app) {
 				User.findOne({ '_id':req.body.userId }, function (err, user) {
 					if(err) return next(err);
 
-					res.send({
-						user: user
-					});
+					res.send(user);
 				});
 			});
 		});
@@ -412,9 +414,7 @@ module.exports = function (app) {
 		Room.create(temp, function (err, room) {
 			if(err) return next(err);
 
-			res.send({
-				room: room
-			});
+			res.send(room);
 		});
 	});
 
@@ -425,9 +425,7 @@ module.exports = function (app) {
 		Room.find({ 'members':req.params.userId }, function (err, rooms) {
 			if(err) return next(err);
 
-			res.send({
-				rooms: rooms
-			});
+			res.send(rooms);
 		});
 	});
 
@@ -439,9 +437,7 @@ module.exports = function (app) {
 		Room.findOne({ '_id':req.params.roomId }, function (err, room) {
 			if(err) return next(err);
 
-			res.send({
-				room: room
-			});
+			res.send(room);
 		});
 	});
 

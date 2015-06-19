@@ -59,7 +59,7 @@
 
 			$scope.login = function () {
 				if($scope.loginEmail && $scope.loginPassword) {
-					
+
 					AuthFactory.login({
 						email: $scope.loginEmail, 
 						password: $scope.loginPassword
@@ -177,18 +177,37 @@
 			if(RoomFactory.checkAccess('User')) {
 
 				socket.emit('update room info',AuthFactory.getAuth('User').currentRoom);
-			}			
+			}
 
 			var minWindowSize = 768;
 			$scope.isShowRoomInfo = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
 
 			$scope.message = [];
-
 			var timer;
 
+			$scope.convertIdToUsername = function (input, data){
+					
+				if(AuthFactory.checkAuth('User') && input) {
+
+					if(input === AuthFactory.getAuth('User').id) {
+						return AuthFactory.getAuth('User').username;
+					}else{
+
+						var friends = data || [];
+						var length = friends.length;
+
+						for(var i=0; i<length;i++) {
+							if(input === friends[i]['_id']) {
+								return friends[i]['username'];
+							}
+						}
+					}
+				}
+			}
 			function updateRoom() {
-				RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (data) {
-					$scope.room = data.room;
+				RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (room) {
+					$scope.room = room;
+					console.log(room);
 				}, function (error) {
 					console.log(error);	
 				});
@@ -355,12 +374,12 @@
 				HintFactory.acceptHint({
 					targetId: AuthFactory.getAuth('User').id,
 					id: id
-				}, function (data) {
-					if(!data.hint.mark) {
+				}, function (hint) {
+					if(!hint.mark) {
 						self.isMarked = true;
 						$rootScope.totalHints = $rootScope.totalHints - 1;
 					}
-					addFriend(data.hint.targetId,data.hint.senderId);
+					addFriend(hint.targetId,hint.senderId);
 					self.isAccepted = true;
 				}, function (error) {
 					console.log(error);
@@ -432,7 +451,7 @@
 				var minWindowSize = 768;
 				$scope.isShowSelfInfo = $scope.isShowFriends = $scope.isShowRooms = $window.document.documentElement.offsetWidth < minWindowSize ? false : true;
 				
-				$rootScope.convertIdToUsername = function (input, data){
+				$scope.convertIdToUsername = function (input, data){
 					
 					if(AuthFactory.checkAuth('User') && input) {
 
@@ -499,8 +518,8 @@
 					}
 				});
 				function updateRooms(){
-					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (data) {
-						$scope.rooms = data.rooms;
+					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (rooms) {
+						$scope.rooms = rooms;
 					}, function (error) {
 						console.log(error);
 					});
@@ -540,8 +559,8 @@
 						createdDate: new Date(),
 						members: $scope.members,
 						currentMembers: []
-					}, function (data) {
-						socket.emit('update rooms',data.room.members);
+					}, function (room) {
+						socket.emit('update rooms',room.members);
 						$scope.roomInfo = '';
 						$scope.members = [];
 						$scope.isCreateRoom = false;
@@ -641,12 +660,12 @@
 						userId: AuthFactory.getAuth('User').id,
 						username: username,
 						signature: signature
-					}, function (data) {
+					}, function (user) {
 						
-						var user = AuthFactory.getAuth('User');
-						user.username = data.user.username;
-						user.signature = data.user.signature;
-						AuthFactory.setAuth('User', user);
+						var temp = AuthFactory.getAuth('User');
+						temp.username = user.username;
+						temp.signature = user.signature;
+						AuthFactory.setAuth('User', temp);
 
 						$rootScope.username = data.user.username;
 
