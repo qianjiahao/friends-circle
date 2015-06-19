@@ -42,7 +42,8 @@
 			socket.on('update hints',function (id) {
 				if(AuthFactory.getAuth('User') && AuthFactory.getAuth('User').id === id) {
 					HintFactory.getHintsCount(AuthFactory.getAuth('User').id + '/' + false, function (data) {
-						$rootScope.totalHints = data.total;
+						console.log(data.status);
+						$rootScope.totalHints = data.data;
 					}, function (error) {
 						console.log(error);
 					});
@@ -99,30 +100,32 @@
 			});
 
 			$scope.signin = function () {
+				if($scope.signinEmail && $scope.signinUsername && $scope.signinPassword && $scope.signinSignature) {
 
-				AuthFactory.signin({
-					username: $scope.signinUsername,
-					password: $scope.signinPassword,
-					email: $scope.signinEmail,
-					signature: $scope.signinSignature
-				},function (data) {
-					if(data.status.code === 409) {
-						AuthFactory.checkAuth('User');
-						$scope.signinUsername = data.data.username;
-						$scope.signinPassword = data.data.password;
-						$scope.signinEmail = data.data.email;
-						$scope.signinSignature = data.data.signature;
-						console.log(data.status);
-					}else if(data.status.code === 200){
-						AuthFactory.setAuth('User',data.data);
-						$rootScope.isAuth = AuthFactory.checkAuth('User');
-						$rootScope.isChatroomAccess = false;
-						AuthFactory.checkNotAuth('User');
-						console.log(data.status);
-					}
-				},function (error) {
-					console.log(error);
-				});
+					AuthFactory.signin({
+						username: $scope.signinUsername,
+						password: $scope.signinPassword,
+						email: $scope.signinEmail,
+						signature: $scope.signinSignature
+					},function (data) {
+						if(data.status.code === 409) {
+							AuthFactory.checkAuth('User');
+							$scope.signinUsername = data.data.username;
+							$scope.signinPassword = data.data.password;
+							$scope.signinEmail = data.data.email;
+							$scope.signinSignature = data.data.signature;
+							console.log(data.status);
+						}else if(data.status.code === 200){
+							AuthFactory.setAuth('User',data.data);
+							$rootScope.isAuth = AuthFactory.checkAuth('User');
+							$rootScope.isChatroomAccess = false;
+							AuthFactory.checkNotAuth('User');
+							console.log(data.status);
+						}
+					},function (error) {
+						console.log(error);
+					});
+				}
 			}
 
 		}])
@@ -135,6 +138,7 @@
 					RoomFactory.exit({
 						userId: user.id
 					}, function (data) {
+						console.log(data.status);
 						socket.emit('update room info', user.currentRoom);
 					}, function (error) {
 
@@ -143,6 +147,7 @@
 				AuthFactory.logout({
 					id: user.id
 				}, function (data) {
+					console.log(data.status);
 					socket.emit('update friends',user.id);
 				}, function (error) {
 					console.log(error);
@@ -160,14 +165,12 @@
 			if(AuthFactory.checkAuth('User')) {
 
 				FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
-					$rootScope.username = data.username;
-					$scope.signature = data.signature;
+					console.log(data.status);
+					$rootScope.username = data.data.username;
+					$scope.signature = data.data.signature;
 				}, function (error) {
 					console.log(error);
 				});
-
-
-
 			}
 		}])
 		.controller('ChatController', ['$scope', '$rootScope', '$timeout','$location', '$window', 'socket', 'AuthFactory','FriendFactory','RoomFactory', function ($scope, $rootScope, $timeout, $location, $window, socket, AuthFactory, FriendFactory, RoomFactory) {
@@ -205,11 +208,11 @@
 				}
 			}
 			function updateRoom() {
-				RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (room) {
-					$scope.room = room;
-					console.log(room);
+				RoomFactory.getOne(AuthFactory.getAuth('User').currentRoom, function (data) {
+					console.log(data.status);
+					$scope.room = data.data;
 				}, function (error) {
-					console.log(error);	
+					console.log(error);
 				});
 			}
 
@@ -271,9 +274,8 @@
 				}
 			}
 
-
 			FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
-				$scope.friends = data;
+				$scope.friends = data.data;
 			}, function (error) {
 				console.log(error);
 			});
@@ -282,8 +284,8 @@
 				RoomFactory.exit({
 					userId: AuthFactory.getAuth('User').id
 				}, function (data) {
+					console.log(data.status);
 					socket.emit('update room info',AuthFactory.getAuth('User').currentRoom);
-					console.log('exit success');
 					$rootScope.isChatroomAccess = false;
 					$location.path('/circle');
 					$rootScope.currentRoom = '';
@@ -334,6 +336,7 @@
 						mark: false,
 						accept: false
 					}, function (data) {
+						console.log(data.status);
 						socket.emit('update hints',targetId);
 						self.isApplied = true;
 						self.applyContent = '';
@@ -351,8 +354,9 @@
 			$scope.isAccepted = false;
 			$scope.friends = AuthFactory.getAuth('User').friends;
 
-			HintFactory.getAllHints(AuthFactory.getAuth('User').id, function(data) {
-				$scope.hintsList = data.hints;
+			HintFactory.getAllHints(AuthFactory.getAuth('User').id, function (data) {
+				console.log(data.status);
+				$scope.hintsList = data.data;
 			}, function (error) {
 				console.log(error);
 			});
@@ -363,6 +367,7 @@
 					targetId: AuthFactory.getAuth('User').id,
 					id: id
 				}, function (data) {
+					console.log(data.status);
 					self.isMarked = true;
 					$rootScope.totalHints = $rootScope.totalHints - 1;
 				}, function (error) {
@@ -374,12 +379,13 @@
 				HintFactory.acceptHint({
 					targetId: AuthFactory.getAuth('User').id,
 					id: id
-				}, function (hint) {
-					if(!hint.mark) {
+				}, function (data) {
+					console.log(data.status);
+					if(!data.data.mark) {
 						self.isMarked = true;
 						$rootScope.totalHints = $rootScope.totalHints - 1;
 					}
-					addFriend(hint.targetId,hint.senderId);
+					addFriend(data.data.targetId,data.data.senderId);
 					self.isAccepted = true;
 				}, function (error) {
 					console.log(error);
@@ -393,8 +399,9 @@
 					senderId: senderId
 				}, function (data) {
 
+					console.log(data.status);
 					FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
-						AuthFactory.setAuth('User', data);
+						AuthFactory.setAuth('User', data.data);
 						
 						HintFactory.pullRequest({
 							targetId: senderId,
@@ -405,7 +412,7 @@
 							mark: false,
 							accept: true
 						}, function (data) {
-
+							console.log(data.status);
 							socket.emit('update hints', senderId);
 							socket.emit('update friends',AuthFactory.getAuth('User').id);
 						
@@ -428,15 +435,17 @@
 			
 			if(AuthFactory.checkAuth('User')) {
 				FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
-					AuthFactory.setAuth('User', data);
+					console.log(data.status);
+					AuthFactory.setAuth('User', data.data);
 				}, function (error) {
 					console.log(error);
 				});
 
-
-				updateRooms();
 				updateFriends();
+				updateRooms();
 				updateNews();
+
+				
 
 				$rootScope.currentRoom = AuthFactory.getAuth('User').currentRoom;
 
@@ -473,7 +482,8 @@
 
 				function updateNews(page){
 					NewsFactory.getAll(AuthFactory.getAuth('User').id + '/' + page, function (data) {
-						$scope.newsList = data;
+						console.log(data.status);
+						$scope.newsList = data.data;
 					}, function (error) {
 						console.log(error);
 					});
@@ -497,13 +507,12 @@
 						$scope.hasNext = true;
 						$scope.page = $scope.page + 1;
 						updateNews($scope.page);
-						console.log($scope.page);
 					}
 				}
 
 				function updateFriends(){
 					FriendFactory.getAll(AuthFactory.getAuth('User').id, function (data) {
-						$scope.friends = data;
+						$scope.friends = data.data;
 					}, function (error) {
 						console.log(error);
 					});
@@ -518,8 +527,9 @@
 					}
 				});
 				function updateRooms(){
-					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (rooms) {
-						$scope.rooms = rooms;
+					RoomFactory.getRooms(AuthFactory.getAuth('User').id, function (data) {
+						console.log(data.status);
+						$scope.rooms = data.data;
 					}, function (error) {
 						console.log(error);
 					});
@@ -559,8 +569,9 @@
 						createdDate: new Date(),
 						members: $scope.members,
 						currentMembers: []
-					}, function (room) {
-						socket.emit('update rooms',room.members);
+					}, function (data) {
+						console.log(data.status);
+						socket.emit('update rooms',data.data.members);
 						$scope.roomInfo = '';
 						$scope.members = [];
 						$scope.isCreateRoom = false;
@@ -569,15 +580,13 @@
 					});
 				}
 				$scope.join = function (roomId) {
-
-					console.log(roomId);
 					RoomFactory.join({
 						userId: AuthFactory.getAuth('User').id,
 						roomId: roomId
 					}, function (data) {
-
+						console.log(data.status);
 						FriendFactory.getOne(AuthFactory.getAuth('User').id, function (data) {
-							AuthFactory.setAuth('User',data);
+							AuthFactory.setAuth('User',data.data);
 							$rootScope.isChatroomAccess = true;
 							$rootScope.currentRoom = roomId;
 							$location.path('/chatroom');
@@ -593,12 +602,13 @@
 
 				$scope.isMarkdown = false;
 		
-				$scope.publish = function(){
+				$scope.createNews = function(){
 					NewsFactory.create({
 						publishId: AuthFactory.getAuth('User').id,
 						publishContent: $scope.writeContent,
 						isMarkdown: $scope.isMarkdown
 					}, function (data) {
+						console.log(data.status);
 						socket.emit('update news',AuthFactory.getAuth('User').id);
 						$scope.writeContent = '';
 					}, function (error) {
@@ -626,6 +636,7 @@
 						newsId: newsId,
 						publishContent: this.editContentResult
 					}, function (data) {
+						console.log(data.status);
 						socket.emit('update news', AuthFactory.getAuth('User').id);
 					}, function (error) {
 						console.log(error);
@@ -635,6 +646,7 @@
 					NewsFactory.remove({
 						newsId: newsId
 					}, function (data) {
+						console.log(data.status);
 						socket.emit('update news', AuthFactory.getAuth('User').id);
 					}, function (error) {
 						console.log(error);
@@ -646,7 +658,7 @@
 						newsId: newsId,
 						supporter: AuthFactory.getAuth('User').id
 					}, function (data) {
-						console.log($scope.newsList);
+						console.log(data.status);
 						socket.emit('update news', AuthFactory.getAuth('User').id);
 					}, function (error) {
 						console.log(error);
@@ -660,14 +672,14 @@
 						userId: AuthFactory.getAuth('User').id,
 						username: username,
 						signature: signature
-					}, function (user) {
-						
-						var temp = AuthFactory.getAuth('User');
-						temp.username = user.username;
-						temp.signature = user.signature;
-						AuthFactory.setAuth('User', temp);
+					}, function (data) {
+						console.log(data.status);
+						var user = AuthFactory.getAuth('User');
+						user.username = data.data.username;
+						user.signature = data.data.signature;
+						AuthFactory.setAuth('User', user);
 
-						$rootScope.username = data.user.username;
+						$rootScope.username = data.data.username;
 
 						socket.emit('update friends', AuthFactory.getAuth('User').id);
 					}, function (error) {

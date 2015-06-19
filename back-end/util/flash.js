@@ -1,5 +1,4 @@
 
-
 module.exports = function(code, message, data) {
 	
 	return {
@@ -7,6 +6,6 @@ module.exports = function(code, message, data) {
 			'code': code,
 			'message': message
 		},
-		'data': data
+		'data': arguments[2] || {}
 	}
 }

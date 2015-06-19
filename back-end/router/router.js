@@ -45,7 +45,7 @@ module.exports = function (app) {
 					return ;
 				}
 
-				res.send(flash(200,'login success',{
+				res.send(flash(200,'Login Success',{
 					username: user.username,
 					email: user.email,
 					signature: user.signature,
@@ -70,7 +70,7 @@ module.exports = function (app) {
 			user.update({ 'online':false }, function (err, user) {
 				if(err) return next(err);
 
-				res.send({});
+				res.send(flash(200,'Logout Success'));
 			});
 		});
 	});
@@ -103,7 +103,7 @@ module.exports = function (app) {
 				User.create(temp, function (err, user) {
 					if(err) return next(err);
 
-					res.send(flash(200,'register success',{
+					res.send(flash(200,'Signin Success',{
 						username: temp.username,
 						email: temp.email,
 						signature: temp.signature,
@@ -134,7 +134,7 @@ module.exports = function (app) {
 		}, function (err, users) {
 			if(err) return next(err);
 
-			res.send(flash('success','search success',users));
+			res.send(flash(200,'Search Hint Success',users));
 		});
 	});
 
@@ -158,12 +158,10 @@ module.exports = function (app) {
 			User.findOne({ '_id': req.body.targetId }, function (err, user) {
 				if(err) return next(err);
 
-				user.update({ '$inc' : { 'hints': 1 } }, function (err, user) {
+				user.update({ '$inc' : { 'hints': 1 } }, function (err) {
 					if(err) return(err);
 					
-					res.send({
-						targetId: req.body.targetId
-					});
+					res.send(flash(200,'Post Hint Success'));
 				});
 			});
 		});
@@ -176,9 +174,7 @@ module.exports = function (app) {
 		Hint.find({ 'targetId':req.params.targetId }, function (err, hints) {
 			if(err) return next(err);
 
-			res.send({
-				hints: hints
-			});
+			res.send(flash(200,'Get All Hints Success',hints));
 		});
 	});
 
@@ -189,9 +185,7 @@ module.exports = function (app) {
 		Hint.count({ 'targetId':req.params.targetId, 'mark':req.params.mark }, function (err, total) {
 			if(err) return next(err);
 
-			res.send({
-				total: total
-			});
+			res.send(flash(200,'Get Hint Count Success',total));
 		});
 	});
 
@@ -208,7 +202,7 @@ module.exports = function (app) {
 				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
 					if(err) return next(err);
 
-					res.send({});
+					res.send(flash(200,'Mark Hint Success'));
 
 				});
 			});
@@ -228,7 +222,7 @@ module.exports = function (app) {
 				User.update({ '_id' : req.body.targetId }, { '$inc' : { 'hints': -1 } }, function (err, user) {
 					if(err) return next(err);
 
-					res.send(hint);
+					res.send(flash(200,'Accept Hint Success',hint));
 				});
 			});
 		});
@@ -252,7 +246,7 @@ module.exports = function (app) {
 							user.update({ '$push': { 'friends':req.body.senderId } }, function (err, user) {
 								if(err) return next(err);
 						
-								res.send({});
+								res.send(flash(200,'Accept Each Other Success'));
 
 							});
 						}
@@ -273,7 +267,7 @@ module.exports = function (app) {
 			User.find({ '_id': { '$in': user.friends } }, { '_id':1, 'username':1, 'email':1, 'online':1 }, function (err, users) {
 				if(err) return next(err);
 
-				res.send(users);
+				res.send(flash(200,'Get All Friends Success',users));
 			});
 		});
 	});
@@ -285,14 +279,14 @@ module.exports = function (app) {
 		User.findOne({ '_id':req.params.userId }, function (err, user) {
 			if(err) return next(err);
 			
-			res.send({
+			res.send(flash(200,'Get User Info Success',{
 				username: user.username,
 				email: user.email,
 				signature: user.signature,
 				id: user._id,
 				friends: user.friends,
 				currentRoom: user.currentRoom
-			});
+			}));
 		});
 	});
 
@@ -306,7 +300,7 @@ module.exports = function (app) {
 				User.findOne({ '_id':req.body.userId }, function (err, user) {
 					if(err) return next(err);
 
-					res.send(user);
+					res.send(flash(200,'Save User Info Success',user));
 				});
 			});
 		});
@@ -331,7 +325,7 @@ module.exports = function (app) {
 		News.create(temp, function (err) {
 			if(err) return next(err);
 
-			res.send({});
+			res.send(flash(200,'Create News Success'));
 		});
 	});
 
@@ -347,7 +341,7 @@ module.exports = function (app) {
 			news.save(function (err, news) {
 				if(err) return next(err);
 
-				res.send({});
+				res.send(flash(200,'Save News Success'));
 			});
 		});
 	});
@@ -359,7 +353,7 @@ module.exports = function (app) {
 		News.remove({ '_id':req.body.newsId }, function (err) {
 			if(err) return next(err);
 
-			res.send({});
+			res.send(flash(200,'Remove News Success'));
 		});
 	});
 
@@ -373,7 +367,7 @@ module.exports = function (app) {
 			news.update({ '$push':{ 'support':req.body.supporter } }, function (err) {
 				if(err) return next(err);
 
-				res.send({});
+				res.send(flash(200,'Support News Success'));
 			});
 		});
 	});
@@ -395,7 +389,7 @@ module.exports = function (app) {
 				if(err) return next(err);
 
 				newsList = newsList.slice(-page*limit,newsList.length);
-				res.send(newsList);
+				res.send(flash(200,'Get News List Success',newsList));
 			});
 		});
 	});
@@ -414,7 +408,7 @@ module.exports = function (app) {
 		Room.create(temp, function (err, room) {
 			if(err) return next(err);
 
-			res.send(room);
+			res.send(flash(200,'Create Room Success',room));
 		});
 	});
 
@@ -425,7 +419,7 @@ module.exports = function (app) {
 		Room.find({ 'members':req.params.userId }, function (err, rooms) {
 			if(err) return next(err);
 
-			res.send(rooms);
+			res.send(flash(200,'Get Rooms Success',rooms));
 		});
 	});
 
@@ -437,7 +431,7 @@ module.exports = function (app) {
 		Room.findOne({ '_id':req.params.roomId }, function (err, room) {
 			if(err) return next(err);
 
-			res.send(room);
+			res.send(flash(200,'Get Room Success',room));
 		});
 	});
 
@@ -475,14 +469,14 @@ module.exports = function (app) {
 								room.save(function (err) {
 									if(err) return next(err);
 
-									res.send({});
+									res.send(flash(200,'Join New Room Success'));
 								});
 							})
 						});
 					});
 				})
 			}else{
-				res.send({});
+				res.send(flash(200,'Join Old Room Success'));
 			}
 		})
 	});
@@ -508,7 +502,7 @@ module.exports = function (app) {
 						user.update({ 'currentRoom': '' }, function (err, user) {
 							if(err) return next(err);
 
-							res.send({});
+							res.send(flash(200,'Exit Success'));
 						});
 					});
 				});
