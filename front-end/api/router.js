@@ -1,7 +1,7 @@
 (function () {
 
 	app
-		.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+		.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 			$stateProvider
 				.state('auth', {
 					url: '/auth',
