@@ -24,16 +24,12 @@ start node server
 start front end server
 
     http-server .
-    
-注意：**要在根路径下执行**
+	注意：**要在根路径下执行**
 
 start gulp and keep watch
 
-	gulp
-
-[gulp 压缩 js, 编译less,压缩css,合并、重命名、压缩angular文件]
-
-注意：**要在根路径下执行**
+	gulp    // gulp 压缩 js, 编译less,压缩css,合并、重命名、压缩angular文件  [dist 文件夹]
+	注意：**要在根路径下执行**
 
 open brwser
 
