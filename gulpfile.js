@@ -13,19 +13,26 @@ var guitl = require('gulp-util');
 var plumber = require('gulp-plumber');
 var combine = require('stream-combiner2');
 
-
+/*
+	config path 
+ */
 
 var path = {
 	lessPath: 'front-end/assets/styles/**.less',
 	angularJSPath: 'front-end/api/**.js',
-	viewsPath: 'front-end/views/**.html',
+	viewsPath: 'front-end/views/**',
 	
 	cleanPath: 'front-end/dist/**',
 	destLessPath: 'front-end/dist/assets/styles',
 	destAngularJSPath : 'front-end/dist/api'
 }
 
-function error(err) {
+/*
+	config path
+ */
+
+
+function log(err) {
 	var colors = guitl.colors;
 	console.log('\n');
 	guitl.log(colors.red('Error'));
@@ -45,13 +52,13 @@ gulp.task('watch', function () {
 	livereload.listen();
 
 	gulp.watch(path.lessPath, ['lessCSS']);
-
 	gulp.watch(path.angularJSPath, ['uglifyAngularJS']);
-		
-	gulp.watch(path.viewsPath)
-		.on('change', function (file) {
-			livereload.changed(file);
-		});
+	gulp.watch(path.viewsPath, ['watchHTML'])
+});
+
+gulp.task('watchHTML', function () {
+	gulp.src(path.viewsPath)
+		.pipe(livereload());
 });
 
 gulp.task('lessCSS', function () {
@@ -59,16 +66,13 @@ gulp.task('lessCSS', function () {
 		gulp.src(path.lessPath),
 		plumber(),
 		sourcemaps.init(),
-		less({
-			plugin: [autoprefix, cleanCSS]
-		}),
+		less(),
 		minifyCSS(),
 		sourcemaps.write('./maps'),
 		gulp.dest(path.destLessPath),
 		livereload()
 	]);
-
-	combined.on('error',error);
+	combined.on('error',log);
 });
 
 gulp.task('uglifyAngularJS', function () {
@@ -84,8 +88,7 @@ gulp.task('uglifyAngularJS', function () {
 		gulp.dest(path.destAngularJSPath),
 		livereload()
 	]);
-
-	combined.on('error',error);
+	combined.on('error',log);
 });
 
 gulp.task('default',['uglifyAngularJS','lessCSS','watch']);
