@@ -1,22 +1,19 @@
 var gulp = require('gulp');
-var plumber = require('gulp-plumber');
+var minifyCSS = require('gulp-minify-css');
+var less = require('gulp-less');
 var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 var jslint  = require('gulp-jslint');
-var guitl = require('gulp-util');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
+
+var guitl = require('gulp-util');
+var plumber = require('gulp-plumber');
 var combine = require('stream-combiner2');
 
-var minifyCSS = require('gulp-minify-css');
-var less = require('gulp-less');
-var LessPluginAutoPrefix = require('less-plugin-autoprefix');
-var LessPluginCleanCSS = require('less-plugin-clean-css');
 
-var cleanCSS = new LessPluginCleanCSS({ advanced: true });
-var autoprefix = new LessPluginAutoPrefix({ browsers: ['last 2 versions'] });
 
 var path = {
 	lessPath: 'front-end/assets/styles/**.less',
